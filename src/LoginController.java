@@ -31,12 +31,14 @@ public class LoginController extends AbstractController
 	
 	public void onButtonPress(String nickName)
 	{
-		
 		System.out.println("Hoi " + nickName);
 		this.connection.login(nickName);
-		
-		// Tell network to login.
-		// Als we een "Ja :D " krijgen van server:
-		//  	sluit deze controller/view en zo, en start de lobby.
 	}
+
+	@Override
+	public String getTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

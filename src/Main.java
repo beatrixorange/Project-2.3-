@@ -9,11 +9,10 @@ public class Main extends Application{
 
 		primaryStage.setTitle("Login");
 
-		primaryStage.show();
 		this.stage = primaryStage;
 		primaryStage.centerOnScreen();
 		
-		LoginController c = new LoginController(connection);
+		LobbyController c = new LobbyController(connection);
 		c.show(primaryStage);
 	}
 	

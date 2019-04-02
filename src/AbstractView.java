@@ -1,5 +1,12 @@
 import javafx.scene.Scene;
 
 public abstract class AbstractView {
-	abstract public Scene getScene();
+	protected Scene scene = null;
+	
+	public Scene getScene() {
+		return this.scene;
+	}
+	
+	abstract public String getTitle();
 }
+
