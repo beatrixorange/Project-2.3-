@@ -14,9 +14,11 @@ public class Connection {
 	private InputStreamReader input;
 	private OutputStreamWriter output;
 	private boolean loggedIn;
+	private boolean subscribed;
 	
 	public Connection() {
 		loggedIn = false;
+		subscribed = false;
 	}
 	
 	public void connect() throws UnknownHostException, IOException {
@@ -30,19 +32,24 @@ public class Connection {
 	}
 	
 	public void receive() {	
-		while(true) {
-			String line;
-			try {
-				line = reader.readLine();
-				System.out.println(line);
-				login("willem");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-			
-		}
-		
+		Thread receive = new Thread(new Runnable() {
+			public void run() {
+				while(true) {
+					String line;
+					try {
+						line = reader.readLine();
+						System.out.println(line);
+						login("willem");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}		
+							
+				}
+			}
+		});
+		receive.start();
+	
 	}
 	
     public void sendCommand(String command){
@@ -69,6 +76,35 @@ public class Connection {
     		loggedIn = true;
     	}
     }
+    
+    public void logout() {
+    	if(loggedIn == true) {
+    		sendCommand("logout");
+    		loggedIn = false;
+    		try {
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    }
+    
+    public void subscribe(String gameType) {
+    	if(subscribed = false) {
+    		sendCommand("subscribe " + gameType);
+    		subscribed = true;
+    	}
+    }
+    
+    public void getGameList() {
+    	sendCommand("get gamelist");
+    }
+    
+    public void getPlayerList() {
+    	sendCommand("get playerlist");
+    }
+	
 	
 	public static void main(String args[]) throws UnknownHostException, IOException {
 		Connection x = new Connection();
