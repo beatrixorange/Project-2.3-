@@ -8,8 +8,13 @@ public class Main extends Application{
 	public void start(Stage primaryStage) throws Exception {
 
 		primaryStage.setTitle("Login");
+
 		primaryStage.show();
 		this.stage = primaryStage;
+		primaryStage.centerOnScreen();
+		
+		LoginController c = new LoginController();
+		c.show(primaryStage);
 	}
 	
 	public void switchScene(AbstractView view) {	
