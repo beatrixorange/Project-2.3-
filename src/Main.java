@@ -4,7 +4,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 	Stage stage = null;
-	
+	private static Connection connection = null;
 	public void start(Stage primaryStage) throws Exception {
 
 		primaryStage.setTitle("Login");
@@ -13,7 +13,7 @@ public class Main extends Application{
 		this.stage = primaryStage;
 		primaryStage.centerOnScreen();
 		
-		LoginController c = new LoginController();
+		LoginController c = new LoginController(connection);
 		c.show(primaryStage);
 	}
 	
@@ -23,6 +23,8 @@ public class Main extends Application{
 	}
 	
 	public static void main(String[] args) {
+		
+		connection = new Connection();
 		
 		Application.launch(args);
 	}
