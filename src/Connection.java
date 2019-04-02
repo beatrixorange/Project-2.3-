@@ -13,9 +13,14 @@ public class Connection {
 	private BufferedWriter writer;
 	private InputStreamReader input;
 	private OutputStreamWriter output;
+	private boolean loggedIn;
+	
+	public Connection() {
+		loggedIn = false;
+	}
 	
 	public void connect() throws UnknownHostException, IOException {
-		socket = new Socket("145.33.225.170", 7789);
+		socket = new Socket("localhost", 7789);
 		input = new InputStreamReader(socket.getInputStream());
 		output = new OutputStreamWriter(socket.getOutputStream());
 		reader = new BufferedReader(input);
@@ -24,27 +29,32 @@ public class Connection {
 			
 	}
 	
-	public void receive() throws IOException {
-		Connection con = this;
-		
+	public void receive() {	
 		while(true) {
-			String line = reader.readLine();
-			System.out.println(line);
+			String line;
+			try {
+				line = reader.readLine();
+				System.out.println(line);
+				login("willem");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 			
 		}
 		
 	}
 	
-	public static void main(String args[]) throws UnknownHostException, IOException {
-		Connection x = new Connection();
-		x.connect();
-	}
-	
-    public void sendCommand(String command) throws IOException {
+    public void sendCommand(String command){
         if (writer != null) {
-            writer.write(command);
-            writer.newLine();
-            writer.flush();
+            try {
+				writer.write(command);
+				writer.newLine();
+	            writer.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             
         }
         else {
@@ -52,6 +62,19 @@ public class Connection {
         }
 
     }
+    
+    public void login(String username) {
+    	if(loggedIn == false) {
+    		sendCommand("login " + username);
+    		loggedIn = true;
+    	}
+    }
+	
+	public static void main(String args[]) throws UnknownHostException, IOException {
+		Connection x = new Connection();
+		x.connect();
+	}
+	
 	
  
 } 
