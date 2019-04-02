@@ -12,7 +12,9 @@ public class Main extends Application{
 		this.stage = primaryStage;
 		primaryStage.centerOnScreen();
 		
-		LobbyController c = new LobbyController(connection);
+		AbstractPlayer p1 = new Player("Pietje");
+		AbstractPlayer p2 = new Player("Frank");
+		AbstractController c = new GameController(connection, p1, p2);
 		c.show(primaryStage);
 	}
 	
