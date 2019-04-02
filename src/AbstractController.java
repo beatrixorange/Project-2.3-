@@ -9,6 +9,4 @@ public abstract class AbstractController {
 		stage.setTitle(this.view.getTitle());
 		stage.show();
 	}
-	
-	abstract public String getTitle();
 }

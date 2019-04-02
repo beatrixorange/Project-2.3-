@@ -34,11 +34,4 @@ public class LoginController extends AbstractController
 		System.out.println("Hoi " + nickName);
 		this.connection.login(nickName);
 	}
-
-	@Override
-	public String getTitle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
