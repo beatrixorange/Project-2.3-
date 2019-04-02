@@ -10,9 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-public class LoginView extends AbstractView {
-	private Scene scene = null;
-	
+public class LoginView extends AbstractView {	
 	private Button button = null;
 	private TextField nickName = null;
 	
@@ -21,7 +19,7 @@ public class LoginView extends AbstractView {
 		
 		VBox start = new VBox();
 		start.setAlignment(Pos.CENTER);
-		VBox.setVgrow(start, Priority.ALWAYS);
+		//VBox.setVgrow(start, Priority.ALWAYS);
 		
 		Label label = new Label("Choose your nickname!");
 		label.setAlignment(Pos.CENTER);
@@ -46,8 +44,9 @@ public class LoginView extends AbstractView {
 		});
 	}
 
-	public Scene getScene()
-	{
-		return this.scene;
+	@Override
+	public String getTitle() {
+		// TODO Auto-generated method stub
+		return "Login";
 	}
 }

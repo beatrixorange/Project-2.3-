@@ -1,23 +1,37 @@
+import java.io.IOException;
+import java.net.UnknownHostException;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
+
 public class LoginController extends AbstractController
 {
+	
+	private Connection connection;
 
-	public LoginController()
+	public LoginController(Connection connection)
 	{	
 		LoginView view = new LoginView();
 		view.setOnButtonPressHandler(this);
 		
 		this.view = view;
+		this.connection = connection;
+		
+		try {
+			this.connection.connect();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void onButtonPress(String nickName)
 	{
 		System.out.println("Hoi " + nickName);
-		
-		// Tell network to login.
-		// Als we een "Ja :D " krijgen van server:
-		//  	sluit deze controller/view en zo, en start de lobby.
+		this.connection.login(nickName);
 	}
 }

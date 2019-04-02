@@ -6,6 +6,7 @@ public abstract class AbstractController {
 	public void show(Stage stage)
 	{
 		stage.setScene(this.view.getScene());
+		stage.setTitle(this.view.getTitle());
+		stage.show();
 	}
-	
 }
