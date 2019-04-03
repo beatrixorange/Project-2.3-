@@ -144,10 +144,7 @@ public class Connection {
     }
     
     public String[] getGameList() {
-    	if(called == false) {
-    		sendCommand("get gamelist");
-    		called = true;
-    	}
+    	sendCommand("get gamelist");
     	return gameList;
     			
     }
