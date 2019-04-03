@@ -35,4 +35,10 @@ public class ReversiController extends AbstractGameController implements ClickHa
 	{
 		return false;
 	}
+
+	@Override
+	public boolean checkMove(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

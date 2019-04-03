@@ -61,7 +61,7 @@ public class TicTacToeView extends BoardView {
 		rect.setStroke(Color.BLACK);
 		
 		this.text = new Text();
-		text.setFont(Font.font(72));
+		text.setFont(Font.font(200));
 		if (disk == Tile.ONE) {
 			this.drawX();
 		}else if(disk == Tile.TWO) {
