@@ -30,12 +30,12 @@ public class Board
 		return this.sizeY;
 	}
 
-	public Tile getDisk(int x, int y)
+	public Tile getTile(int x, int y)
 	{
 		return this.board[x][y];
 	}
 
-	public void putDisk(int x, int y, Tile disk)
+	public void putTile(int x, int y, Tile disk)
 	{
 		this.board[x][y] = disk;
 	}

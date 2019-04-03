@@ -23,9 +23,13 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 	public void onBoardClick(int posX, int posY)
 	{
+		if (this.board.getTile(posX, posY) != Tile.EMPTY) {
+			return;
+		}
+
 		System.out.println("Wat ga jij clicken op " + posX + " en " + posY);
 
-		this.board.putDisk(posX, posY, (this.turn) ? Tile.TWO : Tile.ONE);
+		this.board.putTile(posX, posY, (this.turn) ? Tile.TWO : Tile.ONE);
 		this.rView.reDraw(this.board);
 
 		this.switchTurn();
