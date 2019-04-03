@@ -49,17 +49,22 @@ public class Connection {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
-						login("kees");
-						getGameList();
-						if(line.contains("SVR PLAYERLIST")) {
-							String[] a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
-							playerList = a;
+						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
+							if(line.contains("SVR PLAYERLIST")) {
+								String[] a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
+								playerList = a;	
+							}
+							if(line.contains("SVR GAMELIST")) {
+								String[] b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
+								gameList = b;
+							}
+							
 							
 						}
-						if(line.contains("SVR GAMELIST")) {
-							String[] b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
-							gameList = b;
-						}
+			
+		
+						
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
