@@ -38,13 +38,16 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 		this.switchTurn();
 
-		this.determineHighlightedTiles();
+		this.rView.highlightedTiles = this.determineHighlightedTiles();
+		if (this.rView.highlightedTiles.length > 0) {
+			this.logic.setInitialised();
+		}
 
 		this.rView.reDraw(this.board);
 
 	}
 
-	public void determineHighlightedTiles()
+	public int[][] determineHighlightedTiles()
 	{
 		ArrayList<int[]> list = new ArrayList<int[]>();
 
@@ -63,6 +66,6 @@ public class ReversiController extends AbstractGameController implements ClickHa
 			}
 		}
 
-		this.rView.highlightedTiles = list.toArray(new int[list.size()][]);
+		return list.toArray(new int[list.size()][]);
 	}
 }
