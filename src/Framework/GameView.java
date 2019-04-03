@@ -1,3 +1,5 @@
+package Framework;
+import Interface.AbstractView;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

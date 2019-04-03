@@ -1,3 +1,8 @@
+package TicTacToe;
+import Framework.AbstractGameController;
+import Framework.Board;
+import Framework.ClickHandler;
+import Framework.Tile;
 import javafx.scene.layout.VBox;
 
 public class TicTacToeController extends AbstractGameController implements ClickHandler{

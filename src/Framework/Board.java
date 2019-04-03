@@ -1,3 +1,5 @@
+package Framework;
+
 public class Board
 {
 	protected Tile[][] board;

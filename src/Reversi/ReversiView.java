@@ -1,3 +1,8 @@
+package Reversi;
+import Framework.Board;
+import Framework.BoardView;
+import Framework.ClickHandler;
+import Framework.Tile;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Cell;
@@ -31,7 +36,7 @@ public class ReversiView extends BoardView
 		return "Reversi";
 	}
 
-	public Node makeGridNode(Tile disk)
+	protected Node makeGridNode(Tile disk)
 	{
 		Rectangle rect = new Rectangle();
 		rect.setWidth(50);

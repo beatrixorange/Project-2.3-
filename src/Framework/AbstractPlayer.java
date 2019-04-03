@@ -1,3 +1,4 @@
+package Framework;
 
 public abstract class AbstractPlayer {
 	protected String name;

@@ -1,6 +1,8 @@
+package Interface;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import Connection;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 

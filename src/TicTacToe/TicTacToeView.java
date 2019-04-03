@@ -1,5 +1,10 @@
+package TicTacToe;
 import java.util.ArrayList;
 
+import Framework.Board;
+import Framework.BoardView;
+import Framework.ClickHandler;
+import Framework.Tile;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -48,7 +53,7 @@ public class TicTacToeView extends BoardView {
 		return "Tic-Tac-Toe";
 	}
 	@Override
-	Node makeGridNode(Tile disk) {
+	protected Node makeGridNode(Tile disk) {
 		StackPane pane = new StackPane();
 		Rectangle rect = new Rectangle(270,260);
 		rect.setStrokeWidth(3);

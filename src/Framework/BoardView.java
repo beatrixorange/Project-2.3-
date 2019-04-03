@@ -1,3 +1,4 @@
+package Framework;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -43,5 +44,5 @@ public abstract class BoardView extends AbstractGameView
 		return gridPane;
 	}
 
-	abstract Node makeGridNode(Tile disk);
+	abstract protected Node makeGridNode(Tile disk);
 }

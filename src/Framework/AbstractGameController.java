@@ -1,3 +1,6 @@
+package Framework;
+
+import Interface.AbstractController;
 
 public class AbstractGameController extends AbstractController
 {

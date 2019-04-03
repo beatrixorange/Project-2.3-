@@ -1,7 +1,8 @@
+package Interface;
 import javafx.stage.Stage;
 
 public abstract class AbstractController {
-	AbstractView view = null;
+	protected AbstractView view = null;
 	
 	public void show(Stage stage)
 	{

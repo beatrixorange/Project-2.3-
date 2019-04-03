@@ -1,3 +1,5 @@
+package Interface;
+import Connection;
 
 public class LobbyController extends AbstractController
 {	

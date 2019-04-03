@@ -1,3 +1,8 @@
+import Framework.AbstractPlayer;
+import Framework.GameController;
+import Framework.Player;
+import Interface.AbstractController;
+import Interface.AbstractView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

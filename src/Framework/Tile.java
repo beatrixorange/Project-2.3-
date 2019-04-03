@@ -1,3 +1,4 @@
+package Framework;
 import javafx.scene.paint.Color;
 
 public enum Tile

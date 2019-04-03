@@ -1,3 +1,9 @@
+package Reversi;
+import Framework.AbstractGameController;
+import Framework.Board;
+import Framework.ClickHandler;
+import Framework.GameController;
+import Framework.Tile;
 import javafx.scene.layout.VBox;
 
 public class ReversiController extends AbstractGameController implements ClickHandler
