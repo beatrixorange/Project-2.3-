@@ -4,10 +4,10 @@ public class ReversiController extends AbstractGameController implements ClickHa
 {
 	ReversiView rView = null;
 
-	private boolean turn;
-
-	public ReversiController()
+	public ReversiController(GameController parent)
 	{
+		this.parentController = parent;
+
 		rView = new ReversiView(this);
 
 		this.view = rView;
@@ -20,6 +20,11 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.rView.putDisk(posX, posY, (this.turn) ? Disk.TWO : Disk.ONE);
 		this.rView.reDraw();
 
-		this.turn = !this.turn;
+		this.switchTurn();
+	}
+
+	public boolean isValidMove(int x, int y)
+	{
+		return false;
 	}
 }

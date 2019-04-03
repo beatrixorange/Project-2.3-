@@ -8,27 +8,13 @@ import javafx.application.Platform;
 
 import javafx.scene.input.MouseEvent;
 
-public abstract class Board extends AbstractGameView
+public abstract class BoardView extends AbstractGameView
 {
 	private int sizeX, sizeY;
 
 	protected Disk[][] board;
 
 	protected ClickHandler clickHandler;
-
-	public Board(int sizeX, int sizeY)
-	{
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-
-		// Initialise board.
-		this.board = new Disk[sizeX][sizeY];
-		for (int x = 0; x < this.sizeX; x++) {
-			for (int y = 0; y < this.sizeY; y++) {
-				this.board[x][y] = Disk.EMPTY;
-			}
-		}
-	}
 
 	public void reDraw()
 	{
