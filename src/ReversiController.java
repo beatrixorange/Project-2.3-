@@ -19,7 +19,7 @@ public class ReversiController extends AbstractGameController implements ClickHa
 	{
 		System.out.println("Wat ga jij clicken op " + posX + " en " + posY);
 
-		this.board.putDisk(posX, posY, (this.turn) ? Disk.TWO : Disk.ONE);
+		this.board.putDisk(posX, posY, (this.turn) ? Tile.TWO : Tile.ONE);
 		this.rView.reDraw(this.board);
 
 		this.switchTurn();

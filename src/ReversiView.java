@@ -31,7 +31,7 @@ public class ReversiView extends BoardView
 		return "Reversi";
 	}
 
-	public Node makeGridNode(Disk disk)
+	public Node makeGridNode(Tile disk)
 	{
 		Rectangle rect = new Rectangle();
 		rect.setWidth(50);
@@ -41,7 +41,7 @@ public class ReversiView extends BoardView
 		return rect;
 	}
 
-	private Color color(Disk disk)
+	private Color color(Tile disk)
 	{
 		switch (disk) {
 		case ONE:

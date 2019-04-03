@@ -1,6 +1,6 @@
 import javafx.scene.paint.Color;
 
-public enum Disk
+public enum Tile
 {
 	EMPTY, ONE, TWO;
 }

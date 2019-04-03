@@ -1,6 +1,6 @@
 public class Board
 {
-	protected Disk[][] board;
+	protected Tile[][] board;
 
 	protected int sizeX, sizeY;
 
@@ -10,10 +10,10 @@ public class Board
 		this.sizeY = sizeY;
 
 		// Initialise board.
-		this.board = new Disk[sizeX][sizeY];
+		this.board = new Tile[sizeX][sizeY];
 		for (int x = 0; x < this.sizeX; x++) {
 			for (int y = 0; y < this.sizeY; y++) {
-				this.board[x][y] = Disk.EMPTY;
+				this.board[x][y] = Tile.EMPTY;
 			}
 		}
 	}
@@ -28,12 +28,12 @@ public class Board
 		return this.sizeY;
 	}
 
-	public Disk getDisk(int x, int y)
+	public Tile getDisk(int x, int y)
 	{
 		return this.board[x][y];
 	}
 
-	public void putDisk(int x, int y, Disk disk)
+	public void putDisk(int x, int y, Tile disk)
 	{
 		this.board[x][y] = disk;
 	}

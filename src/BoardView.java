@@ -43,5 +43,5 @@ public abstract class BoardView extends AbstractGameView
 		return gridPane;
 	}
 
-	abstract Node makeGridNode(Disk disk);
+	abstract Node makeGridNode(Tile disk);
 }

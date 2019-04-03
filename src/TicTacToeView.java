@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
@@ -8,45 +9,25 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class TicTacToeView extends AbstractGameView {
+public class TicTacToeView extends BoardView {
 	
 	private Rectangle[][] board;
 	Text text = null;
 	
-	public TicTacToeView(){
-		//Pane pane = new Pane();
-		GridPane gridPane = new GridPane();
-		gridPane.setAlignment(Pos.CENTER);
-		ColumnConstraints column1 = new ColumnConstraints();
-		column1.setPercentWidth(33);
-		gridPane.getColumnConstraints().add(column1);
-		gridPane.getColumnConstraints().add(column1);
-		gridPane.getColumnConstraints().add(column1);
-		for (int x = 0; x < 3; x++) {
-			for (int y = 0; y < 3; y++) {
-				Rectangle rect = new Rectangle(x,y,270,260);
-				rect.setStrokeWidth(3);
-				rect.setFill(null);
-				rect.setStroke(Color.BLACK);
-				this.text = new Text();
-				gridPane.add(rect, y, x);
-				
-				board[x][y] = rect;
-				
-			}
-			
-		}
-		setOnMouseClicked(event -> {
-			if (event.getButton() == MouseButton.PRIMARY) {
-				  drawX()
-			}
-		}
+	public TicTacToeView(ClickHandler clickHandler, Board board){
+		this.clickHandler = clickHandler;
+		Pane pane = new Pane();
+		pane.getChildren().addAll(this.draw(board));
 		
-		this.scene = new Scene(gridPane);
+		this.scene = new Scene(pane);
+		
+		
 	}
     public String getValue() {
         return text.getText();
@@ -65,6 +46,24 @@ public class TicTacToeView extends AbstractGameView {
 	public String getTitle() {
 		// TODO Auto-generated method stub
 		return "Tic-Tac-Toe";
+	}
+	@Override
+	Node makeGridNode(Tile disk) {
+		StackPane pane = new StackPane();
+		Rectangle rect = new Rectangle(270,260);
+		rect.setStrokeWidth(3);
+		rect.setFill(null);
+		rect.setStroke(Color.BLACK);
+		
+		this.text = new Text();
+		text.setFont(Font.font(72));
+		if (disk == Tile.ONE) {
+			this.drawX();
+		}else if(disk == Tile.TWO) {
+			this.drawY();
+		}
+		pane.getChildren().addAll(rect, text);
+		return pane;
 	}
 	
 }
