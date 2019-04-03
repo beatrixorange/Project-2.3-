@@ -1,5 +1,5 @@
 package Interface;
-import Connection;
+import Connection.Connection;
 
 public class LobbyController extends AbstractController
 {	

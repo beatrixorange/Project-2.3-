@@ -1,5 +1,5 @@
 package Framework;
-import Connection;
+import Connection.Connection;
 import Interface.AbstractController;
 import TicTacToe.TicTacToeController;
 
@@ -16,7 +16,7 @@ public class GameController extends AbstractController
 			// Beeld je in dat dit een super mooie factory is die deze instance maakt.
 			AbstractGameController controller = new TicTacToeController();
 
-			this.gView = new GameView(controller.view, p1, p2);
+			this.gView = new GameView(controller.getView(), p1, p2);
 			
 			this.view = gView;
 			this.connection = connection;

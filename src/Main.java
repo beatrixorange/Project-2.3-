@@ -1,3 +1,4 @@
+import Connection.Connection;
 import Framework.AbstractPlayer;
 import Framework.GameController;
 import Framework.Player;

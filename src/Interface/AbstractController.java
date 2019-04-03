@@ -10,4 +10,9 @@ public abstract class AbstractController {
 		stage.setTitle(this.view.getTitle());
 		stage.show();
 	}
+	
+	public AbstractView getView()
+	{
+		return this.view;
+	}
 }
