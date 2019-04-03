@@ -40,7 +40,7 @@ public class GameView extends AbstractView
 	public void switchTurn(boolean newTurn)
 	{
 		System.out.println("Switch turn in view: " + newTurn);
-		this.turnLabel.setText((newTurn) ? "<--" : "-->");
+		this.turnLabel.setText((newTurn) ? "-->" : "<--");
 	}
 
 	@Override

@@ -15,9 +15,8 @@ public class GameController extends AbstractController
 	public GameController(Connection connection, AbstractPlayer p1, AbstractPlayer p2)
 	{
 		// Beeld je in dat dit een super mooie factory is die deze instance maakt.
-		//AbstractGameController controller = new ReversiController(this);
-		AbstractGameController controller = new TicTacToeController();
-
+		AbstractGameController controller = new ReversiController(this);
+		//AbstractGameController controller = new TicTacToeController();
 
 		this.gView = new GameView(controller.getView(), p1, p2);
 		

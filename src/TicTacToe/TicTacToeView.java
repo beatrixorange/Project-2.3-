@@ -53,7 +53,7 @@ public class TicTacToeView extends BoardView {
 		return "Tic-Tac-Toe";
 	}
 	@Override
-	protected Node makeGridNode(Tile disk) {
+	protected Node makeGridNode(Tile disk, int x, int y) {
 		StackPane pane = new StackPane();
 		Rectangle rect = new Rectangle(270,260);
 		rect.setStrokeWidth(3);

@@ -18,4 +18,13 @@ public class AbstractGameController extends AbstractController
 			this.parentController.switchedTurn(this.turn);
 		}
 	}
+
+	protected Tile turnsTile()
+	{
+		if (!this.turn) {
+			return Tile.ONE;
+		}
+
+		return Tile.TWO;
+	}
 }

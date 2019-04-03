@@ -39,4 +39,36 @@ public class Board
 	{
 		this.board[x][y] = disk;
 	}
+
+	public boolean isEmpty(int x, int y)
+	{
+		return this.board[x][y] == Tile.EMPTY;
+	}
+
+	public boolean isValid(int x, int y)
+	{
+		if (x < 0 || y < 0) {
+			return false;
+		}
+
+		if (x >= this.sizeX || y >= this.sizeY) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean notEmptyAndNot(int x, int y, Tile not)
+	{
+		Tile t = this.board[x][y];
+		if (t == Tile.EMPTY) {
+			return false;
+		}
+
+		if (t == not) {
+			return false;
+		}
+
+		return true;
+	}
 }

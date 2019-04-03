@@ -20,6 +20,8 @@ import javafx.scene.Node;
 
 public class ReversiView extends BoardView
 {
+	public int[][] highlightedTiles;
+
 	public ReversiView(ClickHandler clickHandler, Board board)
 	{
 		this.clickHandler = clickHandler;
@@ -35,10 +37,10 @@ public class ReversiView extends BoardView
 	@Override
 	public String getTitle()
 	{
-		return "Reversi";
+		return "Reversi"; 
 	}
 
-	protected Node makeGridNode(Tile tile)
+	protected Node makeGridNode(Tile tile, int x, int y)
 	{
 		Rectangle rect = new Rectangle();
 		rect.setWidth(50);
@@ -46,9 +48,15 @@ public class ReversiView extends BoardView
 		rect.setFill(this.color(Tile.EMPTY));
 
 		if (tile == Tile.EMPTY) {
+			if (this.highlightedTiles != null) {
+				for (int i = 0; i < this.highlightedTiles.length; i++) {
+					if (this.highlightedTiles[i][0] == x && this.highlightedTiles[i][1] == y) {
+						rect.setFill(Color.YELLOW);
+					}
+				}
+			}
 			return rect;
 		}
-
 
 		StackPane pane = new StackPane();
 

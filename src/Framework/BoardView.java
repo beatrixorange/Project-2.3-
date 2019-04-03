@@ -28,7 +28,7 @@ public abstract class BoardView extends AbstractGameView
 
 		for (int x = 0; x < board.getSizeX(); x++) {
 			for (int y = 0; y < board.getSizeY(); y++) {
-				Node node = this.makeGridNode(board.getTile(x, y));
+				Node node = this.makeGridNode(board.getTile(x, y), x, y);
 				
 				int thisX = x;
 				int thisY = y;
@@ -44,5 +44,5 @@ public abstract class BoardView extends AbstractGameView
 		return gridPane;
 	}
 
-	abstract protected Node makeGridNode(Tile disk);
+	abstract protected Node makeGridNode(Tile disk, int x, int y);
 }
