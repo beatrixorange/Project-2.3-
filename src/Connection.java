@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Connection {
 	
@@ -15,10 +16,19 @@ public class Connection {
 	private OutputStreamWriter output;
 	private boolean loggedIn;
 	private boolean subscribed;
+	private ArrayList challengers;
+	private String[] playerList;
+	private String[] gameList;
+	private String loggedinU;
+	private boolean called;
 	
 	public Connection() {
+		called = false;
 		loggedIn = false;
 		subscribed = false;
+		challengers = new ArrayList();
+		gameList = null;
+		playerList = null;
 	}
 	
 	public void connect() throws UnknownHostException, IOException {
@@ -31,7 +41,7 @@ public class Connection {
 			
 	}
 	
-	public void receive() {	
+	public synchronized void receive() {	
 		Thread receive = new Thread(new Runnable() {
 			public void run() {
 				while(true) {
@@ -39,7 +49,17 @@ public class Connection {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
-						login("willem");
+						login("kees");
+						getGameList();
+						if(line.contains("SVR PLAYERLIST")) {
+							String[] a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
+							playerList = a;
+							
+						}
+						if(line.contains("SVR GAMELIST")) {
+							String[] b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
+							gameList = b;
+						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -73,6 +93,7 @@ public class Connection {
     public void login(String username) {
     	if(loggedIn == false) {
     		sendCommand("login " + username);
+    		loggedinU = username;
     		loggedIn = true;
     	}
     }
@@ -97,12 +118,39 @@ public class Connection {
     	}
     }
     
-    public void getGameList() {
-    	sendCommand("get gamelist");
+    public void setSubscribed(boolean subscribed) {
+    	this.subscribed = subscribed;
     }
     
-    public void getPlayerList() {
-    	sendCommand("get playerlist");
+    public boolean getSubscribed() {
+    	return subscribed;
+    }
+    
+    public void makeMove(int move) {
+    	sendCommand("move " + move);
+    }
+    
+    public void sendChallenge(String player, String gameType) {
+    	sendCommand("challenge " + player  + " " + gameType);
+    }
+    
+    public void acceptChallenge(int challengeNumber) {
+    	sendCommand("challenge accept " + challengeNumber);
+    }
+    
+    public String[] getGameList() {
+    	if(called == false) {
+    		sendCommand("get gamelist");
+    		called = true;
+    	}
+    	return gameList;
+    			
+    }
+    
+    public String[] getPlayerList() {
+        sendCommand("get playerlist");
+    	return playerList;
+
     }
 	
 	
