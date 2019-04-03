@@ -11,9 +11,11 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 import javafx.scene.Node;
 
 public class ReversiView extends BoardView
@@ -36,14 +38,27 @@ public class ReversiView extends BoardView
 		return "Reversi";
 	}
 
-	protected Node makeGridNode(Tile disk)
+	protected Node makeGridNode(Tile tile)
 	{
 		Rectangle rect = new Rectangle();
 		rect.setWidth(50);
 		rect.setHeight(50);
-		rect.setFill(this.color(disk));
+		rect.setFill(this.color(Tile.EMPTY));
 
-		return rect;
+		if (tile == Tile.EMPTY) {
+			return rect;
+		}
+
+
+		StackPane pane = new StackPane();
+
+		Circle circ = new Circle();
+		circ.setRadius(20);
+		circ.setFill(this.color(tile));
+
+		pane.getChildren().addAll(rect, circ);
+
+		return pane;
 	}
 
 	private Color color(Tile disk)
