@@ -9,17 +9,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.Node;
 
-public class ReversiView extends ReversiBoard
+public class ReversiView extends BoardView
 {
-	public ReversiView(ClickHandler clickHandler)
+	public ReversiView(ClickHandler clickHandler, Board board)
 	{
-		super(8, 8);
-
 		this.clickHandler = clickHandler;
 
+		// This is a hack.
+		// Will explain later.
 		Pane pane = new Pane();
-		pane.getChildren().addAll(this.draw());
+		pane.getChildren().addAll(this.draw(board));
 		
 		this.scene = new Scene(pane);
 	}
@@ -28,5 +29,27 @@ public class ReversiView extends ReversiBoard
 	public String getTitle()
 	{
 		return "Reversi";
+	}
+
+	public Node makeGridNode(Disk disk)
+	{
+		Rectangle rect = new Rectangle();
+		rect.setWidth(50);
+		rect.setHeight(50);
+		rect.setFill(this.color(disk));
+
+		return rect;
+	}
+
+	private Color color(Disk disk)
+	{
+		switch (disk) {
+		case ONE:
+			return Color.BLACK;
+		case TWO:
+			return Color.WHITE;
+		default:
+			return Color.GRAY;
+		}
 	}
 }
