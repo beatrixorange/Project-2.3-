@@ -6,9 +6,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-public class GameView extends AbstractView{
-	
-	public GameView(AbstractView gameView, AbstractPlayer p1, AbstractPlayer p2) {
+public class GameView extends AbstractView
+{
+	public GameView(AbstractView gameView, AbstractPlayer p1, AbstractPlayer p2)
+	{
 		VBox vbox = new VBox();
 		vbox.setAlignment(Pos.TOP_CENTER);
 		
@@ -22,7 +23,6 @@ public class GameView extends AbstractView{
 		hbox.setAlignment(Pos.TOP_LEFT);
 		
 		vbox.getChildren().addAll(hbox, gameView.getScene().getRoot());
-		
 		
 		this.scene = new Scene(vbox,800,800);
 	}
