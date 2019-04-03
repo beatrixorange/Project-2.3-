@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class ReversiController extends AbstractGameController implements ClickHandler
 {
-	ReversiView rView = null;
+	private ReversiView rView = null;
 
-	ReversiLogic logic;
+	private ReversiLogic logic;
 
 	public ReversiController(GameController parent)
 	{
@@ -24,11 +24,17 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		rView = new ReversiView(this, this.board);
 
 		this.view = rView;
+
+		this.rView.setHighlightedTiles(this.determineHighlightedTiles());
+
+		this.rView.reDraw(this.board);
 	}
 
 	public void onBoardClick(int posX, int posY)
 	{
-		if (!this.logic.allowMove(this.board, posX, posY, this.turnsTile())) {
+		if (this.turnSwitches >= 4 &&
+			!this.logic.isValidMove(this.board, posX, posY, this.turnsTile()))
+		{
 			return;
 		}
 
@@ -38,13 +44,9 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 		this.switchTurn();
 
-		this.rView.highlightedTiles = this.determineHighlightedTiles();
-		if (this.rView.highlightedTiles.length > 0) {
-			this.logic.setInitialised();
-		}
+		this.rView.setHighlightedTiles(this.determineHighlightedTiles());
 
 		this.rView.reDraw(this.board);
-
 	}
 
 	public int[][] determineHighlightedTiles()
@@ -53,15 +55,23 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 		Tile turnsTile = this.turnsTile();
 
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				Tile t = this.board.getTile(x, y);
-				if (t != Tile.EMPTY) {
-					continue;
-				}
-
-				if (this.logic.isValidMove(this.board, x, y, turnsTile)) {
+		if (this.turnSwitches < 4) {
+			for (int x = 3; x < 5; x++) {
+				for (int y = 3; y < 5; y++) {
 					list.add(new int[]{x, y});
+				}
+			}
+		} else {
+			for (int x = 0; x < 8; x++) {
+				for (int y = 0; y < 8; y++) {
+					Tile t = this.board.getTile(x, y);
+					if (t != Tile.EMPTY) {
+						continue;
+					}
+
+					if (this.logic.isValidMove(this.board, x, y, turnsTile)) {
+						list.add(new int[]{x, y});
+					}
 				}
 			}
 		}

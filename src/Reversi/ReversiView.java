@@ -20,7 +20,9 @@ import javafx.scene.Node;
 
 public class ReversiView extends BoardView
 {
-	public int[][] highlightedTiles;
+	private int[][] highlightedTiles;
+
+	private Pane pane;
 
 	public ReversiView(ClickHandler clickHandler, Board board)
 	{
@@ -28,9 +30,8 @@ public class ReversiView extends BoardView
 
 		// This is a hack.
 		// Will explain later.
-		Pane pane = new Pane();
-		pane.getChildren().addAll(this.draw(board));
-		
+		this.pane = new Pane();
+
 		this.scene = new Scene(pane);
 	}
 
@@ -79,5 +80,10 @@ public class ReversiView extends BoardView
 		default:
 			return Color.GRAY;
 		}
+	}
+
+	public void setHighlightedTiles(int[][] tiles)
+	{
+		this.highlightedTiles = tiles;
 	}
 }

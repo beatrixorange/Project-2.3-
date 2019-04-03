@@ -5,22 +5,6 @@ import Framework.Tile;
 
 public class ReversiLogic
 {
-	private boolean initialised;
-
-	public void setInitialised()
-	{
-		this.initialised = true;
-	}
-
-	public boolean allowMove(Board board, int x, int y, Tile me)
-	{
-		if (!this.initialised) {
-			return true;
-		}
-
-		return this.isValidMove(board, x, y, me);
-	}
-
 	public boolean isValidMove(Board board, int x, int y, Tile me)
 	{
 		if (!board.isEmpty(x, y)) {
