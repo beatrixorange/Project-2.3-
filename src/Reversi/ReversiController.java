@@ -70,4 +70,10 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		int[] scores = this.logic.calculateScores(this.board);
 		this.parentController.setScores(scores[0], scores[1]);
 	}
+
+	@Override
+	public boolean checkMove(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

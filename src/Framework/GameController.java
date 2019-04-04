@@ -23,7 +23,6 @@ public class GameController extends AbstractController
 
 			AbstractGameController controller = new TicTacToeController();
 			this.gView = new GameView(controller.getView(), p1, p2);
-
 		}
 		
 		this.view = gView;

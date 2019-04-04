@@ -33,7 +33,7 @@ public class LoginView extends AbstractView {
 		start.getChildren().addAll(label, this.nickName, this.button);
 		
 		
-		this.scene = new Scene(start,1000,1000);
+		this.scene = new Scene(start,1200,1200);
 	}
 		
 	public void setOnButtonPressHandler(LoginController handler)

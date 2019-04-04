@@ -2,7 +2,7 @@ package Framework;
 
 import Interface.AbstractController;
 
-public class AbstractGameController extends AbstractController
+public abstract class AbstractGameController extends AbstractController
 {
 	protected Board board;
 
@@ -22,6 +22,7 @@ public class AbstractGameController extends AbstractController
 			this.parentController.switchedTurn(this.turn);
 		}
 	}
+	abstract public boolean checkMove(int x, int y);
 
 	protected Tile turnsTile()
 	{

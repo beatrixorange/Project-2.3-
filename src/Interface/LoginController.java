@@ -6,10 +6,8 @@ import Connection.Connection;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-
 public class LoginController extends AbstractController
 {
-	
 	private Connection connection;
 
 	public LoginController(Connection connection)
@@ -35,5 +33,7 @@ public class LoginController extends AbstractController
 	{
 		System.out.println("Hoi " + nickName);
 		this.connection.login(nickName);
+
+		Router.get().toLobby();
 	}
 }
