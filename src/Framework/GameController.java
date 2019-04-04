@@ -12,21 +12,17 @@ public class GameController extends AbstractController
 
 	private GameView gView;
 	
-	public GameController(Connection connection, AbstractPlayer p1, AbstractPlayer p2)
+	public GameController(AbstractPlayer p1, AbstractPlayer p2, String gameType)
 	{
-		boolean reversi = true;
-
-		if (reversi) {
+		if (gameType.equalsIgnoreCase("reversi")) {
 			AbstractGameController controller = new ReversiController(this);
 			this.gView = new GameView(controller.getView(), p1, p2, true);
 		} else {
-
 			AbstractGameController controller = new TicTacToeController();
 			this.gView = new GameView(controller.getView(), p1, p2);
 		}
 		
 		this.view = gView;
-		this.connection = connection;
 	}
 
 	public void switchedTurn(boolean newTurn)

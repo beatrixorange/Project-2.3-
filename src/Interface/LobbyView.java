@@ -46,7 +46,8 @@ public class LobbyView extends AbstractView {
 		Label label = new Label("What game do you want to play?");
 		
 		this.cb = new ChoiceBox<String>(FXCollections.observableArrayList(
-			    "Tic-Tac-Toe", "Reversie", "Coming soon"));
+			    "Tic-tac-toe", "Reversi", "Coming soon"));
+		// TODO: Naming is important as the server is picky.
 		
 		this.group = new ToggleGroup();
 		this.playerButton = new RadioButton("Play as Player");
