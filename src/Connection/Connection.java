@@ -88,6 +88,7 @@ public class Connection extends Registrator {
 								triggerEvent(new YourMoveEvent());
 							}
 							if(line.contains("SVR GAME MOVE")) {
+								//uitvogelen hoe lang de string zonder speler is en dan uitzoeken waar we moeten substringen
 								//triggerEvent(new TurnEvent());
 							}
 							if(line.contains("SVR GAME MATCH")) {
