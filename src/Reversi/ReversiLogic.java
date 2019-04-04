@@ -116,4 +116,23 @@ public class ReversiLogic
 
 		return list.toArray(new int[list.size()][]);
 	}
+
+	public int[] calculateScores(Board board)
+	{
+		int p1 = 0;
+		int p2 = 0;
+
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				Tile t = board.getTile(x, y);
+				if (t == Tile.ONE) {
+					p1++;
+				} else if (t == Tile.TWO) {
+					p2++;
+				}
+			}
+		}
+
+		return new int[]{p1, p2};
+	}
 }

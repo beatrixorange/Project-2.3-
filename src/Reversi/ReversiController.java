@@ -66,5 +66,8 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.rView.setHighlightedTiles(possibleMoves);
 
 		this.rView.reDraw(this.board);
+
+		int[] scores = this.logic.calculateScores(this.board);
+		this.parentController.setScores(scores[0], scores[1]);
 	}
 }
