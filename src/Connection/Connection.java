@@ -90,6 +90,7 @@ public class Connection extends Registrator {
 							if(line.contains("SVR GAME MOVE")) {
 								//uitvogelen hoe lang de string zonder speler is en dan uitzoeken waar we moeten substringen
 								//triggerEvent(new TurnEvent());
+
 							}
 							if(line.contains("SVR GAME MATCH")) {
 								triggerEvent(new MatchStartEvent());
@@ -214,6 +215,7 @@ public class Connection extends Registrator {
         sendCommand("get playerlist");
     }
     public String[] getPlayerList() {
+    	playerList[0] = "aapje";
     	return playerList;
     }
 	
