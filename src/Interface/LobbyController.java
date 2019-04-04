@@ -1,6 +1,7 @@
 package Interface;
 import Connection.Connection;
 
+
 public class LobbyController extends AbstractController
 {	
 		private Connection connection;
@@ -10,6 +11,7 @@ public class LobbyController extends AbstractController
 			LobbyView view = new LobbyView();
 			view.setOnQuickPlayButtonPressHandler(this);
 			view.setOnInviteButtonPressHandler(this);
+			view.setOnRefreshButtonPressHandler(this);
 			
 			
 			this.view = view;
@@ -25,6 +27,16 @@ public class LobbyController extends AbstractController
 				e.printStackTrace();
 			}*/
 		}
+		
+		public String[] onRefreshButtonPress()
+		{
+			 connection.updatePlayerList();
+			 System.out.println("hot");
+			 return connection.getPlayerList();
+			
+			// TODO: Stuur invite via Connection
+		}
+		
 		
 		public void onQuickPlayButtonPress(String game, boolean isRegularPlayer)
 		{
@@ -45,6 +57,8 @@ public class LobbyController extends AbstractController
 			System.out.println("Hoi " + invitePlayer + ", ik wil jou graag eem " + isRegularPlayer + " " + game);
 			// TODO: Stuur invite via Connection
 		}
+		
+		
 		
 		public String getTitle() {
 			return "Lobby";
