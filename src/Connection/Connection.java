@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-public class Connection {
+public class Connection extends Registrator {
 	
 	private Socket socket;
 	private BufferedReader reader;
@@ -21,10 +21,8 @@ public class Connection {
 	private String[] playerList;
 	private String[] gameList;
 	private String loggedinU;
-	private boolean called;
 	
-	public Connection() {
-		called = false;
+	public Connection()  {
 		loggedIn = false;
 		subscribed = false;
 		challengers = new ArrayList();
@@ -58,6 +56,40 @@ public class Connection {
 							if(line.contains("SVR GAMELIST")) {
 								String[] b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
 								gameList = b;
+							}
+							if(line.contains("SVR GAME CHALLENGE {CHALLENGER}")) {
+								triggerEvent(new ChallengedEvent());
+							}
+							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
+								triggerEvent(new ChallengeCancelledEvent());
+							}
+							if(line.contains("SVR GAME YOURTURN")) {
+								triggerEvent(new YourMoveEvent());
+							}
+							if(line.contains("SVR GAME MOVE")) {
+								triggerEvent(new TurnEvent());
+							}
+							if(line.contains("SVR GAME MATCH")) {
+								triggerEvent(new MatchEvent());
+							}
+							if(line.contains("SVR GAME COMMENT")){
+								if(line.contains("forfeited")) {
+									triggerEvent(new ForfeitEvent());
+								}
+								if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
+									if(line.contains("WIN")){
+										triggerEvent(new MatchWonEvent());
+									}
+									if(line.contains("LOSS")){
+										triggerEvent(new MatchLostEvent());
+									}
+									if(line.contains("TIE")){
+										triggerEvent(new MatchTiedEvent());
+									}
+								}
+								if(line.contains("disconnected")) {
+									triggerEvent(new OpponentDisconnectedEvent());
+								}
 							}
 							
 							
