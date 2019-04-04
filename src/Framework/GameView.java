@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 
 public class GameView extends AbstractView
 {
@@ -61,10 +62,11 @@ public class GameView extends AbstractView
 		hbox2.getChildren().addAll(this.scoreLabel1, st00fs3, this.scoreLabel2);
 		hbox2.setAlignment(Pos.TOP_LEFT);
 
+		Node node = gameView.getScene().getRoot();
 		if (hasScores) {
-			vbox.getChildren().addAll(hbox1, hbox2, gameView.getScene().getRoot());
+			vbox.getChildren().addAll(hbox1, hbox2, node);
 		} else {
-			vbox.getChildren().addAll(hbox1, gameView.getScene().getRoot());
+			vbox.getChildren().addAll(hbox1, node);
 		}
 		
 		this.scene = new Scene(vbox,800,800);
