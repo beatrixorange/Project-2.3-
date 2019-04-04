@@ -1,4 +1,5 @@
 package Interface;
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -8,6 +9,7 @@ import Connection.Events.EventHandler;
 import Connection.Events.LoginSuccesEvent;
 
 import javafx.application.Platform;
+
 
 public class LoginController extends AbstractController
 {
