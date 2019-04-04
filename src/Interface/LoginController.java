@@ -1,10 +1,15 @@
 package Interface;
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 
 import Connection.Connection;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import Connection.Events.Event;
+import Connection.Events.EventHandler;
+import Connection.Events.LoginSuccesEvent;
+
+import javafx.application.Platform;
+
 
 public class LoginController extends AbstractController
 {
@@ -17,6 +22,19 @@ public class LoginController extends AbstractController
 		
 		this.view = view;
 		this.connection = connection;
+
+		System.out.println("yoo dit is wel goed ja");
+		this.connection.register(event -> {
+			if (!(event instanceof LoginSuccesEvent)) {
+				return;
+			}
+
+			System.out.println("log in");
+
+			Platform.runLater(() -> {
+				Router.get().toLobby();
+			});
+		});
 		
 		try {
 			this.connection.connect();
@@ -33,7 +51,5 @@ public class LoginController extends AbstractController
 	{
 		System.out.println("Hoi " + nickName);
 		this.connection.login(nickName);
-
-		Router.get().toLobby();
 	}
 }
