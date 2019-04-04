@@ -47,7 +47,7 @@ public class Connection extends Registrator {
 	}
 	
 	public void connect() throws UnknownHostException, IOException {
-		socket = new Socket("localhost", 7789);
+		socket = new Socket("145.33.225.170", 7789);
 		input = new InputStreamReader(socket.getInputStream());
 		output = new OutputStreamWriter(socket.getOutputStream());
 		reader = new BufferedReader(input);
@@ -64,7 +64,7 @@ public class Connection extends Registrator {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
-						login("kees");
+						//login("kees");
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
 							if(loggedIn == true && loginEventTriggered == false) {
 								triggerEvent(new LoginSuccesEvent());
@@ -177,7 +177,7 @@ public class Connection extends Registrator {
     }
     
     public void subscribe(String gameType) {
-    	if(subscribed = false) {
+    	if (subscribed == false) {
     		sendCommand("subscribe " + gameType);
     		subscribed = true;
     	}
