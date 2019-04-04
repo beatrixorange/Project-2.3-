@@ -215,6 +215,8 @@ public class Connection extends Registrator {
         sendCommand("get playerlist");
     }
     public synchronized ArrayList getPlayerList() {
+    	String a = "henkie";
+    	playerList.add(a);
     	return playerList;
     }
 	
