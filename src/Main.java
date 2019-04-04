@@ -18,8 +18,8 @@ public class Main extends Application{
 		this.stage = primaryStage;
 		primaryStage.centerOnScreen();
 		
-		AbstractPlayer p1 = new Player("Pietje");
-		AbstractPlayer p2 = new Player("Frank");
+		AbstractPlayer p1 = new Player("Zwart");
+		AbstractPlayer p2 = new Player("Wit");
 		AbstractController c = new GameController(connection, p1, p2);
 		c.show(primaryStage);
 	}

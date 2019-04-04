@@ -6,7 +6,9 @@ public class AbstractGameController extends AbstractController
 {
 	protected Board board;
 
-	protected boolean turn;
+	protected boolean turn = false;
+
+	protected int turnSwitches = 0;
 
 	protected GameController parentController;
 
@@ -14,8 +16,19 @@ public class AbstractGameController extends AbstractController
 	{
 		this.turn = !this.turn;
 
+		this.turnSwitches++;
+
 		if (this.parentController != null) {
 			this.parentController.switchedTurn(this.turn);
 		}
+	}
+
+	protected Tile turnsTile()
+	{
+		if (!this.turn) {
+			return Tile.ONE;
+		}
+
+		return Tile.TWO;
 	}
 }
