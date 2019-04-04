@@ -34,6 +34,7 @@ public class Connection extends Registrator {
 	private String[] playerList;
 	private String[] gameList;
 	private String loggedUsername;
+	private char quote;
 	
 	public Connection()  {
 		loggedIn = false;
@@ -42,6 +43,7 @@ public class Connection extends Registrator {
 		gameList = null;
 		playerList = null;
 		loginEventTriggered = false;
+		quote = '"';
 	}
 	
 	public void connect() throws UnknownHostException, IOException {
@@ -86,7 +88,7 @@ public class Connection extends Registrator {
 								triggerEvent(new YourMoveEvent());
 							}
 							if(line.contains("SVR GAME MOVE")) {
-								triggerEvent(new TurnEvent());
+								//triggerEvent(new TurnEvent());
 							}
 							if(line.contains("SVR GAME MATCH")) {
 								triggerEvent(new MatchStartEvent());
