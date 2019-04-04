@@ -1,4 +1,4 @@
-package Connection;
+package Connection.Events;
 
 public class TurnEvent implements Event {
 	public String player;

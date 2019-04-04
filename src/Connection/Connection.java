@@ -8,6 +8,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import Connection.Events.ChallengeCancelledEvent;
+import Connection.Events.ChallengedEvent;
+import Connection.Events.ForfeitEvent;
+import Connection.Events.MatchEvent;
+import Connection.Events.MatchLostEvent;
+import Connection.Events.MatchTiedEvent;
+import Connection.Events.MatchWonEvent;
+import Connection.Events.OpponentDisconnectedEvent;
+import Connection.Events.TurnEvent;
+import Connection.Events.YourMoveEvent;
+
 public class Connection extends Registrator {
 	
 	private Socket socket;
