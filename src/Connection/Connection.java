@@ -60,6 +60,7 @@ public class Connection extends Registrator {
 						line = reader.readLine();
 						System.out.println(line);
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
+							
 							if(line.contains("SVR PLAYERLIST")) {
 								String[] a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
 								playerList = a;	
@@ -187,16 +188,18 @@ public class Connection extends Registrator {
     	sendCommand("challenge accept " + challengeNumber);
     }
     
+    public void updateGameList() {
+    	sendCommand("get gamelist");  			
+    }
     public String[] getGameList() {
-    	sendCommand("get gamelist");
     	return gameList;
-    			
     }
     
-    public String[] getPlayerList() {
+    public void updatePlayerList() {
         sendCommand("get playerlist");
+    }
+    public String[] getPlayerList() {
     	return playerList;
-
     }
 	
 	
