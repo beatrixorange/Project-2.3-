@@ -1,5 +1,5 @@
 package Connection.Events;
 
-public class MatchOverEvent implements Event {
+public abstract class MatchOverEvent implements Event {
 
 }

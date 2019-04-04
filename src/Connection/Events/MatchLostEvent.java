@@ -1,5 +1,5 @@
 package Connection.Events;
 
-public class MatchLostEvent implements Event {
+public class MatchLostEvent extends MatchOverEvent implements Event {
 
 }

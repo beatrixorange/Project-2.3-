@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import Connection.Events.ChallengeCancelledEvent;
 import Connection.Events.ChallengedEvent;
 import Connection.Events.ForfeitEvent;
-import Connection.Events.MatchEvent;
+import Connection.Events.LoginSuccesEvent;
 import Connection.Events.MatchLostEvent;
+import Connection.Events.MatchStartEvent;
 import Connection.Events.MatchTiedEvent;
 import Connection.Events.MatchWonEvent;
 import Connection.Events.OpponentDisconnectedEvent;
@@ -28,10 +29,11 @@ public class Connection extends Registrator {
 	private OutputStreamWriter output;
 	private boolean loggedIn;
 	private boolean subscribed;
+	private boolean loginEventTriggered;
 	private ArrayList challengers;
 	private String[] playerList;
 	private String[] gameList;
-	private String loggedinU;
+	private String loggedUsername;
 	
 	public Connection()  {
 		loggedIn = false;
@@ -39,6 +41,7 @@ public class Connection extends Registrator {
 		challengers = new ArrayList();
 		gameList = null;
 		playerList = null;
+		loginEventTriggered = false;
 	}
 	
 	public void connect() throws UnknownHostException, IOException {
@@ -59,8 +62,12 @@ public class Connection extends Registrator {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
+						login("kees");
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
-							
+							if(loggedIn == true && loginEventTriggered == false) {
+								triggerEvent(new LoginSuccesEvent());
+								loginEventTriggered = true;
+							}
 							if(line.contains("SVR PLAYERLIST")) {
 								String[] a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
 								playerList = a;	
@@ -69,7 +76,7 @@ public class Connection extends Registrator {
 								String[] b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
 								gameList = b;
 							}
-							if(line.contains("SVR GAME CHALLENGE {CHALLENGER}")) {
+							if(line.contains("SVR GAME CHALLENGE {CHALLENGER")) {
 								triggerEvent(new ChallengedEvent());
 							}
 							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
@@ -82,7 +89,7 @@ public class Connection extends Registrator {
 								triggerEvent(new TurnEvent());
 							}
 							if(line.contains("SVR GAME MATCH")) {
-								triggerEvent(new MatchEvent());
+								triggerEvent(new MatchStartEvent());
 							}
 							if(line.contains("SVR GAME COMMENT")){
 								if(line.contains("forfeited")) {
@@ -143,9 +150,13 @@ public class Connection extends Registrator {
     public void login(String username) {
     	if(loggedIn == false) {
     		sendCommand("login " + username);
-    		loggedinU = username;
     		loggedIn = true;
+    		loggedUsername = username;
     	}
+    }
+    
+    public String getUsername() {
+    	return loggedUsername;
     }
     
     public void logout() {
@@ -181,7 +192,8 @@ public class Connection extends Registrator {
     }
     
     public void sendChallenge(String player, String gameType) {
-    	sendCommand("challenge " + player  + " " + gameType);
+    	char quote = '"';
+    	sendCommand("challenge "  + quote + player + quote + " " + quote + gameType + quote);
     }
     
     public void acceptChallenge(int challengeNumber) {
