@@ -2,6 +2,7 @@ package Reversi;
 
 import Framework.Board;
 import Framework.Tile;
+import java.util.ArrayList;
 
 public class ReversiLogic
 {
@@ -11,19 +12,21 @@ public class ReversiLogic
 			return false;
 		}
 
+		return this.disksTurnedByMove(board, x, y, me).length > 0;
+	}
+
+	public int[][] disksTurnedByMove(Board board, int x, int y, Tile me)
+	{
+		ArrayList<int[]> list = new ArrayList<int[]>();
+
+		Tile other = (me == Tile.TWO) ? Tile.ONE : Tile.TWO;
+
 		int[][] directions = new int[][]{
 			{ 0,  1}, { 1,  1},
 			{ 1,  0}, { 1, -1},
 			{ 0, -1}, {-1, -1},
 			{-1,  0}, {-1,  1}
 		};
-
-		Tile other;
-		if (me == Tile.ONE) {
-			other = Tile.TWO;
-		} else {
-			other = Tile.ONE;
-		}
 
 		for (int i = 0; i < directions.length; i++) {
 			int xC = x + directions[i][0];
@@ -68,9 +71,49 @@ public class ReversiLogic
 				continue;
 			}
 
-			return true;
+			list.add(new int[]{xC, yC});
+
+			while (true) {
+				xC -= directions[i][0];
+				yC -= directions[i][1];
+
+                    		list.add(new int[]{xC, yC});
+				
+				if (xC == x && yC == y) {
+					break;
+				}
+			}
+
 		}
 
-		return false;
+		return list.toArray(new int[list.size()][]);
+	}
+
+	public int[][] determinePossibleMoves(Board board, boolean atStart, Tile turnsTile)
+	{
+		ArrayList<int[]> list = new ArrayList<int[]>();
+
+		if (atStart) {
+			for (int x = 3; x < 5; x++) {
+				for (int y = 3; y < 5; y++) {
+					list.add(new int[]{x, y});
+				}
+			}
+		} else {
+			for (int x = 0; x < 8; x++) {
+				for (int y = 0; y < 8; y++) {
+					Tile t = board.getTile(x, y);
+					if (t != Tile.EMPTY) {
+						continue;
+					}
+
+					if (this.isValidMove(board, x, y, turnsTile)) {
+						list.add(new int[]{x, y});
+					}
+				}
+			}
+		}
+
+		return list.toArray(new int[list.size()][]);
 	}
 }

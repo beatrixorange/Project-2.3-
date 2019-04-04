@@ -20,7 +20,8 @@ import javafx.scene.Node;
 
 public class ReversiView extends BoardView
 {
-	private int[][] highlightedTiles;
+	private int[][] highlightedTiles = new int[][]{};
+	private int[][] newChanges = new int[][]{};
 
 	private Pane pane;
 
@@ -43,29 +44,49 @@ public class ReversiView extends BoardView
 
 	protected Node makeGridNode(Tile tile, int x, int y)
 	{
+		StackPane pane = new StackPane();
+
 		Rectangle rect = new Rectangle();
 		rect.setWidth(50);
 		rect.setHeight(50);
 		rect.setFill(this.color(Tile.EMPTY));
 
+		pane.getChildren().add(rect);
+
 		if (tile == Tile.EMPTY) {
-			if (this.highlightedTiles != null) {
-				for (int i = 0; i < this.highlightedTiles.length; i++) {
-					if (this.highlightedTiles[i][0] == x && this.highlightedTiles[i][1] == y) {
-						rect.setFill(Color.YELLOW);
-					}
+			for (int i = 0; i < this.highlightedTiles.length; i++) {
+				if (this.highlightedTiles[i][0] == x && this.highlightedTiles[i][1] == y) {
+					Circle circ = new Circle();
+					circ.setRadius(10);
+					circ.setFill(Color.GRAY);
+					pane.getChildren().add(circ);
+
+					break;
 				}
 			}
-			return rect;
+
+			return pane;
 		}
 
-		StackPane pane = new StackPane();
-
+		
+		boolean highlight = false;
+		for (int i = 0; i < this.newChanges.length; i++) {
+			if (this.newChanges[i][0] == x && this.newChanges[i][1] == y) {
+				highlight = true;
+				break;
+			}
+		}
+		if (highlight) {
+			Circle bgCirc = new Circle();
+			bgCirc.setRadius(21);
+			bgCirc.setFill(Color.YELLOW);
+			pane.getChildren().add(bgCirc);
+		}
+		
 		Circle circ = new Circle();
 		circ.setRadius(20);
 		circ.setFill(this.color(tile));
-
-		pane.getChildren().addAll(rect, circ);
+		pane.getChildren().add(circ);
 
 		return pane;
 	}
@@ -78,12 +99,17 @@ public class ReversiView extends BoardView
 		case TWO:
 			return Color.WHITE;
 		default:
-			return Color.GRAY;
+			return Color.GAINSBORO;
 		}
 	}
 
 	public void setHighlightedTiles(int[][] tiles)
 	{
 		this.highlightedTiles = tiles;
+	}
+
+	public void setNewChanges(int[][] tiles)
+	{
+		this.newChanges = tiles;
 	}
 }

@@ -46,7 +46,6 @@ public class TicTacToeView extends BoardView {
 		text.setText("Y");
 	}
 
-
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub

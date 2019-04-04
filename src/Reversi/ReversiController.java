@@ -25,57 +25,46 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 		this.view = rView;
 
-		this.rView.setHighlightedTiles(this.determineHighlightedTiles());
-
+		int[][] possibleMoves = this.logic.determinePossibleMoves(
+			board, this.turnSwitches < 4, this.turnsTile());
+		this.rView.setHighlightedTiles(possibleMoves);
+				
 		this.rView.reDraw(this.board);
 	}
 
-	public void onBoardClick(int posX, int posY)
+	public void onBoardClick(int x, int y)
 	{
-		if (this.turnSwitches >= 4 &&
-			!this.logic.isValidMove(this.board, posX, posY, this.turnsTile()))
-		{
+		this.makeMove(turn, x, y);
+	}
+
+	public void makeMove(boolean turn, int x, int y)
+	{
+		if (!board.isEmpty(x, y)) {
 			return;
 		}
 
-		System.out.println("Wat ga jij clicken op " + posX + " en " + posY);
+		int[][] turned = this.logic.disksTurnedByMove(board, x, y, this.turnsTile());
+		if (this.turnSwitches >= 4 && turned.length == 0) {
+			return;
+		}
 
-		this.board.putTile(posX, posY, (this.turn) ? Tile.TWO : Tile.ONE);
+		for (int i = 0; i < turned.length; i++) {
+			this.board.putTile(turned[i][0], turned[i][1], this.turnsTile());
+		}
+		this.board.putTile(x, y, this.turnsTile());
+
+		int[][] newChanges = turned;
+		if (this.turnSwitches < 4) {
+			newChanges = new int[][]{{x, y}};
+		}
+		this.rView.setNewChanges(newChanges);
 
 		this.switchTurn();
 
-		this.rView.setHighlightedTiles(this.determineHighlightedTiles());
+		int[][] possibleMoves = this.logic.determinePossibleMoves(
+			board, this.turnSwitches < 4, this.turnsTile());
+		this.rView.setHighlightedTiles(possibleMoves);
 
 		this.rView.reDraw(this.board);
-	}
-
-	public int[][] determineHighlightedTiles()
-	{
-		ArrayList<int[]> list = new ArrayList<int[]>();
-
-		Tile turnsTile = this.turnsTile();
-
-		if (this.turnSwitches < 4) {
-			for (int x = 3; x < 5; x++) {
-				for (int y = 3; y < 5; y++) {
-					list.add(new int[]{x, y});
-				}
-			}
-		} else {
-			for (int x = 0; x < 8; x++) {
-				for (int y = 0; y < 8; y++) {
-					Tile t = this.board.getTile(x, y);
-					if (t != Tile.EMPTY) {
-						continue;
-					}
-
-					if (this.logic.isValidMove(this.board, x, y, turnsTile)) {
-						list.add(new int[]{x, y});
-					}
-				}
-			}
-		}
-
-		return list.toArray(new int[list.size()][]);
 	}
 }
