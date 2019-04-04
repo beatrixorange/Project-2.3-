@@ -10,6 +10,7 @@ import Interface.LoginController;
 import Interface.LobbyController;
 import Interface.AbstractView;
 import Interface.Router;
+import Interface.LobbyController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -29,10 +30,12 @@ public class Main extends Application
 		this.stage.setTitle("Login");
 		this.stage.centerOnScreen();
 		
-		/*AbstractPlayer p1 = new Player("Zwart");
+		/*AbstractPlayer 	p1 = new Player("Zwart");
 		AbstractPlayer p2 = new Player("Wit");*/
 		//AbstractController c = new GameController(connection, p1, p2);
-		AbstractController c = new LoginController(connection);
+		//AbstractController c = new LoginController(connection);
+		AbstractController c = new LobbyController(connection);
+
 		c.show(primaryStage);
 	}
 	

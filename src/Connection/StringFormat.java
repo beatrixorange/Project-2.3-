@@ -1,12 +1,13 @@
 package Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class StringFormat {
 	
-	public static String[] stringToArray(String string) {
+	public static ArrayList<String> stringToArray(String string) {
 		string = string.substring(1, string.length()-1).replace("\"", "");
-		
-		return string.split(", " );
+		ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(string.split(", " )));
+		return arrayList;
 	}
 
 }

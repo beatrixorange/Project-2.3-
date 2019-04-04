@@ -31,8 +31,8 @@ public class Connection extends Registrator {
 	private boolean subscribed;
 	private boolean loginEventTriggered;
 	private ArrayList challengers;
-	private String[] playerList;
-	private String[] gameList;
+	private ArrayList playerList;
+	private ArrayList gameList;
 	private String loggedUsername;
 	private char quote;
 	
@@ -71,11 +71,11 @@ public class Connection extends Registrator {
 								loginEventTriggered = true;
 							}
 							if(line.contains("SVR PLAYERLIST")) {
-								String[] a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
+								ArrayList a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
 								playerList = a;	
 							}
 							if(line.contains("SVR GAMELIST")) {
-								String[] b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
+								ArrayList b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
 								gameList = b;
 							}
 							if(line.contains("SVR GAME CHALLENGE {CHALLENGER")) {
@@ -207,15 +207,14 @@ public class Connection extends Registrator {
     public void updateGameList() {
     	sendCommand("get gamelist");  			
     }
-    public String[] getGameList() {
+    public ArrayList getGameList() {
     	return gameList;
     }
     
-    public void updatePlayerList() {
+    public synchronized void updatePlayerList() {
         sendCommand("get playerlist");
     }
-    public String[] getPlayerList() {
-    	playerList[0] = "aapje";
+    public synchronized ArrayList getPlayerList() {
     	return playerList;
     }
 	
