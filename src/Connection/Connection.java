@@ -8,7 +8,18 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-public class Connection {
+import Connection.Events.ChallengeCancelledEvent;
+import Connection.Events.ChallengedEvent;
+import Connection.Events.ForfeitEvent;
+import Connection.Events.MatchEvent;
+import Connection.Events.MatchLostEvent;
+import Connection.Events.MatchTiedEvent;
+import Connection.Events.MatchWonEvent;
+import Connection.Events.OpponentDisconnectedEvent;
+import Connection.Events.TurnEvent;
+import Connection.Events.YourMoveEvent;
+
+public class Connection extends Registrator {
 	
 	private Socket socket;
 	private BufferedReader reader;
@@ -21,10 +32,8 @@ public class Connection {
 	private String[] playerList;
 	private String[] gameList;
 	private String loggedinU;
-	private boolean called;
 	
-	public Connection() {
-		called = false;
+	public Connection()  {
 		loggedIn = false;
 		subscribed = false;
 		challengers = new ArrayList();
@@ -51,6 +60,7 @@ public class Connection {
 						line = reader.readLine();
 						System.out.println(line);
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
+							
 							if(line.contains("SVR PLAYERLIST")) {
 								String[] a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
 								playerList = a;	
@@ -58,6 +68,40 @@ public class Connection {
 							if(line.contains("SVR GAMELIST")) {
 								String[] b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
 								gameList = b;
+							}
+							if(line.contains("SVR GAME CHALLENGE {CHALLENGER}")) {
+								triggerEvent(new ChallengedEvent());
+							}
+							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
+								triggerEvent(new ChallengeCancelledEvent());
+							}
+							if(line.contains("SVR GAME YOURTURN")) {
+								triggerEvent(new YourMoveEvent());
+							}
+							if(line.contains("SVR GAME MOVE")) {
+								triggerEvent(new TurnEvent());
+							}
+							if(line.contains("SVR GAME MATCH")) {
+								triggerEvent(new MatchEvent());
+							}
+							if(line.contains("SVR GAME COMMENT")){
+								if(line.contains("forfeited")) {
+									triggerEvent(new ForfeitEvent());
+								}
+								if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
+									if(line.contains("WIN")){
+										triggerEvent(new MatchWonEvent());
+									}
+									if(line.contains("LOSS")){
+										triggerEvent(new MatchLostEvent());
+									}
+									if(line.contains("TIE")){
+										triggerEvent(new MatchTiedEvent());
+									}
+								}
+								if(line.contains("disconnected")) {
+									triggerEvent(new OpponentDisconnectedEvent());
+								}
 							}
 							
 							
@@ -144,16 +188,18 @@ public class Connection {
     	sendCommand("challenge accept " + challengeNumber);
     }
     
+    public void updateGameList() {
+    	sendCommand("get gamelist");  			
+    }
     public String[] getGameList() {
-    	sendCommand("get gamelist");
     	return gameList;
-    			
     }
     
-    public String[] getPlayerList() {
+    public void updatePlayerList() {
         sendCommand("get playerlist");
+    }
+    public String[] getPlayerList() {
     	return playerList;
-
     }
 	
 	

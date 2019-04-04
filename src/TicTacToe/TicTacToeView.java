@@ -46,14 +46,13 @@ public class TicTacToeView extends BoardView {
 		text.setText("Y");
 	}
 
-
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
 		return "Tic-Tac-Toe";
 	}
 	@Override
-	protected Node makeGridNode(Tile disk) {
+	protected Node makeGridNode(Tile disk, int x, int y) {
 		StackPane pane = new StackPane();
 		Rectangle rect = new Rectangle(270,260);
 		rect.setStrokeWidth(3);

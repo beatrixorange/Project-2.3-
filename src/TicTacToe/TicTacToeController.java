@@ -20,9 +20,7 @@ public class TicTacToeController extends AbstractGameController implements Click
 	@Override
 	public void onBoardClick(int x, int y) {
 		if(checkMove(x,y)) {
-		this.board.putDisk(x, y, (this.turn) ? Tile.TWO : Tile.ONE);
-		
-		
+		this.board.putTile(x, y, (this.turn) ? Tile.TWO : Tile.ONE);
 		this.tView.reDraw(this.board);
 	
 		System.out.println("hoi");
@@ -35,7 +33,7 @@ public class TicTacToeController extends AbstractGameController implements Click
 
 	@Override
 	public boolean checkMove(int x, int y) {
-		if (this.board.getDisk(x, y) != Tile.EMPTY) {
+		if (this.board.getTile(x, y) != Tile.EMPTY) {
 			return false;
 		}
 		return true;
