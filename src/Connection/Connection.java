@@ -91,17 +91,11 @@ public class Connection extends Registrator {
 								triggerEvent(new YourMoveEvent());
 							}
 							if(line.contains("SVR GAME MOVE")) {
-								//1 SVR GAME MOVE {PLAYER: "willem"2  MOVE: "0"3  DETAILS: ""}
-								String[] a = line.split(",");
-								String b = a[0];
-								String player = b.substring("SVR GAME MOVE {PLAYER: ".length());
-								player = player.replace("\"", "");
-								String c = a[1];
-								String move = c.substring(" MOVE: ".length());
-								move = move.replace("\"", "");
-								System.out.println(move);
+								String player = StringFormat.stringFormat(line.substring("SVR GAME MOVE {PLAYER: ".length()));
+								String b = "SVR GAME MOVE {PLAYER: " + player + ", MOVE: ";
+								String move = StringFormat.stringFormat(line.substring(b.length()));
+								move = move.replace(" ","");
 								triggerEvent(new TurnEvent(player, Integer.parseInt(move)));
-
 							}
 							if(line.contains("SVR GAME MATCH")) {
 								triggerEvent(new MatchStartEvent());
@@ -120,9 +114,6 @@ public class Connection extends Registrator {
 									if(line.contains("TIE")){
 										triggerEvent(new MatchTiedEvent());
 									}
-								}
-								if(line.contains("disconnected")) {
-									triggerEvent(new OpponentDisconnectedEvent());
 								}
 							}
 							

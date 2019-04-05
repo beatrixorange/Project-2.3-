@@ -9,5 +9,13 @@ public class TurnEvent implements Event {
 		this.move = move;
 	}
 	
+	public String getPlayer() {
+		return player;
+		
+	}
+	public int getMove() {
+		return move;
+	}
+	
 	
 }
