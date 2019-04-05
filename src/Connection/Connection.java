@@ -47,8 +47,8 @@ public class Connection extends Registrator {
 		quote = '"';
 	}
 	
-	public void connect() throws UnknownHostException, IOException {
-		socket = new Socket("localhost", 7789);
+	public void connect(String ipAdress) throws UnknownHostException, IOException {
+		socket = new Socket(ipAdress, 7789);
 		input = new InputStreamReader(socket.getInputStream());
 		output = new OutputStreamWriter(socket.getOutputStream());
 		reader = new BufferedReader(input);
@@ -65,8 +65,7 @@ public class Connection extends Registrator {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
-						login("kees");
-						subscribe("Tic-tac-toe");
+
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
 							if(loggedIn == true && loginEventTriggered == false) {
 								triggerEvent(new LoginSuccesEvent());
@@ -82,7 +81,6 @@ public class Connection extends Registrator {
 								gameList = b;
 							}
 							if(line.contains("SVR GAME CHALLENGE {CHALLENGER")) {
-								//SVR GAME CHALLENGE {CHALLENGER: "willem", CHALLENGENUMBER: "0", GAMETYPE: "Tic-tac-toe"}
 								String challenger = StringFormat.stringFormat(line.substring("SVR GAME CHALLENGE {CHALLENGER: ".length()));
 								System.out.println(challenger);
 								String t = "SVR GAME CHALLENGE {CHALLENGER: " + challenger + ", CHALLENGENUMBER: ";
@@ -95,7 +93,8 @@ public class Connection extends Registrator {
 								triggerEvent(new ChallengedEvent(challenger, gameType, Integer.parseInt(challengeNum)));
 							}
 							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
-								triggerEvent(new ChallengeCancelledEvent());
+								String challengeNumC = StringFormat.stringFormat(line.substring("SVR GAME CHALLENGE CANCELLED {CHALLENGENUMBER: ".length()));
+								triggerEvent(new ChallengeCancelledEvent(Integer.parseInt(challengeNumC)));
 							}
 							if(line.contains("SVR GAME YOURTURN")) {
 								triggerEvent(new YourMoveEvent());
@@ -233,7 +232,9 @@ public class Connection extends Registrator {
 	
 	public static void main(String args[]) throws UnknownHostException, IOException {
 		Connection x = new Connection();
-		x.connect();
+		x.connect("localhost");
+		x.login("kees");
+		x.subscribe("Tic-tac-toe");
 	}
 	
 	
