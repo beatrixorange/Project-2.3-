@@ -46,11 +46,17 @@ public class LobbyController extends AbstractController
 			}*/
 		}
 		
-		public ArrayList onRefreshButtonPress()
+		public ArrayList<String> onRefreshButtonPress()
 		{
 			 connection.updatePlayerList();
 			 System.out.println("hot");
 			 return connection.getPlayerList();
+			 
+			 /*connection.register(event -> {
+				 if (event instanceof YoIkHebEenNieuwePlayerListYo) {
+					 view.updatePlayers(connection.getPlayerList());
+				 }
+			 });*/
 			
 			// TODO: Stuur invite via Connection
 		}

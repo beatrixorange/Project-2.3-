@@ -108,7 +108,7 @@ public class LobbyView extends AbstractView {
 	
 	public void updatePlayers(ArrayList<String> temp) {
 		ObservableList<String> items = FXCollections.observableArrayList();
-		for(int x = 0; x> temp.size()-1;x++) {
+		for(int x = 0; x < temp.size();x++) {
 			items.add(temp.get(x));
 		}
 		list.setItems(items);
