@@ -48,7 +48,7 @@ public class Connection extends Registrator {
 	}
 	
 	public void connect() throws UnknownHostException, IOException {
-		socket = new Socket("145.33.225.170", 7789);
+		socket = new Socket("localhost", 7789);
 		input = new InputStreamReader(socket.getInputStream());
 		output = new OutputStreamWriter(socket.getOutputStream());
 		reader = new BufferedReader(input);
@@ -65,8 +65,8 @@ public class Connection extends Registrator {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
-						//login("kees");
-						//subscribe("Tic-tac-toe");
+						login("kees");
+						subscribe("Tic-tac-toe");
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
 							if(loggedIn == true && loginEventTriggered == false) {
 								triggerEvent(new LoginSuccesEvent());
@@ -91,9 +91,16 @@ public class Connection extends Registrator {
 								triggerEvent(new YourMoveEvent());
 							}
 							if(line.contains("SVR GAME MOVE")) {
+								//1 SVR GAME MOVE {PLAYER: "willem"2  MOVE: "0"3  DETAILS: ""}
 								String[] a = line.split(",");
-								System.out.println(a[0] + " " + " " +  a[1] + " " + a[2]);
-								//triggerEvent(new TurnEvent());
+								String b = a[0];
+								String player = b.substring("SVR GAME MOVE {PLAYER: ".length());
+								player = player.replace("\"", "");
+								String c = a[1];
+								String move = c.substring(" MOVE: ".length());
+								move = move.replace("\"", "");
+								System.out.println(move);
+								triggerEvent(new TurnEvent(player, Integer.parseInt(move)));
 
 							}
 							if(line.contains("SVR GAME MATCH")) {
