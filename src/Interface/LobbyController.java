@@ -2,7 +2,7 @@ package Interface;
 import java.util.ArrayList;
 
 import Connection.Connection;
-
+import Connection.UpdatedPlayerListEvent;
 import Connection.Events.MatchStartEvent;
 
 import javafx.application.Platform;
@@ -10,10 +10,11 @@ import javafx.application.Platform;
 public class LobbyController extends AbstractController
 {	
 		private Connection connection;
+		private LobbyView view;
 
 		public LobbyController(Connection connection)
 		{	
-			LobbyView view = new LobbyView();
+			this.view = new LobbyView();
 			view.setOnQuickPlayButtonPressHandler(this);
 			view.setOnInviteButtonPressHandler(this);
 			view.setOnRefreshButtonPressHandler(this);
@@ -46,17 +47,17 @@ public class LobbyController extends AbstractController
 			}*/
 		}
 		
-		public ArrayList<String> onRefreshButtonPress()
+		public void onRefreshButtonPress()
 		{
 			 connection.updatePlayerList();
 			 System.out.println("hot");
-			 return connection.getPlayerList();
+
 			 
-			 /*connection.register(event -> {
-				 if (event instanceof YoIkHebEenNieuwePlayerListYo) {
+			 connection.register(event -> {
+				 if (event instanceof UpdatedPlayerListEvent) {
 					 view.updatePlayers(connection.getPlayerList());
 				 }
-			 });*/
+			 });
 			
 			// TODO: Stuur invite via Connection
 		}
