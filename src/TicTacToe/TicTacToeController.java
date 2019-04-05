@@ -1,13 +1,22 @@
 package TicTacToe;
+
 import Framework.AbstractGameController;
 import Framework.Board;
 import Framework.ClickHandler;
 import Framework.Tile;
+import Framework.GameController;
+import Connection.Connection;
+import Framework.AbstractPlayer;
 import javafx.scene.layout.VBox;
 
 public class TicTacToeController extends AbstractGameController implements ClickHandler{
 	TicTacToeView  tView = null;
-	public TicTacToeController() {
+
+	public TicTacToeController(Connection connection, AbstractPlayer p1,
+			AbstractPlayer p2, GameController parent)
+	{
+		super(connection, p1, p2, parent);
+
 		this.board = new Board(3,3);
 		
 		
@@ -26,7 +35,7 @@ public class TicTacToeController extends AbstractGameController implements Click
 			System.out.println("Winner");
 		};
 		
-		this.switchTurn();
+		this.switchTurn(!this.turn);
 		}
 		else
 			return;
@@ -76,5 +85,9 @@ public class TicTacToeController extends AbstractGameController implements Click
 			}
 		}
 		return victory;
+	}
+
+	protected void makeServerMove(boolean turn, int x, int y)
+	{
 	}
 }

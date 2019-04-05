@@ -71,4 +71,18 @@ public class Board
 
 		return true;
 	}
+
+	public int xyToMove(int x, int y)
+	{
+		return y*this.getSizeY() + x ;
+	}
+
+	public int[] moveToXY(int move)
+	{
+		// TODO: Check this. This is error prone.
+		int x = move%this.getSizeX();
+		int y = (int)Math.ceil((double)move/this.getSizeX());
+
+		return new int[]{x, y};
+	}
 }

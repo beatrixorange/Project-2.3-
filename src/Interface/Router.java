@@ -5,7 +5,7 @@ import Connection.Connection;
 
 import Framework.GameController;
 import Framework.AbstractPlayer;
-import Framework.Player;
+import Framework.HumanPlayer;
 import Framework.RemotePlayer;
 
 public class Router
@@ -19,6 +19,9 @@ public class Router
 	{
 		this.stage = stage;
 		this.connection = connection;
+
+		System.out.println("new Router");
+		System.out.println(this.connection);
 
 		instance = this;
 	}
@@ -36,10 +39,13 @@ public class Router
 
 	public void startRemoteGame(String gameType)
 	{
-		AbstractPlayer p1 = new Player("Ik");
+		System.out.println("startRemoteGame");
+		System.out.println(this.connection);
+
+		AbstractPlayer p1 = new HumanPlayer("Ik");
 		AbstractPlayer p2 = new RemotePlayer(this.connection, "remote");
 
-		AbstractController c = new GameController(p1, p2, gameType);
+		AbstractController c = new GameController(this.connection, p1, p2, gameType);
 		c.show(this.stage);
 	}
 }

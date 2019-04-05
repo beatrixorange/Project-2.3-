@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import Connection.Connection;
 import Connection.Events.UpdatedPlayerListEvent;
 import Connection.Events.MatchStartEvent;
+import Connection.Events.UpdatedPlayerListEvent;
 
 import javafx.application.Platform;
 
@@ -33,10 +34,8 @@ public class LobbyController extends AbstractController
 				Platform.runLater(() -> {
 					Router.get().startRemoteGame(gameType);
 				});
-
 			});
 
-			
 			/*try {
 				this.connection.connect();
 			} catch (UnknownHostException e) {
