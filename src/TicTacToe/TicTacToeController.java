@@ -65,21 +65,18 @@ public class TicTacToeController extends AbstractGameController implements Click
 				}
 				if(this.board.getTile(0,a) == player && this.board.getTile(1,a) == player && this.board.getTile(2,a) == player)
 				{
-					System.out.println("yey");
 					victory = true;
 					return victory;
 				}
 			}
 			if(this.board.getTile(0,0) == player && this.board.getTile(1,1) == player && this.board.getTile(2,2) == player)
 			{
-				System.out.println("yey");
 				victory = true;
 				return victory;
 				
 			}
 			if(this.board.getTile(0,2) == player && this.board.getTile(1,1) == player && this.board.getTile(2,0) == player)
 			{
-				System.out.println("yey");
 				victory = true;
 				return victory;
 			}
