@@ -98,9 +98,7 @@ public class LobbyView extends AbstractView {
 	{
 		this.refreshButton.setOnAction((ActionEvent e) -> {
 			//public void handle(ActionEvent e) {
-				ArrayList<String> temp = new ArrayList<String>();
-				temp = handler.onRefreshButtonPress();
-				updatePlayers(temp);
+				handler.onRefreshButtonPress();
 				
 			//}
 		});
