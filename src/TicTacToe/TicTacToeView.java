@@ -1,5 +1,6 @@
 package TicTacToe;
 import java.util.ArrayList;
+import java.util.List;
 
 import Framework.Board;
 import Framework.BoardView;
@@ -45,6 +46,8 @@ public class TicTacToeView extends BoardView {
 	public void drawY() {
 		text.setText("Y");
 	}
+	
+	
 
 	@Override
 	public String getTitle() {

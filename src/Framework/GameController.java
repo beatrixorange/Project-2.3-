@@ -6,19 +6,19 @@ import Reversi.ReversiController;
 
 public class GameController extends AbstractController
 {
-	private Connection connection;
-
 	private boolean turn;
 
 	private GameView gView;
-	
-	public GameController(AbstractPlayer p1, AbstractPlayer p2, String gameType)
+
+	public GameController(Connection connection, AbstractPlayer p1, AbstractPlayer p2, String gameType)
 	{
+		this.connection = connection;
+
 		if (gameType.equalsIgnoreCase("reversi")) {
-			AbstractGameController controller = new ReversiController(this);
+			AbstractGameController controller = new ReversiController(this.connection, p1, p2, this);
 			this.gView = new GameView(controller.getView(), p1, p2, true);
 		} else {
-			AbstractGameController controller = new TicTacToeController();
+			AbstractGameController controller = new TicTacToeController(this.connection, p1, p2, this);
 			this.gView = new GameView(controller.getView(), p1, p2);
 		}
 		

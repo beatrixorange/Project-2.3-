@@ -2,24 +2,26 @@ package Interface;
 import java.util.ArrayList;
 
 import Connection.Connection;
-import Connection.UpdatedPlayerListEvent;
+import Connection.Events.UpdatedPlayerListEvent;
 import Connection.Events.MatchStartEvent;
+import Connection.Events.UpdatedPlayerListEvent;
 
 import javafx.application.Platform;
 
 public class LobbyController extends AbstractController
 {	
 		private Connection connection;
-		private LobbyView view;
+		private LobbyView lView;
 
 		public LobbyController(Connection connection)
 		{	
-			this.view = new LobbyView();
-			view.setOnQuickPlayButtonPressHandler(this);
-			view.setOnInviteButtonPressHandler(this);
-			view.setOnRefreshButtonPressHandler(this);
+			this.lView = new LobbyView();
+			this.view = lView;
 			
-			this.view = view;
+			lView.setOnQuickPlayButtonPressHandler(this);
+			lView.setOnInviteButtonPressHandler(this);
+			lView.setOnRefreshButtonPressHandler(this);
+			
 			this.connection = connection;
 
 			this.connection.register(event -> {
@@ -32,10 +34,8 @@ public class LobbyController extends AbstractController
 				Platform.runLater(() -> {
 					Router.get().startRemoteGame(gameType);
 				});
-
 			});
 
-			
 			/*try {
 				this.connection.connect();
 			} catch (UnknownHostException e) {
@@ -55,7 +55,7 @@ public class LobbyController extends AbstractController
 			 
 			 connection.register(event -> {
 				 if (event instanceof UpdatedPlayerListEvent) {
-					 view.updatePlayers(connection.getPlayerList());
+					 lView.updatePlayers(connection.getPlayerList());
 				 }
 			 });
 			

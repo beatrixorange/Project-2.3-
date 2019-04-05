@@ -36,15 +36,7 @@ public class LoginController extends AbstractController
 			});
 		});
 
-		try {
-			this.connection.connect();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public void onButtonPress(String nickName)
