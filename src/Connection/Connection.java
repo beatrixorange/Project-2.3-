@@ -18,6 +18,7 @@ import Connection.Events.MatchTiedEvent;
 import Connection.Events.MatchWonEvent;
 import Connection.Events.OpponentDisconnectedEvent;
 import Connection.Events.TurnEvent;
+import Connection.Events.UpdatedPlayerListEvent;
 import Connection.Events.YourMoveEvent;
 
 public class Connection extends Registrator {
@@ -73,6 +74,7 @@ public class Connection extends Registrator {
 							if(line.contains("SVR PLAYERLIST")) {
 								ArrayList a = StringFormat.stringToArray(line.substring("SVR PLAYERLIST ".length()));
 								playerList = a;	
+								triggerEvent(new UpdatedPlayerListEvent());
 							}
 							if(line.contains("SVR GAMELIST")) {
 								ArrayList b = StringFormat.stringToArray(line.substring("SVR GAMELIST ".length()));
@@ -88,7 +90,8 @@ public class Connection extends Registrator {
 								triggerEvent(new YourMoveEvent());
 							}
 							if(line.contains("SVR GAME MOVE")) {
-								//uitvogelen hoe lang de string zonder speler is en dan uitzoeken waar we moeten substringen
+								String[] a = line.split(",");
+								System.out.println(a[0] + " " + " " +  a[1] + " " + a[2]);
 								//triggerEvent(new TurnEvent());
 
 							}
