@@ -66,6 +66,7 @@ public class Connection extends Registrator {
 						line = reader.readLine();
 						System.out.println(line);
 						//login("kees");
+						//subscribe("Tic-tac-toe");
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
 							if(loggedIn == true && loginEventTriggered == false) {
 								triggerEvent(new LoginSuccesEvent());
