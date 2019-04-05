@@ -42,7 +42,7 @@ public class Connection extends Registrator {
 		subscribed = false;
 		challengers = new ArrayList();
 		gameList = null;
-		playerList = null;
+		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
 		quote = '"';
 	}
@@ -226,8 +226,6 @@ public class Connection extends Registrator {
         sendCommand("get playerlist");
     }
     public synchronized ArrayList getPlayerList() {
-    	String a = "henkie";
-    	playerList.add(a);
     	return playerList;
     }
 	
