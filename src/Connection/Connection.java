@@ -82,7 +82,17 @@ public class Connection extends Registrator {
 								gameList = b;
 							}
 							if(line.contains("SVR GAME CHALLENGE {CHALLENGER")) {
-								triggerEvent(new ChallengedEvent());
+								//SVR GAME CHALLENGE {CHALLENGER: "willem", CHALLENGENUMBER: "0", GAMETYPE: "Tic-tac-toe"}
+								String challenger = StringFormat.stringFormat(line.substring("SVR GAME CHALLENGE {CHALLENGER: ".length()));
+								System.out.println(challenger);
+								String t = "SVR GAME CHALLENGE {CHALLENGER: " + challenger + ", CHALLENGENUMBER: ";
+								String challengeNum = StringFormat.stringFormat(line.substring(t.length()));
+								challengeNum = challengeNum.replace(" ", "");
+								System.out.println(challengeNum);
+								String t2 = "SVR GAME CHALLENGE {CHALLENGER: " + challenger + ", CHALLENGENUMBER: " + challengeNum + ", GAMETYPE: ";
+								String gameType = StringFormat.stringFormat(line.substring(t2.length()+3));
+								System.out.println(gameType);
+								triggerEvent(new ChallengedEvent(challenger, gameType, Integer.parseInt(challengeNum)));
 							}
 							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
 								triggerEvent(new ChallengeCancelledEvent());
