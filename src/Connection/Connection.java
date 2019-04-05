@@ -113,27 +113,36 @@ public class Connection extends Registrator {
 								String t2 = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: " + gameType + ", OPPONENT: ";
 								String opponent = StringFormat.stringFormat(line.substring(t2.length()+2));
 								opponent = opponent.replace(" ","");
-								System.out.println(playerToMove);
-								System.out.println(gameType);
-								System.out.println(opponent);
 								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
-							if(line.contains("SVR GAME COMMENT")){
-								if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
-									if(line.contains("WIN")){
-										//SVR GAME WIN {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
-										triggerEvent(new MatchWonEvent());
-									}
-									if(line.contains("LOSS")){
-										//SVR GAME LOSS {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
-										triggerEvent(new MatchLostEvent());
-									}
-									if(line.contains("TIE")){
-										//SVR GAME DRAW {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
-										triggerEvent(new MatchTiedEvent());
-									}
+						
+							if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
+								if(line.contains("WIN")){
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME WIN {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME WIN {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
+									playerTwoScore = playerTwoScore.replace(" ", "");
+									//SVR GAME WIN {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
+									triggerEvent(new MatchWonEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
+								}
+								if(line.contains("LOSS")){
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME WIN {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME WIN {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
+									playerTwoScore = playerTwoScore.replace(" ", "");
+									//SVR GAME LOSS {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
+									triggerEvent(new MatchLostEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
+								}
+								if(line.contains("TIE")){
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME WIN {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME WIN {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
+									playerTwoScore = playerTwoScore.replace(" ", "");
+									//SVR GAME DRAW {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
+									triggerEvent(new MatchTiedEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
 								}
 							}
+							
 							
 							
 						}
