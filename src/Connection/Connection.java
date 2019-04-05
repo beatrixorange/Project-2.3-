@@ -41,7 +41,7 @@ public class Connection extends Registrator {
 		loggedIn = false;
 		subscribed = false;
 		challengers = new ArrayList();
-		gameList = null;
+		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
 		quote = '"';
@@ -65,7 +65,6 @@ public class Connection extends Registrator {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
-
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
 							if(loggedIn == true && loginEventTriggered == false) {
 								triggerEvent(new LoginSuccesEvent());
@@ -107,20 +106,30 @@ public class Connection extends Registrator {
 								triggerEvent(new TurnEvent(player, Integer.parseInt(move)));
 							}
 							if(line.contains("SVR GAME MATCH")) {
-								triggerEvent(new MatchStartEvent());
+								String playerToMove = StringFormat.stringFormat(line.substring("SVR GAME MATCH {PLAYERTOMOVE: ".length()));
+								String t = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: "; 
+								String gameType = StringFormat.stringFormat(line.substring(t.length()));
+								gameType = gameType.replace(" ","");
+								String t2 = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: " + gameType + ", OPPONENT: ";
+								String opponent = StringFormat.stringFormat(line.substring(t2.length()+2));
+								opponent = opponent.replace(" ","");
+								System.out.println(playerToMove);
+								System.out.println(gameType);
+								System.out.println(opponent);
+								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
 							if(line.contains("SVR GAME COMMENT")){
-								if(line.contains("forfeited")) {
-									triggerEvent(new ForfeitEvent());
-								}
 								if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
 									if(line.contains("WIN")){
+										//SVR GAME WIN {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
 										triggerEvent(new MatchWonEvent());
 									}
 									if(line.contains("LOSS")){
+										//SVR GAME LOSS {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
 										triggerEvent(new MatchLostEvent());
 									}
 									if(line.contains("TIE")){
+										//SVR GAME DRAW {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
 										triggerEvent(new MatchTiedEvent());
 									}
 								}
