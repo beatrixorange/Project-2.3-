@@ -3,6 +3,9 @@ import java.util.ArrayList;
 
 import Connection.Connection;
 
+import Connection.Events.MatchStartEvent;
+
+import javafx.application.Platform;
 
 public class LobbyController extends AbstractController
 {	
@@ -15,9 +18,22 @@ public class LobbyController extends AbstractController
 			view.setOnInviteButtonPressHandler(this);
 			view.setOnRefreshButtonPressHandler(this);
 			
-			
 			this.view = view;
 			this.connection = connection;
+
+			this.connection.register(event -> {
+				if (!(event instanceof MatchStartEvent)) {
+					return;
+				}
+
+				String gameType = "Reversi";
+
+				Platform.runLater(() -> {
+					Router.get().startRemoteGame(gameType);
+				});
+
+			});
+
 			
 			/*try {
 				this.connection.connect();
@@ -47,7 +63,8 @@ public class LobbyController extends AbstractController
 			}
 			
 			System.out.println("Hoi " + game + " " + isRegularPlayer);
-			// TODO: Stuur invite via Connection
+
+			this.connection.subscribe(game);
 		}
 		
 		public void onInviteButtonPress(String game, boolean isRegularPlayer, String invitePlayer)

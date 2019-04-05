@@ -37,6 +37,8 @@ public class Main extends Application
 		AbstractController c = new LobbyController(connection);
 
 		c.show(primaryStage);
+
+		this.connection.login("RichardStallman");
 	}
 	
 	public void switchScene(AbstractView view) {	

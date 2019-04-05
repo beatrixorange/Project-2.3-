@@ -46,7 +46,8 @@ public class LobbyView extends AbstractView {
 		Label label = new Label("What game do you want to play?");
 		
 		this.cb = new ChoiceBox<String>(FXCollections.observableArrayList(
-			    "Tic-Tac-Toe", "Reversie", "Coming soon"));
+			    "Tic-tac-toe", "Reversi", "Coming soon"));
+		// TODO: Naming is important as the server is picky.
 		
 		this.group = new ToggleGroup();
 		this.playerButton = new RadioButton("Play as Player");
@@ -88,7 +89,6 @@ public class LobbyView extends AbstractView {
 	{
 		this.inviteButton.setOnAction((ActionEvent e) -> {
 			//public void handle(ActionEvent e) {
-			
 				handler.onInviteButtonPress(this.cb.getValue(), this.group.getSelectedToggle() == this.playerButton, this.list.getSelectionModel().getSelectedItem());
 			//}
 		});
@@ -98,18 +98,18 @@ public class LobbyView extends AbstractView {
 	{
 		this.refreshButton.setOnAction((ActionEvent e) -> {
 			//public void handle(ActionEvent e) {
-				
-				updatePlayers(handler.onRefreshButtonPress());
-				
+				ArrayList<String> temp = new ArrayList<String>();
+				temp = handler.onRefreshButtonPress();
+				updatePlayers(temp);
 				
 			//}
 		});
 	}
 	
-	public void updatePlayers(ArrayList temp) {
-		ObservableList<String> items = FXCollections.observableArrayList ();
+	public void updatePlayers(ArrayList<String> temp) {
+		ObservableList<String> items = FXCollections.observableArrayList();
 		for(int x = 0; x> temp.size()-1;x++) {
-			items.add((String) temp.get(x));
+			items.add(temp.get(x));
 		}
 		list.setItems(items);
 	}
