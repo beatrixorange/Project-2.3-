@@ -113,6 +113,8 @@ public class Connection extends Registrator {
 								String t2 = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: " + gameType + ", OPPONENT: ";
 								String opponent = StringFormat.stringFormat(line.substring(t2.length()+2));
 								opponent = opponent.replace(" ","");
+								System.out.println(opponent);
+								System.out.println(playerToMove);
 								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
 						

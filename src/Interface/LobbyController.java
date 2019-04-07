@@ -29,22 +29,22 @@ public class LobbyController extends AbstractController
 					return;
 				}
 
-				String gameType = "Reversi";
+				MatchStartEvent e = (MatchStartEvent)event;
 
+				String gameType = e.getGameType();
+				String opponent = e.getOpponent();
+				boolean startTurn = e.getPlayerToMove().equals(e.getOpponent());
+
+				System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
-					Router.get().startRemoteGame(gameType);
+					Router.get().startRemoteGame(gameType, startTurn, opponent);
 				});
 			});
 
-			/*try {
-				this.connection.connect();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+			System.out.println(this.connection.getUsername());
+			if (this.connection.getUsername().startsWith("reversitest")) {
+				this.connection.subscribe("Reversi");
+			}
 		}
 		
 		public void onRefreshButtonPress()

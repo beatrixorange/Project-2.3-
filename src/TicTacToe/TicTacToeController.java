@@ -13,9 +13,9 @@ public class TicTacToeController extends AbstractGameController implements Click
 	TicTacToeView  tView = null;
 
 	public TicTacToeController(Connection connection, AbstractPlayer p1,
-			AbstractPlayer p2, GameController parent)
+			AbstractPlayer p2, GameController parent, boolean startTurn)
 	{
-		super(connection, p1, p2, parent);
+		super(connection, p1, p2, parent, startTurn);
 
 		this.board = new Board(3,3);
 		

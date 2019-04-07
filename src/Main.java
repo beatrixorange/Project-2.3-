@@ -31,17 +31,20 @@ public class Main extends Application
 		this.stage.setTitle("Login");
 		this.stage.centerOnScreen();
 		
-		AbstractController c = new LobbyController(connection);
+		AbstractController c = new LoginController(connection);
 
 		c.show(primaryStage);
 
 		try {
-			this.connection.connect(host);
+			if (host.startsWith("reversitest")) {
+				this.connection.connect("localhost");
+				this.connection.login(host);
+			} else {
+				this.connection.connect(host);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		this.connection.login("pietdevries");
 	}
 	
 	public void switchScene(AbstractView view) {	

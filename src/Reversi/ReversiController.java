@@ -7,34 +7,32 @@ import Framework.GameController;
 import Framework.Tile;
 import Framework.LocalPlayer;
 import Framework.AbstractPlayer;
+import Framework.HumanPlayer;
 import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import Connection.Connection;
 
 public class ReversiController extends AbstractGameController implements ClickHandler
 {
-	private ReversiView rView = null;
-
 	private ReversiLogic logic;
 
 	public ReversiController(Connection connection, AbstractPlayer p1,
-			AbstractPlayer p2, GameController parent)
+			AbstractPlayer p2, GameController parent, boolean startTurn)
 	{
-		super(connection, p1, p2, parent);
+		super(connection, p1, p2, parent, startTurn);
 
-		this.board = new Board(8, 8);
+		this.board = new ReversiBoard(8, 8, startTurn);
 
 		this.logic = new ReversiLogic();
 
-		rView = new ReversiView(this, this.board);
-
-		this.view = rView;
+		boolean myTurn = this.getPlayerAtMove() instanceof HumanPlayer;
+		this.view = new ReversiView(this, this.board, myTurn);
 
 		int[][] possibleMoves = this.logic.determinePossibleMoves(
-			board, this.turnSwitches < 4, Tile.byTurn(this.turn));
-		this.rView.setHighlightedTiles(possibleMoves);
+			board, Tile.byTurn(this.turn));
+		this.getView().setHighlightedTiles(possibleMoves);
 				
-		this.rView.reDraw(this.board);
+		this.getView().reDraw(this.board);
 	}
 
 	public void onBoardClick(int x, int y)
@@ -53,7 +51,8 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		}
 
 		int[][] turned = this.logic.disksTurnedByMove(board, x, y, Tile.byTurn(this.turn));
-		if (this.turnSwitches >= 4 && turned.length == 0) {
+		if (turned.length == 0) {
+			System.out.println("NIETS TURNED");
 			return;
 		}
 
@@ -62,44 +61,45 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		}
 		this.board.putTile(x, y, Tile.byTurn(this.turn));
 
-		this.connection.makeMove(this.board.xyToMove(x, y));
+		int move = this.board.xyToMove(x, y);
+	     	System.out.println(x + " " + y);
+      		System.out.println(move);
+		this.connection.makeMove(move);
 
-		int[][] newChanges = turned;
-		if (this.turnSwitches < 4) {
-			newChanges = new int[][]{{x, y}};
-		}
-		this.rView.setNewChanges(newChanges);
+		this.getView().setNewChanges(turned);
 
 		this.makeMove(turn, x, y);
 	}
 
 	protected void makeServerMove(boolean turn, int x, int y)
 	{
+		System.out.println("make server move: " + x + " " + y);
+
 		int[][] turned = this.logic.disksTurnedByMove(board, x, y, Tile.byTurn(this.turn));
+		System.out.println("turned: " + turned.length);
 		for (int i = 0; i < turned.length; i++) {
 			this.board.putTile(turned[i][0], turned[i][1], Tile.byTurn(this.turn));
 		}
 		this.board.putTile(x, y, Tile.byTurn(this.turn));
 
-		int[][] newChanges = turned;
-		if (this.turnSwitches < 4) {
-			newChanges = new int[][]{{x, y}};
-		}
-		this.rView.setNewChanges(newChanges);
+		this.getView().setNewChanges(turned);
 		
 		this.makeMove(turn, x, y);
 	}
 
 	private void makeMove(boolean turn, int x, int y)
 	{
-		int[][] possibleMoves = this.logic.determinePossibleMoves(
-			board, this.turnSwitches < 4, Tile.byTurn(this.turn));
-		this.rView.setHighlightedTiles(possibleMoves);
+		this.switchTurn(!this.turn);
 
-		this.rView.reDraw(this.board);
+		int[][] possibleMoves = this.logic.determinePossibleMoves(
+			board, Tile.byTurn(this.turn));
+		this.getView().setHighlightedTiles(possibleMoves);
+
+		this.getView().reDraw(this.board);
 
 		int[] scores = this.logic.calculateScores(this.board);
 		this.parentController.setScores(scores[0], scores[1]);
+
 
 		/*int[] move;
 		if (!this.turn) {
@@ -117,5 +117,10 @@ public class ReversiController extends AbstractGameController implements ClickHa
 	public boolean checkMove(int x, int y) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public ReversiView getView()
+	{
+		return (ReversiView)this.view;
 	}
 }
