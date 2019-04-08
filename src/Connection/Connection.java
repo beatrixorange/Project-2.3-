@@ -46,7 +46,7 @@ public class Connection extends Registrator {
 		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
-		quote = '"';
+		quote = '"';// Found this easier to work than the official way to insert quotes in Strings.
 	}
 	// create new socket for connection and create new input/output stream and reader/writers
 	public void connect(String ipAdress) throws UnknownHostException, IOException {
