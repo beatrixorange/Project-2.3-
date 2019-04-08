@@ -41,7 +41,7 @@ public class Connection extends Registrator {
 		loggedIn = false;
 		subscribed = false;
 		challengers = new ArrayList();
-		gameList = null;
+		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
 		quote = '"';
@@ -65,7 +65,6 @@ public class Connection extends Registrator {
 					try {
 						line = reader.readLine();
 						System.out.println(line);
-
 						if(line != null && line.startsWith("OK") || line.startsWith("ERR") || line.startsWith("SVR")) {
 							if(loggedIn == true && loginEventTriggered == false) {
 								triggerEvent(new LoginSuccesEvent());
@@ -107,24 +106,46 @@ public class Connection extends Registrator {
 								triggerEvent(new TurnEvent(player, Integer.parseInt(move)));
 							}
 							if(line.contains("SVR GAME MATCH")) {
-								triggerEvent(new MatchStartEvent());
+								String playerToMove = StringFormat.stringFormat(line.substring("SVR GAME MATCH {PLAYERTOMOVE: ".length()));
+								String t = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: "; 
+								String gameType = StringFormat.stringFormat(line.substring(t.length()));
+								gameType = gameType.replace(" ","");
+								String t2 = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: " + gameType + ", OPPONENT: ";
+								String opponent = StringFormat.stringFormat(line.substring(t2.length()+2));
+								opponent = opponent.replace(" ","");
+								System.out.println(opponent);
+								System.out.println(playerToMove);
+								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
-							if(line.contains("SVR GAME COMMENT")){
-								if(line.contains("forfeited")) {
-									triggerEvent(new ForfeitEvent());
+						
+							if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
+								subscribed = false;
+								if(line.contains("WIN")){
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME WIN {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME WIN {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
+									playerTwoScore = playerTwoScore.replace(" ", "");
+									//SVR GAME WIN {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
+									triggerEvent(new MatchWonEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
 								}
-								if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
-									if(line.contains("WIN")){
-										triggerEvent(new MatchWonEvent());
-									}
-									if(line.contains("LOSS")){
-										triggerEvent(new MatchLostEvent());
-									}
-									if(line.contains("TIE")){
-										triggerEvent(new MatchTiedEvent());
-									}
+								if(line.contains("LOSS")){
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME LOSS {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME LOSS {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
+									playerTwoScore = playerTwoScore.replace(" ", "");
+									//SVR GAME LOSS {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
+									triggerEvent(new MatchLostEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
+								}
+								if(line.contains("TIE")){
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME DRAW {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME DRAW {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
+									playerTwoScore = playerTwoScore.replace(" ", "");
+									//SVR GAME DRAW {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
+									triggerEvent(new MatchTiedEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
 								}
 							}
+							
 							
 							
 						}
@@ -232,9 +253,9 @@ public class Connection extends Registrator {
 	
 	public static void main(String args[]) throws UnknownHostException, IOException {
 		Connection x = new Connection();
-		x.connect("localhost");
-		x.login("kees");
-		x.subscribe("Tic-tac-toe");
+		//x.connect("localhost");
+		//x.login("kees");
+		//x.subscribe("Tic-tac-toe");
 	}
 	
 	

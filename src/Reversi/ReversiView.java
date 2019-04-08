@@ -25,9 +25,11 @@ public class ReversiView extends BoardView
 
 	private Pane pane;
 
-	public ReversiView(ClickHandler clickHandler, Board board)
+	public ReversiView(ClickHandler clickHandler, Board board, boolean myTurn)
 	{
 		this.clickHandler = clickHandler;
+
+		this.myTurn = myTurn;
 
 		// This is a hack.
 		// Will explain later.
@@ -57,9 +59,16 @@ public class ReversiView extends BoardView
 			for (int i = 0; i < this.highlightedTiles.length; i++) {
 				if (this.highlightedTiles[i][0] == x && this.highlightedTiles[i][1] == y) {
 					Circle circ = new Circle();
-					circ.setRadius(10);
+					circ.setRadius(12);
 					circ.setFill(Color.GRAY);
 					pane.getChildren().add(circ);
+
+					if (!this.myTurn) {
+						circ = new Circle();
+						circ.setRadius(10);
+						circ.setFill(Color.LIGHTGRAY);
+						pane.getChildren().add(circ);
+					}
 
 					break;
 				}
@@ -78,7 +87,7 @@ public class ReversiView extends BoardView
 		}
 		if (highlight) {
 			Circle bgCirc = new Circle();
-			bgCirc.setRadius(21);
+			bgCirc.setRadius(22);
 			bgCirc.setFill(Color.YELLOW);
 			pane.getChildren().add(bgCirc);
 		}

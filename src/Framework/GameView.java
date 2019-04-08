@@ -17,12 +17,12 @@ public class GameView extends AbstractView
 
 	private Label scoreLabel1, scoreLabel2;
 
-	public GameView(AbstractView gameView, AbstractPlayer p1, AbstractPlayer p2)
+	public GameView(AbstractGameView gameView, AbstractPlayer p1, AbstractPlayer p2)
 	{
 		this(gameView, p1, p2, false);
 	}
 
-	public GameView(AbstractView gameView, AbstractPlayer p1, AbstractPlayer p2, boolean hasScores)
+	public GameView(AbstractGameView gameView, AbstractPlayer p1, AbstractPlayer p2, boolean hasScores)
 	{
 		this.player1 = p1;
 		this.player2 = p2;
@@ -72,7 +72,7 @@ public class GameView extends AbstractView
 		this.scene = new Scene(vbox,800,800);
 	}
 
-	public void switchTurn(boolean newTurn)
+	public void updateTurn(boolean newTurn)
 	{
 		System.out.println("Switch turn in view: " + newTurn);
 		String name = (newTurn) ? this.player2.getName() : this.player1.getName();

@@ -37,15 +37,19 @@ public class Router
 		c.show(this.stage);
 	}
 
-	public void startRemoteGame(String gameType)
+	public void startRemoteGame(String gameType, boolean startTurn, String opponent)
 	{
 		System.out.println("startRemoteGame");
 		System.out.println(this.connection);
 
-		AbstractPlayer p1 = new HumanPlayer("Ik");
-		AbstractPlayer p2 = new RemotePlayer(this.connection, "remote");
+		AbstractPlayer p1 = new HumanPlayer(this.connection.getUsername());
+		AbstractPlayer p2 = new RemotePlayer(this.connection, opponent);
 
-		AbstractController c = new GameController(this.connection, p1, p2, gameType);
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@ \\/");
+		GameController c = new GameController(this.connection, p1, p2, gameType, startTurn);
+		System.out.println("View:");
+		System.out.println(c.getView());
+
 		c.show(this.stage);
 	}
 }

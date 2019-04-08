@@ -39,11 +39,15 @@ public class Main extends Application
 		c.show(primaryStage);
 
 		try {
-			this.connection.connect(host);
+			if (host.startsWith("reversitest")) {
+				this.connection.connect("localhost");
+				this.connection.login(host);
+			} else {
+				this.connection.connect(host);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	public void switchScene(AbstractView view) {	

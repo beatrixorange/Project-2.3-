@@ -89,27 +89,19 @@ public class ReversiLogic
 		return list.toArray(new int[list.size()][]);
 	}
 
-	public int[][] determinePossibleMoves(Board board, boolean atStart, Tile turnsTile)
+	public int[][] determinePossibleMoves(Board board, Tile turnsTile)
 	{
 		ArrayList<int[]> list = new ArrayList<int[]>();
 
-		if (atStart) {
-			for (int x = 3; x < 5; x++) {
-				for (int y = 3; y < 5; y++) {
-					list.add(new int[]{x, y});
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				Tile t = board.getTile(x, y);
+				if (t != Tile.EMPTY) {
+					continue;
 				}
-			}
-		} else {
-			for (int x = 0; x < 8; x++) {
-				for (int y = 0; y < 8; y++) {
-					Tile t = board.getTile(x, y);
-					if (t != Tile.EMPTY) {
-						continue;
-					}
 
-					if (this.isValidMove(board, x, y, turnsTile)) {
-						list.add(new int[]{x, y});
-					}
+				if (this.isValidMove(board, x, y, turnsTile)) {
+					list.add(new int[]{x, y});
 				}
 			}
 		}

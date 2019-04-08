@@ -12,8 +12,10 @@ public abstract class AbstractController
 	
 	public void show(Stage stage)
 	{
-		stage.setScene(this.view.getScene());
-		stage.setTitle(this.view.getTitle());
+		System.out.println("View:");
+		System.out.println(this.view);
+		stage.setScene(this.getView().getScene());
+		stage.setTitle(this.getView().getTitle());
 		stage.show();
 	}
 	
