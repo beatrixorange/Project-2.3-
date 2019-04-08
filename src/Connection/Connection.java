@@ -119,6 +119,7 @@ public class Connection extends Registrator {
 							}
 						
 							if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
+								subscribed = false;
 								if(line.contains("WIN")){
 									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME WIN {PLAYERONESCORE: ".length()));
 									String t = "SVR GAME WIN {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
@@ -136,8 +137,8 @@ public class Connection extends Registrator {
 									triggerEvent(new MatchLostEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
 								}
 								if(line.contains("TIE")){
-									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME WIN {PLAYERONESCORE: ".length()));
-									String t = "SVR GAME WIN {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME DRAW {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME DRAW {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
 									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
 									playerTwoScore = playerTwoScore.replace(" ", "");
 									//SVR GAME DRAW {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
