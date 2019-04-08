@@ -16,14 +16,14 @@ public abstract class AbstractGameController extends AbstractController
 
 	protected boolean turn = false;
 
-	protected int turnSwitches = 0;
-
 	protected GameController parentController;
 
 	protected Connection connection;
 
+	protected AbstractGameView view;
+
 	public AbstractGameController(Connection connection, AbstractPlayer p1,
-			AbstractPlayer p2, GameController parent)
+			AbstractPlayer p2, GameController parent, boolean startTurn)
 	{
 		System.out.println("AbstractGameController");
 		System.out.println(connection);
@@ -32,25 +32,39 @@ public abstract class AbstractGameController extends AbstractController
 		this.player2 = p2;
 		this.parentController = parent;
 
+		this.turn = startTurn;
+
 		this.connection.register(event -> {
-			System.out.println(event);
+			System.out.println("event in AbstractGameController: " + event);
 			Platform.runLater(() -> {
 				if (event instanceof TurnEvent) {
 					TurnEvent e = (TurnEvent) event;
 
 					int[] xy = this.board.moveToXY(e.move);
 					
-					if (e.player == this.player1.getName()) {
+					if (e.player.equals(this.player1.getName())) {
+						if (this.player1 instanceof LocalPlayer) {
+							System.out.println("TurnEvent: skip as is ourselves 1");
+							return;
+						}
+
 						this.makeServerMove(false, xy[0], xy[1]);
-					} else if (e.player == this.player1.getName()) {
+					} else if (e.player.equals(this.player2.getName())) {
 						this.makeServerMove(true, xy[0], xy[1]);
+
+						if (this.player2 instanceof LocalPlayer) {
+							System.out.println("TurnEvent: skip as is ourselves 2");
+							return;
+						}
 					} else {
-						System.out.println("WAATTT? " + e.player + " - " + e.move);
+						System.out.println("WAATTT? " + e.player + " - " + this.player1.getName() + " " + this.player2.getName());
 					}
 				} else if (event instanceof YourMoveEvent) {
 					if (this.player1 instanceof LocalPlayer) {
+						System.out.println("YourMove 1");
 						this.switchTurn(false);
 					} else if (this.player2 instanceof LocalPlayer) {
+						System.out.println("YourMove 2");
 						this.switchTurn(true);
 					} else {
 						System.out.println("this shouldn't happen m8");
@@ -74,14 +88,34 @@ public abstract class AbstractGameController extends AbstractController
 
 	protected void switchTurn(boolean newTurn)
 	{
+		switchTurn(newTurn, false);
+	}
+
+	protected void switchTurn(boolean newTurn, boolean first)
+	{
 		this.turn = newTurn;
 
-		this.turnSwitches++;
+		AbstractPlayer playerTurn = (newTurn) ? this.player2 : this.player1;
+		this.view.setMyTurn(playerTurn instanceof HumanPlayer);
 
-		if (this.parentController != null) {
-			this.parentController.switchedTurn(this.turn);
+		if (!first && this.parentController != null) {
+			this.parentController.updateTurn(this.turn);
 		}
 	}
 
 	abstract public boolean checkMove(int x, int y);
+
+	public AbstractGameView getView()
+	{
+		return this.view;
+	}
+
+	public AbstractPlayer getPlayerAtMove()
+	{
+		if (this.turn) {
+			return this.player2;
+		}
+
+		return this.player1;
+	}
 }

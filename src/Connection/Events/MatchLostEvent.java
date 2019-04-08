@@ -17,5 +17,3 @@ public class MatchLostEvent implements Event {
 		return playerTwoScore;
 	}
 }
-
-}
