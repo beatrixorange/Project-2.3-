@@ -113,6 +113,8 @@ public class Connection extends Registrator {
 								String t2 = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: " + gameType + ", OPPONENT: ";
 								String opponent = StringFormat.stringFormat(line.substring(t2.length()+2));
 								opponent = opponent.replace(" ","");
+								System.out.println(opponent);
+								System.out.println(playerToMove);
 								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
 						
@@ -126,8 +128,8 @@ public class Connection extends Registrator {
 									triggerEvent(new MatchWonEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
 								}
 								if(line.contains("LOSS")){
-									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME WIN {PLAYERONESCORE: ".length()));
-									String t = "SVR GAME WIN {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
+									String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME LOSS {PLAYERONESCORE: ".length()));
+									String t = "SVR GAME LOSS {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
 									String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
 									playerTwoScore = playerTwoScore.replace(" ", "");
 									//SVR GAME LOSS {PLAYERONESCORE: "0", PLAYERTWOSCORE: "0", COMMENT: "Turn timelimit reached"}
@@ -250,9 +252,9 @@ public class Connection extends Registrator {
 	
 	public static void main(String args[]) throws UnknownHostException, IOException {
 		Connection x = new Connection();
-		x.connect("localhost");
-		x.login("kees");
-		x.subscribe("Tic-tac-toe");
+		//x.connect("localhost");
+		//x.login("kees");
+		//x.subscribe("Tic-tac-toe");
 	}
 	
 	
