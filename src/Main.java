@@ -31,7 +31,7 @@ public class Main extends Application
 		
 		new Router(this.stage, this.connection);
 
-		this.stage.setTitle("Login");
+		stage.setTitle("Login");
 		this.stage.centerOnScreen();
 		
 		AbstractController c = new LoginController(connection);
@@ -48,6 +48,12 @@ public class Main extends Application
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void stop() throws Exception
+	{
+		System.out.println("STOP@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		connection.logout();
 	}
 	
 	public void switchScene(AbstractView view) {	

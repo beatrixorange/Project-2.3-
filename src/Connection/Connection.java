@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.SocketException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -155,7 +156,9 @@ public class Connection extends Registrator {
 			
 		
 						
-						
+					} catch (SocketException e) {
+						System.out.println(e.getMessage());
+						return;
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
