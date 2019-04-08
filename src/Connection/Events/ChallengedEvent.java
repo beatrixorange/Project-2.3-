@@ -1,9 +1,9 @@
 package Connection.Events;
 
 public class ChallengedEvent implements Event {
-	private String challenger;
+	private static String challenger;
 	private String gameType;
-	private int challengeNum;
+	private static int challengeNum;
 	
 	public ChallengedEvent(String challenger, String gameType, int challengeNum) {
 		this.challenger = challenger;
@@ -12,7 +12,7 @@ public class ChallengedEvent implements Event {
 				
 	}
 	
-	public String getChallenger() {
+	public static String getChallenger() {
 		return challenger;
 	}
 	
@@ -20,7 +20,7 @@ public class ChallengedEvent implements Event {
 		return gameType;
 	}
 	
-	public int getChallengeNum() {
+	public static int getChallengeNum() {
 		return challengeNum;
 	}
 

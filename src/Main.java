@@ -19,19 +19,22 @@ public class Main extends Application
 	private Stage stage = null;
 	private static Connection connection = null;
 
-	private static String host = "localhost";
+	private static String host = "145.33.225.170";
 
 	public void start(Stage primaryStage) throws Exception {
 
 		this.connection = new Connection();
 		this.stage = primaryStage;
-
+		this.stage.setWidth(1000);
+		this.stage.setHeight(800);
+		
+		
 		new Router(this.stage, this.connection);
 
 		this.stage.setTitle("Login");
 		this.stage.centerOnScreen();
 		
-		AbstractController c = new LobbyController(connection);
+		AbstractController c = new LoginController(connection);
 
 		c.show(primaryStage);
 
@@ -41,7 +44,6 @@ public class Main extends Application
 			e.printStackTrace();
 		}
 
-		this.connection.login("pietdevries");
 	}
 	
 	public void switchScene(AbstractView view) {	
