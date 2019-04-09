@@ -35,7 +35,7 @@ public class Connection extends Registrator {
 	private boolean loggedIn;
 	private boolean subscribed;
 	private boolean loginEventTriggered;
-	private HashMap<Integer, String> challengers;
+	private HashMap<String, String> challengers;
 	private ArrayList<String> playerList;
 	private ArrayList<String> gameList;
 	private String loggedUsername;
@@ -45,7 +45,7 @@ public class Connection extends Registrator {
 	public Connection()  {
 		loggedIn = false;
 		subscribed = false;
-		challengers = new HashMap<Integer, String>();
+		challengers = new HashMap<String, String>();
 		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
@@ -93,13 +93,13 @@ public class Connection extends Registrator {
 								challengeNum = challengeNum.replace(" ", "");
 								String t2 = "SVR GAME CHALLENGE {CHALLENGER: " + challenger + ", CHALLENGENUMBER: " + challengeNum + ", GAMETYPE: ";
 								String gameType = StringFormat.stringFormat(line.substring(t2.length()+3));
-								challengers.put(Integer.parseInt(challengeNum), challenger);
+								challengers.put(challengeNum, challenger);
 								triggerEvent(new ChallengedEvent(challenger, gameType, Integer.parseInt(challengeNum)));
 							}
 							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
 								// If a challenged gets cancelled send a notification to all registered classes with the challengenumber passed to it.
 								String challengeNumC = StringFormat.stringFormat(line.substring("SVR GAME CHALLENGE CANCELLED {CHALLENGENUMBER: ".length()));
-								challengers.remove(Integer.parseInt(challengeNumC));
+								challengers.remove(challengeNumC);
 								triggerEvent(new ChallengeCancelledEvent(Integer.parseInt(challengeNumC)));
 							}
 							if(line.contains("SVR GAME YOURTURN")) {
