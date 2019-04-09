@@ -13,6 +13,14 @@ public abstract class AbstractPlayer {
 		return this.name;
 	}
 
+	public String getNameDisplay()
+	{
+		if (this.name.startsWith("reversitest")) {
+			return this.name.replaceFirst("^reversitest", "");
+		}
+		return this.name;
+	}
+
 	public int[] makeMove()
 	{
 		return null;

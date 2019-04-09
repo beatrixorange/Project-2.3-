@@ -11,7 +11,7 @@ import Connection.Connection;
 
 import javafx.application.Platform;
 
-public abstract class AbstractGameController extends AbstractController
+public abstract class AbstractGameController extends AbstractController implements EventHandler
 {
 	protected Board board;
 
@@ -19,11 +19,15 @@ public abstract class AbstractGameController extends AbstractController
 
 	protected boolean turn = false;
 
+	protected int turnSwitches = 0;
+
 	protected GameController parentController;
 
 	protected Connection connection;
 
 	protected AbstractGameView view;
+
+	private EventHandler handler;
 
 	public AbstractGameController(Connection connection, AbstractPlayer p1,
 			AbstractPlayer p2, GameController parent, boolean startTurn)
@@ -37,67 +41,101 @@ public abstract class AbstractGameController extends AbstractController
 
 		this.turn = startTurn;
 
-		this.connection.register(event -> {
-			System.out.println("event in AbstractGameController: " + event);
-			Platform.runLater(() -> {
-				if (event instanceof TurnEvent) {
-					TurnEvent e = (TurnEvent) event;
+		if (this.isRemoteGame() != null) {
+			this.registerEventHandlers();
+		}
 
-					int[] xy = this.board.moveToXY(e.move);
-					
-					if (e.player.equals(this.player1.getName())) {
-						if (this.player1 instanceof LocalPlayer) {
-							System.out.println("TurnEvent: skip as is ourselves 1");
-							return;
-						}
+		BotPlayer bot = this.isBotGame();
+		if (bot != null && !startTurn) {
+			// (If it's our turn, and we're a bot:
+			//   it could be that we're not getting the YourMoveEvent
+			//   because raceyness, but it can be that we also will get
+			//   it. Wait a bit to check if a move has been made,
+			//   if not, then we likely missed the YourMoveEvent)
 
-						this.makeServerMove(false, xy[0], xy[1]);
-					} else if (e.player.equals(this.player2.getName())) {
-						this.makeServerMove(true, xy[0], xy[1]);
-
-						if (this.player2 instanceof LocalPlayer) {
-							System.out.println("TurnEvent: skip as is ourselves 2");
-							return;
-						}
-					} else {
-						System.out.println("WAATTT? " + e.player + " - " + this.player1.getName() + " " + this.player2.getName());
-					}
-				} else if (event instanceof YourMoveEvent) {
-					if (this.player1 instanceof LocalPlayer) {
-						System.out.println("YourMove 1");
-						this.switchTurn(false);
-					} else if (this.player2 instanceof LocalPlayer) {
-						System.out.println("YourMove 2");
-						this.switchTurn(true);
-					} else {
-						System.out.println("this shouldn't happen m8");
-					}
-				} else if (event instanceof MatchWonEvent) {
-					System.out.println("You won The game!");
-
-					Popup popup = new Popup("Win", "You won The Game!");
-					popup.onClose(eve -> {
-						this.quit();
-					});
-					popup.show();
-				} else if (event instanceof MatchTiedEvent) {
-					System.out.println("You tied The Game!");
-				} else if (event instanceof MatchLostEvent) {
-					MatchLostEvent e = (MatchLostEvent)event;
-
-					System.out.println("You lost The Game!");
-
-					Popup popup = new Popup("Lost", "You lost The Game!");
-					popup.onClose(eve -> {
-						this.quit();
-					});
-					popup.show();
-				} else if (event instanceof OpponentDisconnectedEvent) {
-					System.out.println("Your opponent is a noob.");
-				} else if (event instanceof ForfeitEvent) {
-					System.out.println("Your opponent is a noob. x2");
+			boolean botTurn = startTurn;
+			(new Thread(() -> {
+				try {
+					Thread.sleep(500L);
+				} catch (InterruptedException e) {
+					return;
 				}
-			});
+
+				Platform.runLater(() -> {
+					// If it's still our turn.
+					if (!this.turn && this.turnSwitches == 0) {
+						System.out.println("Manually make botmove");
+						this.makeBotMove(botTurn, bot);
+					}
+				});
+
+			})).start();
+		}
+	}
+
+	private void registerEventHandlers()
+	{
+		this.connection.register(this);
+	}
+
+	public void handleEvent(Event event)
+	{
+		Platform.runLater(() -> {
+			if (event instanceof TurnEvent) {
+				TurnEvent e = (TurnEvent) event;
+
+				int[] xy = this.board.moveToXY(e.move);
+				
+				if (e.player.equals(this.player1.getName())) {
+					// This is us.
+				} else if (e.player.equals(this.player2.getName())) {
+					this.makeServerMove(true, xy[0], xy[1]);
+				} else {
+					try {
+						throw new Exception("not p1 and not p2? wat? " + e.player);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			} else if (event instanceof YourMoveEvent) {
+				if (this.player1 instanceof LocalPlayer) {
+					System.out.println("YourMove 1");
+					if (!this.turn) {
+						System.out.println("ALREADY MUH MOVE");
+						return;
+					}
+					this.switchTurn(false);
+				} else if (this.player2 instanceof LocalPlayer) {
+					// This is remote.
+					System.out.println("YourMove");
+				} else {
+					System.out.println("this shouldn't happen m8");
+				}
+			} else if (event instanceof MatchWonEvent) {
+				System.out.println("You won The game!");
+
+				Popup popup = new Popup("Win", "You won The Game!");
+				popup.onClose(eve -> {
+					this.quit();
+				});
+				popup.show();
+			} else if (event instanceof MatchTiedEvent) {
+				System.out.println("You tied The Game!");
+			} else if (event instanceof MatchLostEvent) {
+				MatchLostEvent e = (MatchLostEvent)event;
+
+				System.out.println("You lost The Game!");
+
+				Popup popup = new Popup("Lost", "You lost The Game!");
+				popup.onClose(eve -> {
+					this.quit();
+				});
+				popup.show();
+			} else if (event instanceof OpponentDisconnectedEvent) {
+				System.out.println("Your opponent is a noob.");
+			} else if (event instanceof ForfeitEvent) {
+				System.out.println("Your opponent is a noob. x2");
+			}
 		});
 	}
 
@@ -105,22 +143,38 @@ public abstract class AbstractGameController extends AbstractController
 
 	protected void switchTurn(boolean newTurn)
 	{
-		switchTurn(newTurn, false);
-	}
-
-	protected void switchTurn(boolean newTurn, boolean first)
-	{
 		this.turn = newTurn;
+
+		this.turnSwitches++;
 
 		AbstractPlayer playerTurn = (newTurn) ? this.player2 : this.player1;
 		this.view.setMyTurn(playerTurn instanceof HumanPlayer);
 
-		if (!first && this.parentController != null) {
-			this.parentController.updateTurn(this.turn);
+		this.parentController.updateTurn(this.turn);
+
+		if (!turn) {
+			BotPlayer bot = this.isBotGame();
+			if (bot != null) {
+				int thisTurnSwitches = this.turnSwitches;
+				(new Thread(() -> {
+					try {
+						Thread.sleep(100L);
+					} catch (InterruptedException e) {}
+					Platform.runLater(() -> {
+						if (thisTurnSwitches != this.turnSwitches) {
+							return;
+						}
+
+						this.makeBotMove(newTurn, bot);
+					});
+				})).start();
+			}
 		}
 	}
 
-	abstract public boolean checkMove(int x, int y);
+	abstract protected boolean checkMove(int x, int y);
+
+	abstract protected void makeBotMove(boolean turn, BotPlayer bot);
 
 	public AbstractGameView getView()
 	{
@@ -138,8 +192,34 @@ public abstract class AbstractGameController extends AbstractController
 
 	public void quit()
 	{
-		// TODO: De-register
+		this.connection.deRegister();
 
 		Router.get().toLobby();
+	}
+
+	public BotPlayer isBotGame()
+	{
+		if (this.player1 instanceof BotPlayer) {
+			return (BotPlayer)this.player1;
+		}
+
+		if (this.player2 instanceof BotPlayer) {
+			return (BotPlayer)this.player2;
+		}
+
+		return null;
+	}
+
+	public RemotePlayer isRemoteGame()
+	{
+		if (this.player1 instanceof RemotePlayer) {
+			return (RemotePlayer)this.player1;
+		}
+
+		if (this.player2 instanceof RemotePlayer) {
+			return (RemotePlayer)this.player2;
+		}
+
+		return null;
 	}
 }

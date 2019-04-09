@@ -162,7 +162,6 @@ public class ReversiLogic
 
 		int[][] moves = determinePossibleMoves(bClone, t);
 
-		System.out.println("possible moves: " + moves.length);
 		for (int i = 0; i < moves.length; i++) {
 			int[] move = moves[i];
 
@@ -177,7 +176,7 @@ public class ReversiLogic
 
 			int beta = board.getSizeX()*board.getSizeY()+4*board.getSizeX()+4+1;
 
-			int points = this.neGaMax(bClone, t, Tile.other(t), 5, -1, beta);
+			int points = this.neGaMax(bClone, t, Tile.other(t), 9, -1, beta);
 
 			if (points > maxPoints) {
 				maxPoints = points;
@@ -186,30 +185,22 @@ public class ReversiLogic
 			}
 		}
 
-		System.out.println("bestMove: @@@@ " + mX + " " + mY);
-
 		return new int[]{mX, mY};
 	}
 
 	private int neGaMax(Board board, Tile me, Tile tile, int depth, int alpha, int beta)
 	{
 		if (depth == 0) {
-			System.out.println("depth == 0");
-
 			int score = this.evaluateBoard(board, me);
 			if (me == tile) {
-				System.out.println("me is tile: " + me + " " + tile);
 				return score;
 			}
-			System.out.println("me is not tile: " + me + " " + tile);
 
 			return score * -1;
 		}
 
 		int[][] possibleMoves = this.determinePossibleMoves(board, me);
 		if (possibleMoves.length == 0) {
-			System.out.println("possible moves == 0");
-
 			int score = this.evaluateBoard(board, me);
 			if (me == tile) {
 				return score;
@@ -225,7 +216,6 @@ public class ReversiLogic
 			Board bCopy = node.board;
 
 			int score = this.neGaMax(bCopy, me, Tile.other(tile), depth-1, beta*-1, alpha*-1);
-			System.out.println("score: " + score);
 			if (score > bestScore) {
 				bestScore = score;
 			}
@@ -238,8 +228,6 @@ public class ReversiLogic
 				break;
 			}
 		}
-
-		System.out.println("best score: " + bestScore);
 
 		return bestScore;
 	}
@@ -307,10 +295,10 @@ public class ReversiLogic
 				if (xSide && ySide) {
 					// In a corner! :D
 
-					score += 4; // or 5, not sure
+					score += 5; // or 5, not sure
 				} else if (xSide || ySide) {
 					// At a side! :D
-					score += 2;
+					score += 3;
 				} else {
 					score += 1;
 				}

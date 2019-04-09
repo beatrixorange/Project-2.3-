@@ -29,7 +29,6 @@ public class GameController extends AbstractController
 		System.out.println("this.view : ");
 		System.out.println(this.view);
 
-		//controller.switchTurn(startTurn, true);
 		this.updateTurn(startTurn);
 	}
 
