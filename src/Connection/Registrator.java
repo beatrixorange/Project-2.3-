@@ -10,7 +10,7 @@ public class Registrator {
 	
 	private final List <EventHandler> eventHandlers = ListModDebug.getProxy(new ArrayList());
 	
-	// classes can register to the observer here
+	// classes can register to the observer here.
 	public void register(EventHandler eventHandler) {
 		synchronized(eventHandlers) {
 			eventHandlers.add(eventHandler);
@@ -22,6 +22,14 @@ public class Registrator {
 		synchronized(eventHandlers) {
 			for(EventHandler eventHandler : eventHandlers) {
 				eventHandler.handleEvent(event);
+			}
+		}
+	}
+	// function that allows for deregistration.
+	public void deRegister(EventHandler eventHandler) {
+		for(EventHandler e : eventHandlers) {
+			if(e == eventHandler) {
+				eventHandlers.remove(e);
 			}
 		}
 	}

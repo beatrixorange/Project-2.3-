@@ -19,6 +19,8 @@ public abstract class AbstractGameController extends AbstractController
 
 	protected boolean turn = false;
 
+	protected int turnSwitches = 0;
+
 	protected GameController parentController;
 
 	protected Connection connection;
@@ -37,6 +39,40 @@ public abstract class AbstractGameController extends AbstractController
 
 		this.turn = startTurn;
 
+		if (this.isRemoteGame() != null) {
+			this.registerEventHandlers();
+		}
+
+		BotPlayer bot = this.isBotGame();
+		if (bot != null && !startTurn) {
+			// (If it's our turn, and we're a bot:
+			//   it could be that we're not getting the YourMoveEvent
+			//   because raceyness, but it can be that we also will get
+			//   it. Wait a bit to check if a move has been made,
+			//   if not, then we likely missed the YourMoveEvent)
+
+			boolean botTurn = startTurn;
+			(new Thread(() -> {
+				try {
+					Thread.sleep(500L);
+				} catch (InterruptedException e) {
+					return;
+				}
+
+				Platform.runLater(() -> {
+					// If it's still our turn.
+					if (!this.turn && this.turnSwitches == 0) {
+						System.out.println("Manually make botmove");
+						this.makeBotMove(botTurn, bot);
+					}
+				});
+
+			})).start();
+		}
+	}
+
+	private void registerEventHandlers()
+	{
 		this.connection.register(event -> {
 			System.out.println("event in AbstractGameController: " + event);
 			Platform.runLater(() -> {
@@ -46,29 +82,27 @@ public abstract class AbstractGameController extends AbstractController
 					int[] xy = this.board.moveToXY(e.move);
 					
 					if (e.player.equals(this.player1.getName())) {
-						if (this.player1 instanceof LocalPlayer) {
-							System.out.println("TurnEvent: skip as is ourselves 1");
-							return;
-						}
-
-						this.makeServerMove(false, xy[0], xy[1]);
+						// This is us.
 					} else if (e.player.equals(this.player2.getName())) {
 						this.makeServerMove(true, xy[0], xy[1]);
-
-						if (this.player2 instanceof LocalPlayer) {
-							System.out.println("TurnEvent: skip as is ourselves 2");
-							return;
-						}
 					} else {
-						System.out.println("WAATTT? " + e.player + " - " + this.player1.getName() + " " + this.player2.getName());
+						try {
+							throw new Exception("not p1 and not p2? wat? " + e.player);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
 					}
 				} else if (event instanceof YourMoveEvent) {
 					if (this.player1 instanceof LocalPlayer) {
 						System.out.println("YourMove 1");
+						if (!this.turn) {
+							System.out.println("ALREADY MUH MOVE");
+							return;
+						}
 						this.switchTurn(false);
 					} else if (this.player2 instanceof LocalPlayer) {
-						System.out.println("YourMove 2");
-						this.switchTurn(true);
+						// This is remote.
+						System.out.println("YourMove");
 					} else {
 						System.out.println("this shouldn't happen m8");
 					}
@@ -105,22 +139,26 @@ public abstract class AbstractGameController extends AbstractController
 
 	protected void switchTurn(boolean newTurn)
 	{
-		switchTurn(newTurn, false);
-	}
-
-	protected void switchTurn(boolean newTurn, boolean first)
-	{
 		this.turn = newTurn;
+
+		this.turnSwitches++;
 
 		AbstractPlayer playerTurn = (newTurn) ? this.player2 : this.player1;
 		this.view.setMyTurn(playerTurn instanceof HumanPlayer);
 
-		if (!first && this.parentController != null) {
-			this.parentController.updateTurn(this.turn);
+		this.parentController.updateTurn(this.turn);
+
+		if (!turn) {
+			BotPlayer bot = this.isBotGame();
+			if (bot != null) {
+				this.makeBotMove(newTurn, bot);
+			}
 		}
 	}
 
-	abstract public boolean checkMove(int x, int y);
+	abstract protected boolean checkMove(int x, int y);
+
+	abstract protected void makeBotMove(boolean turn, BotPlayer bot);
 
 	public AbstractGameView getView()
 	{
@@ -141,5 +179,31 @@ public abstract class AbstractGameController extends AbstractController
 		// TODO: De-register
 
 		Router.get().toLobby();
+	}
+
+	public BotPlayer isBotGame()
+	{
+		if (this.player1 instanceof BotPlayer) {
+			return (BotPlayer)this.player1;
+		}
+
+		if (this.player2 instanceof BotPlayer) {
+			return (BotPlayer)this.player2;
+		}
+
+		return null;
+	}
+
+	public RemotePlayer isRemoteGame()
+	{
+		if (this.player1 instanceof RemotePlayer) {
+			return (RemotePlayer)this.player1;
+		}
+
+		if (this.player2 instanceof RemotePlayer) {
+			return (RemotePlayer)this.player2;
+		}
+
+		return null;
 	}
 }
