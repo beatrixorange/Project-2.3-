@@ -87,6 +87,7 @@ public class Popup
 	{
 		this.button2.setOnAction(e -> {
 			handler.handle(e);
+			this.list.getSelectionModel().getSelectedItem();
 		});
 	}
 
