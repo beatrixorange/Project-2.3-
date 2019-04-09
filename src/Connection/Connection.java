@@ -35,7 +35,11 @@ public class Connection extends Registrator {
 	private boolean loggedIn;
 	private boolean subscribed;
 	private boolean loginEventTriggered;
+<<<<<<< HEAD
 	private static HashMap<Integer, String> challengers;
+=======
+	private HashMap<String, String> challengers;
+>>>>>>> 37812bd535965a33ec260569f0842e9804b13d1a
 	private ArrayList<String> playerList;
 	private ArrayList<String> gameList;
 	private String loggedUsername;
@@ -45,7 +49,7 @@ public class Connection extends Registrator {
 	public Connection()  {
 		loggedIn = false;
 		subscribed = false;
-		challengers = new HashMap<Integer, String>();
+		challengers = new HashMap<String, String>();
 		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
@@ -93,13 +97,13 @@ public class Connection extends Registrator {
 								challengeNum = challengeNum.replace(" ", "");
 								String t2 = "SVR GAME CHALLENGE {CHALLENGER: " + challenger + ", CHALLENGENUMBER: " + challengeNum + ", GAMETYPE: ";
 								String gameType = StringFormat.stringFormat(line.substring(t2.length()+3));
-								challengers.put(Integer.parseInt(challengeNum), challenger);
+								challengers.put(challengeNum, challenger);
 								triggerEvent(new ChallengedEvent(challenger, gameType, Integer.parseInt(challengeNum)));
 							}
 							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
 								// If a challenged gets cancelled send a notification to all registered classes with the challengenumber passed to it.
 								String challengeNumC = StringFormat.stringFormat(line.substring("SVR GAME CHALLENGE CANCELLED {CHALLENGENUMBER: ".length()));
-								challengers.remove(Integer.parseInt(challengeNumC));
+								challengers.remove(challengeNumC);
 								triggerEvent(new ChallengeCancelledEvent(Integer.parseInt(challengeNumC)));
 							}
 							if(line.contains("SVR GAME YOURTURN")) {
@@ -121,11 +125,11 @@ public class Connection extends Registrator {
 								String gameType = StringFormat.stringFormat(line.substring(t.length()));
 								gameType = gameType.replace(" ","");
 								String t2 = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: " + gameType + ", OPPONENT: ";
-								String opponent = StringFormat.stringFormat(line.substring(t2.length()+2));
-								opponent = opponent.replace(" ","");
+								String opponent = StringFormat.stringFormat(line.substring(t2.length()+3));
+								//opponent = opponent.replace(" ","");
 								System.out.println(opponent);
 								System.out.println(playerToMove);
-								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
+								//triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
 						
 							if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
@@ -281,9 +285,9 @@ public class Connection extends Registrator {
 	
 	public static void main(String args[]) throws UnknownHostException, IOException {
 		Connection x = new Connection();
-		//x.connect("localhost");
-		//x.login("kees");
-		//x.subscribe("Tic-tac-toe");
+		x.connect("localhost");
+		x.login("kees");
+		x.subscribe("Tic-tac-toe");
 	}
 	
 	
