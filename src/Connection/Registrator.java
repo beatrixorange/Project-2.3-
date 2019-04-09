@@ -1,6 +1,8 @@
 package Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+import java.util.Collections;
 
 import Connection.Events.Event;
 import Connection.Events.EventHandler;
@@ -8,7 +10,7 @@ import Connection.Events.EventHandler;
 //observer class
 public class Registrator {
 	
-	private final List <EventHandler> eventHandlers = ListModDebug.getProxy(new ArrayList());
+	private List<EventHandler> eventHandlers = new ArrayList<EventHandler>();
 	
 	// classes can register to the observer here.
 	public void register(EventHandler eventHandler) {
@@ -26,12 +28,9 @@ public class Registrator {
 		}
 	}
 	// function that allows for deregistration.
-	public void deRegister(EventHandler eventHandler) {
-		for(EventHandler e : eventHandlers) {
-			if(e == eventHandler) {
-				eventHandlers.remove(e);
-			}
+	public void deRegister() {
+		synchronized(eventHandlers) {
+			eventHandlers.clear();
 		}
 	}
-
 }
