@@ -35,11 +35,7 @@ public class Connection extends Registrator {
 	private boolean loggedIn;
 	private boolean subscribed;
 	private boolean loginEventTriggered;
-<<<<<<< HEAD
-	private static HashMap<Integer, String> challengers;
-=======
-	private HashMap<String, String> challengers;
->>>>>>> 37812bd535965a33ec260569f0842e9804b13d1a
+	private HashMap challengers;
 	private ArrayList<String> playerList;
 	private ArrayList<String> gameList;
 	private String loggedUsername;
@@ -49,7 +45,7 @@ public class Connection extends Registrator {
 	public Connection()  {
 		loggedIn = false;
 		subscribed = false;
-		challengers = new HashMap<String, String>();
+		challengers = new HashMap<Integer,String>();
 		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
@@ -254,11 +250,11 @@ public class Connection extends Registrator {
     }
     
     // function to accept a challenge
-    public void acceptChallenge(int challengeNumber) {
+    public void acceptChallenge(String challengeNumber) {
     	sendCommand("challenge accept " + challengeNumber);
     }
     
-    public static HashMap<Integer, String> getChallengerList() {
+    public HashMap<Integer, String> getChallengerList() {
     	return challengers;
     }
     

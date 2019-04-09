@@ -26,19 +26,21 @@ public class Popup
 	private ListView<String> list;
 	private Button button;
 	private Button button2;
+	private Connection connection;
 
 	public Popup(String title, String contents)
 	{
 		init(title, contents, null, null);
 	}
 	
-	public Popup(String title, String contents, String button1, String button2)
+	public Popup(String title, String contents, String button1, String button2, Connection connection)
 	{
 		init(title, contents, button1, button2);
 	}
 	
 	private void init(String title, String contents, String b1text, String b2text)
 	{
+		this.connection = connection;
 		this.stage=new Stage();
 
 		this.stage.initModality(Modality.APPLICATION_MODAL);
@@ -49,7 +51,7 @@ public class Popup
 		HBox hBox = new HBox();
 		if (b1text != null) {
 			this.list = new ListView<String>();
-			updatePlayers(Connection.getChallengerList());
+			updatePlayers(connection.getChallengerList());
 			hBox.getChildren().add(list);
 			
 		}
@@ -87,7 +89,14 @@ public class Popup
 	{
 		this.button2.setOnAction(e -> {
 			handler.handle(e);
-			this.list.getSelectionModel().getSelectedItem();
+			Iterator it = connection.getChallengerList().entrySet().iterator();
+			while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		        if(pair.getValue().equals(this.list.getSelectionModel().getSelectedItem())) {
+		        	String s = (String) pair.getKey();
+		        	connection.acceptChallenge((s));
+		        };
+			}
 		});
 	}
 
@@ -101,7 +110,6 @@ public class Popup
 			Iterator it = temp.entrySet().iterator();
 			while (it.hasNext()) {
 		        Map.Entry pair = (Map.Entry)it.next();
-		        System.out.println(pair.getKey() + " = " + pair.getValue());
 		        items.add((String) pair.getValue());
 		        it.remove();
 			
