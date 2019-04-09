@@ -7,6 +7,7 @@ import Framework.GameController;
 import Framework.AbstractPlayer;
 import Framework.HumanPlayer;
 import Framework.RemotePlayer;
+import Framework.BotPlayer;
 
 public class Router
 {
@@ -42,7 +43,7 @@ public class Router
 		System.out.println("startRemoteGame");
 		System.out.println(this.connection);
 
-		AbstractPlayer p1 = new HumanPlayer(this.connection.getUsername());
+		AbstractPlayer p1 = new BotPlayer(this.connection.getUsername());
 		AbstractPlayer p2 = new RemotePlayer(this.connection, opponent);
 
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@ \\/");

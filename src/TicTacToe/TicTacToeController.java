@@ -11,6 +11,7 @@ import Framework.LocalPlayer;
 import Connection.Connection;
 import Framework.AbstractPlayer;
 import javafx.scene.layout.VBox;
+import Framework.BotPlayer;
 
 public class TicTacToeController extends AbstractGameController implements ClickHandler{
 
@@ -127,5 +128,9 @@ public class TicTacToeController extends AbstractGameController implements Click
 	public TicTacToeView getView()
 	{
 		return (TicTacToeView)this.view;
+	}
+
+	protected void makeBotMove(boolean turn, BotPlayer bot)
+	{
 	}
 }

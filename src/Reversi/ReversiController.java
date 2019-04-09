@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import Connection.Connection;
 import javafx.application.Platform;
+import Interface.Popup;
 
 public class ReversiController extends AbstractGameController implements ClickHandler
 {
@@ -68,39 +69,47 @@ public class ReversiController extends AbstractGameController implements ClickHa
       		System.out.println(move);
 		this.connection.makeMove(move);
 
-		this.getView().setNewChanges(turned);
-
 		this.makeMove(turn, x, y);
+
+		this.switchTurn(!turn);
 	}
 
 	protected void makeServerMove(boolean turn, int x, int y)
 	{
-		System.out.println("make server move: " + x + " " + y);
-
-		int[][] turned = this.logic.disksTurnedByMove(board, x, y, Tile.byTurn(this.turn));
-		System.out.println("turned: " + turned.length);
-		for (int i = 0; i < turned.length; i++) {
-			this.board.putTile(turned[i][0], turned[i][1], Tile.byTurn(this.turn));
-		}
-		this.board.putTile(x, y, Tile.byTurn(this.turn));
-
-		this.getView().setNewChanges(turned);
-		
 		this.makeMove(turn, x, y);
 	}
 
-	protected void makeBotMove(boolean turn, int x, int y)
+	protected void makeBotMove(boolean turn, BotPlayer bot)
 	{
+		Board bClone = null;
+		try {
+			bClone = this.board.clone();
+		} catch (CloneNotSupportedException e) {}
 
-		int[][] turned = this.logic.makeMove(this.board, x, y, Tile.byTurn(this.turn));
-		this.getView().setNewChanges(turned);
 
-		this.makeMove(turn, x, y);
+		int[] move = bot.move(bClone, turn);
+		if (move[0] == -1 || move[1] == -1) {
+			try {
+				throw new Exception("Je kan ja geen zet meer doen ja");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return;
+		}
+
+		this.connection.makeMove(this.board.xyToMove(move[0], move[1]));
+
+		this.makeMove(turn, move[0], move[1]);
+
+		this.switchTurn(!turn);
 	}
 
 	private void makeMove(boolean turn, int x, int y)
 	{
-		this.switchTurn(!this.turn);
+		int[][] turned = this.logic.makeMove(this.board, x, y, Tile.byTurn(turn));
+
+		this.getView().setNewChanges(turned);
 
 		int[][] possibleMoves = this.logic.determinePossibleMoves(
 			board, Tile.byTurn(this.turn));
@@ -110,47 +119,6 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 		int[] scores = this.logic.calculateScores(this.board);
 		this.parentController.setScores(scores[0], scores[1]);
-
-		final BotPlayer bot;
-		if (!this.turn && this.player1 instanceof BotPlayer) {
-			bot = (BotPlayer)this.player1;
-		} else if (this.turn && this.player2 instanceof BotPlayer) {
-			bot = (BotPlayer)this.player2;
-		} else {
-			bot = null;
-		}
-
-		System.out.println("\n\n\nik switch die turn\n\n\n");
-
-		System.out.println(this.board);
-
-		if (bot != null) {
-			final boolean botTurn = this.turn;
-			(new Thread(() -> {
-				try {
-					// TODO: Don't do this when remote, waste of time.
-					Thread.sleep(500L);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				Platform.runLater(() -> {
-					int[] move = new int[2];
-
-					Board bClone = null;
-					try {
-						bClone = this.board.clone();
-					} catch (CloneNotSupportedException e) {}
-
-					move = bot.move(bClone, botTurn);
-					System.out.println(move[0] + " " + move[1]);
-
-					this.makeBotMove(botTurn, move[0], move[1]);
-					System.out.println(this.board);
-
-				});
-			})).start();
-		}
 	}
 
 	@Override
