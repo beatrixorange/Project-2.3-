@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.lang.Comparable;
 import java.util.Collections;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 public class ReversiLogic
 {
 	public boolean isValidMove(Board board, int x, int y, Tile me)
@@ -153,36 +156,55 @@ public class ReversiLogic
 
 		Tile t = Tile.byTurn(turn);
 
-		Board bClone = null;
-		try {
-			bClone = (Board)board.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		BlockingQueue<int[]> q = new ArrayBlockingQueue<int[]>(8);
 
-		int[][] moves = determinePossibleMoves(bClone, t);
+		int[][] moves = determinePossibleMoves(board, t);
 
 		for (int i = 0; i < moves.length; i++) {
 			int[] move = moves[i];
 
+			Board bClone2 = null;
 			try {
-				bClone = (Board)board.clone();
+				bClone2 = (Board)board.clone();
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 			}
-			int[][] disks = disksTurnedByMove(board, move[0], move[1], t);
-		
-			int count = disks.length;
 
-			int beta = board.getSizeX()*board.getSizeY()+4*board.getSizeX()+4+1;
+			final Board bClone = bClone2;
 
-			int points = this.neGaMax(bClone, t, Tile.other(t), 9, -1, beta);
+			(new Thread(() -> {
+				int[][] disks = disksTurnedByMove(board, move[0], move[1], t);
+			
+				int count = disks.length;
 
-			if (points > maxPoints) {
-				maxPoints = points;
-				mX = move[0];
-				mY = move[1];
-			}
+				int beta = board.getSizeX()*board.getSizeY()+4*board.getSizeX()+4+1;
+
+				int points = this.neGaMax(bClone, t, Tile.other(t), 15, -1, beta);
+
+				try {
+					q.put(new int[]{points, move[0], move[1]});
+				} catch (InterruptedException e) {}
+
+				/*if (points > maxPoints) {
+					maxPoints = points;
+					mX = move[0];
+					mY = move[1];
+				}*/
+			})).start();
+		}
+
+		for (int i = 0; i < moves.length; i++) {
+			try {
+				int[] data = q.take();
+
+				int points = data[0];
+
+				if (points > maxPoints) {
+					maxPoints = points;
+					mX = data[1];
+					mY = data[2];
+				}
+			} catch (InterruptedException e) {}
 		}
 
 		return new int[]{mX, mY};
