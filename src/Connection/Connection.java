@@ -35,7 +35,7 @@ public class Connection extends Registrator {
 	private boolean loggedIn;
 	private boolean subscribed;
 	private boolean loginEventTriggered;
-	private HashMap<Integer, String> challengers;
+	private static HashMap<Integer, String> challengers;
 	private ArrayList<String> playerList;
 	private ArrayList<String> gameList;
 	private String loggedUsername;
@@ -252,6 +252,10 @@ public class Connection extends Registrator {
     // function to accept a challenge
     public void acceptChallenge(int challengeNumber) {
     	sendCommand("challenge accept " + challengeNumber);
+    }
+    
+    public static HashMap<Integer, String> getChallengerList() {
+    	return challengers;
     }
     
     //send command to server to update the game list

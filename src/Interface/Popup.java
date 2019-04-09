@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import Connection.Connection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -44,10 +45,14 @@ public class Popup
 		this.stage.setTitle(title);
 
 		Label label = new Label(contents);
+
+		HBox hBox = new HBox();
 		if (b1text != null) {
 			this.list = new ListView<String>();
+			updatePlayers(Connection.getChallengerList());
+			hBox.getChildren().add(list);
+			
 		}
-		HBox hBox = new HBox();
 				
 		this.button = new Button((b1text != null) ? b1text : "Close");
 		button.setOnAction((e) -> {
