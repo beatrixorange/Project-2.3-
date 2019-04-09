@@ -125,7 +125,7 @@ public class Connection extends Registrator {
 								//opponent = opponent.replace(" ","");
 								System.out.println(opponent);
 								System.out.println(playerToMove);
-								//triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
+								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
 						
 							if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
