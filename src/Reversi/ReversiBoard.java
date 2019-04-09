@@ -5,6 +5,8 @@ import Framework.Board;
 
 public class ReversiBoard extends Board
 {
+	private ReversiLogic logic = new ReversiLogic();
+
 	public ReversiBoard(int sizeX, int sizeY, boolean startTurn)
 	{
 		super(sizeX, sizeY);

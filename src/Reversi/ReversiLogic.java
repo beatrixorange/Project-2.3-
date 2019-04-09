@@ -3,6 +3,8 @@ package Reversi;
 import Framework.Board;
 import Framework.Tile;
 import java.util.ArrayList;
+import java.lang.Comparable;
+import java.util.Collections;
 
 public class ReversiLogic
 {
@@ -13,6 +15,21 @@ public class ReversiLogic
 		}
 
 		return this.disksTurnedByMove(board, x, y, me).length > 0;
+	}
+
+	public int[][] makeMove(Board board, int x, int y, Tile me)
+	{
+		int[][] turned = this.disksTurnedByMove(board, x, y, me);
+		if (turned.length == 0) {
+			return new int[][]{};
+		}
+
+		for (int i = 0; i < turned.length; i++) {
+			board.putTile(turned[i][0], turned[i][1], me);
+		}
+		board.putTile(x, y, me);
+
+		return turned;
 	}
 
 	public int[][] disksTurnedByMove(Board board, int x, int y, Tile me)
@@ -93,8 +110,8 @@ public class ReversiLogic
 	{
 		ArrayList<int[]> list = new ArrayList<int[]>();
 
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
+		for (int x = 0; x < board.getSizeX(); x++) {
+			for (int y = 0; y < board.getSizeY(); y++) {
 				Tile t = board.getTile(x, y);
 				if (t != Tile.EMPTY) {
 					continue;
@@ -114,8 +131,8 @@ public class ReversiLogic
 		int p1 = 0;
 		int p2 = 0;
 
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
+		for (int x = 0; x < board.getSizeX(); x++) {
+			for (int y = 0; y < board.getSizeY(); y++) {
 				Tile t = board.getTile(x, y);
 				if (t == Tile.ONE) {
 					p1++;
@@ -126,5 +143,180 @@ public class ReversiLogic
 		}
 
 		return new int[]{p1, p2};
+	}
+
+	public int[] bestMove(Board board, boolean turn)
+	{
+		int maxPoints = 0;
+		int mX = -1;
+		int mY = -1;
+
+		Tile t = Tile.byTurn(turn);
+
+		Board bClone = null;
+		try {
+			bClone = (Board)board.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+		int[][] moves = determinePossibleMoves(bClone, t);
+
+		System.out.println("possible moves: " + moves.length);
+		for (int i = 0; i < moves.length; i++) {
+			int[] move = moves[i];
+
+			try {
+				bClone = (Board)board.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			int[][] disks = disksTurnedByMove(board, move[0], move[1], t);
+		
+			int count = disks.length;
+
+			int beta = board.getSizeX()*board.getSizeY()+4*board.getSizeX()+4+1;
+
+			int points = this.neGaMax(bClone, t, Tile.other(t), 5, -1, beta);
+
+			if (points > maxPoints) {
+				maxPoints = points;
+				mX = move[0];
+				mY = move[1];
+			}
+		}
+
+		System.out.println("bestMove: @@@@ " + mX + " " + mY);
+
+		return new int[]{mX, mY};
+	}
+
+	private int neGaMax(Board board, Tile me, Tile tile, int depth, int alpha, int beta)
+	{
+		if (depth == 0) {
+			System.out.println("depth == 0");
+
+			int score = this.evaluateBoard(board, me);
+			if (me == tile) {
+				System.out.println("me is tile: " + me + " " + tile);
+				return score;
+			}
+			System.out.println("me is not tile: " + me + " " + tile);
+
+			return score * -1;
+		}
+
+		int[][] possibleMoves = this.determinePossibleMoves(board, me);
+		if (possibleMoves.length == 0) {
+			System.out.println("possible moves == 0");
+
+			int score = this.evaluateBoard(board, me);
+			if (me == tile) {
+				return score;
+			}
+
+			return score * -1;
+		}
+
+		ArrayList<SortedNode> sortedNodes = this.sortedNodes(board, me);
+		int bestScore = -1;
+
+		for (SortedNode node : sortedNodes) {
+			Board bCopy = node.board;
+
+			int score = this.neGaMax(bCopy, me, Tile.other(tile), depth-1, beta*-1, alpha*-1);
+			System.out.println("score: " + score);
+			if (score > bestScore) {
+				bestScore = score;
+			}
+
+			if (score > alpha) {
+				alpha = score;
+			}
+
+			if (alpha >= beta) {
+				break;
+			}
+		}
+
+		System.out.println("best score: " + bestScore);
+
+		return bestScore;
+	}
+
+	class SortedNode implements Comparable<SortedNode>
+	{
+		Board board;
+		int turned;
+
+		public SortedNode(Board b, int t)
+		{
+			this.board = b;
+			this.turned = t;
+		}
+
+		public int compareTo(SortedNode n)
+		{
+			// Sort descending.
+
+			return n.turned - this.turned;
+		}
+	}
+
+	private ArrayList<SortedNode> sortedNodes(Board board, Tile me)
+	{
+		ArrayList<SortedNode> list = new ArrayList<SortedNode>();
+
+		for (int x = 0; x < board.getSizeX(); x++) {
+			for (int y = 0; y < board.getSizeY(); y++) {
+				if (!this.isValidMove(board, x, y, me)) {
+					continue;
+				}
+
+				Board bCopy = null;
+				try {
+					bCopy = (Board)board.clone();
+				} catch (CloneNotSupportedException e) {
+				}
+
+				int[][] turned = this.disksTurnedByMove(board, x, y, me);
+
+				list.add(new SortedNode(bCopy, turned.length));
+			}
+		
+		}
+
+		Collections.sort(list);
+
+		return list;
+	}
+
+	private int evaluateBoard(Board board, Tile me)
+	{
+		int score = 0;
+
+		for (int x = 0; x < board.getSizeX(); x++) {
+			for (int y = 0; y < board.getSizeY(); y++) {
+				if (board.getTile(x, y) != me) {
+					continue;
+				}
+
+				boolean xSide = x == 0 || x == board.getSizeX()-1;
+				boolean ySide = y == 0 || y == board.getSizeY()-1;
+
+				if (xSide && ySide) {
+					// In a corner! :D
+
+					score += 4; // or 5, not sure
+				} else if (xSide || ySide) {
+					// At a side! :D
+					score += 2;
+				} else {
+					score += 1;
+				}
+			}
+		}
+
+		return score;
 	}
 }

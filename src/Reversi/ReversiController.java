@@ -8,9 +8,11 @@ import Framework.Tile;
 import Framework.LocalPlayer;
 import Framework.AbstractPlayer;
 import Framework.HumanPlayer;
+import Framework.BotPlayer;
 import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import Connection.Connection;
+import javafx.application.Platform;
 
 public class ReversiController extends AbstractGameController implements ClickHandler
 {
@@ -87,6 +89,15 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.makeMove(turn, x, y);
 	}
 
+	protected void makeBotMove(boolean turn, int x, int y)
+	{
+
+		int[][] turned = this.logic.makeMove(this.board, x, y, Tile.byTurn(this.turn));
+		this.getView().setNewChanges(turned);
+
+		this.makeMove(turn, x, y);
+	}
+
 	private void makeMove(boolean turn, int x, int y)
 	{
 		this.switchTurn(!this.turn);
@@ -100,17 +111,46 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		int[] scores = this.logic.calculateScores(this.board);
 		this.parentController.setScores(scores[0], scores[1]);
 
-
-		/*int[] move;
-		if (!this.turn) {
-			move = this.player1.requestMove();
+		final BotPlayer bot;
+		if (!this.turn && this.player1 instanceof BotPlayer) {
+			bot = (BotPlayer)this.player1;
+		} else if (this.turn && this.player2 instanceof BotPlayer) {
+			bot = (BotPlayer)this.player2;
 		} else {
-			move = this.player2.requestMove();
+			bot = null;
 		}
 
-		if (move.length == 2) {
-			this.makeMove(turn, move[0], move[1]);
-		}*/
+		System.out.println("\n\n\nik switch die turn\n\n\n");
+
+		System.out.println(this.board);
+
+		if (bot != null) {
+			final boolean botTurn = this.turn;
+			(new Thread(() -> {
+				try {
+					// TODO: Don't do this when remote, waste of time.
+					Thread.sleep(500L);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				Platform.runLater(() -> {
+					int[] move = new int[2];
+
+					Board bClone = null;
+					try {
+						bClone = this.board.clone();
+					} catch (CloneNotSupportedException e) {}
+
+					move = bot.move(bClone, botTurn);
+					System.out.println(move[0] + " " + move[1]);
+
+					this.makeBotMove(botTurn, move[0], move[1]);
+					System.out.println(this.board);
+
+				});
+			})).start();
+		}
 	}
 
 	@Override
