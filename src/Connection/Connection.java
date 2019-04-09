@@ -121,11 +121,11 @@ public class Connection extends Registrator {
 								String gameType = StringFormat.stringFormat(line.substring(t.length()));
 								gameType = gameType.replace(" ","");
 								String t2 = "SVR GAME MATCH {PLAYERTOMOVE: " + playerToMove + ", GAMETYPE: " + gameType + ", OPPONENT: ";
-								String opponent = StringFormat.stringFormat(line.substring(t2.length()+2));
-								opponent = opponent.replace(" ","");
+								String opponent = StringFormat.stringFormat(line.substring(t2.length()+3));
+								//opponent = opponent.replace(" ","");
 								System.out.println(opponent);
 								System.out.println(playerToMove);
-								triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
+								//triggerEvent(new MatchStartEvent(playerToMove, gameType, opponent));
 							}
 						
 							if(line.contains("WIN") || line.contains("LOSS") || line.contains("TIE")) {
@@ -277,9 +277,9 @@ public class Connection extends Registrator {
 	
 	public static void main(String args[]) throws UnknownHostException, IOException {
 		Connection x = new Connection();
-		//x.connect("localhost");
-		//x.login("kees");
-		//x.subscribe("Tic-tac-toe");
+		x.connect("localhost");
+		x.login("kees");
+		x.subscribe("Tic-tac-toe");
 	}
 	
 	
