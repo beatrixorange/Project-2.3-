@@ -6,6 +6,14 @@ public class Board
 
 	protected int sizeX, sizeY;
 
+	public Board (int sizeX, int sizeY, Tile[][] board)
+	{
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+
+		this.board = board;
+	}
+
 	public Board(int sizeX, int sizeY)
 	{
 		this.sizeX = sizeX;
@@ -84,5 +92,39 @@ public class Board
 		int y = (move)%this.getSizeX();
 
 		return new int[]{x, y};
+	}
+
+	public Board clone() throws CloneNotSupportedException
+	{
+		Tile[][] tiles = new Tile[this.sizeX][this.sizeY];
+
+		for (int x = 0; x < this.sizeX; x++) {
+			for (int y = 0; y < this.sizeY; y++) {
+				Tile t = Tile.EMPTY;
+				if (this.getTile(x, y) == Tile.ONE) {
+					t = Tile.ONE;
+				} else if (this.getTile(x, y) == Tile.TWO) {
+					t = Tile.TWO;
+				}
+
+				tiles[x][y] = t;
+			}
+		}
+
+		return new Board(this.sizeX, this.sizeY, tiles);
+	}
+
+	public String toString()
+	{
+		String str = "";
+
+		for (int x = 0; x < this.sizeX; x++) {
+			for (int y = 0; y < this.sizeY; y++) {
+				str += this.getTile(x, y);
+			}
+			str += "\n";
+		}
+
+		return str;
 	}
 }

@@ -5,7 +5,7 @@ import java.lang.reflect.Proxy;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
-
+//magical class that prevents a ConcurrentModifcationException on the List in registrator because it is iteratored at the same time that objects are added.
 public class ListModDebug {
     public static <E> List<E> getProxy(List<E> source) {
         Object proxy = Proxy.newProxyInstance(ListModDebug.class.getClassLoader(), new Class[]{List.class}, new DebugInvocationHandler(source));

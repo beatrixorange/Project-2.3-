@@ -1,6 +1,9 @@
 package Framework;
 
 import Interface.AbstractController;
+import Interface.Popup;
+import Interface.Router;
+
 import Framework.AbstractPlayer;
 
 import Connection.Events.*;
@@ -71,10 +74,24 @@ public abstract class AbstractGameController extends AbstractController
 					}
 				} else if (event instanceof MatchWonEvent) {
 					System.out.println("You won The game!");
+
+					Popup popup = new Popup("Win", "You won The Game!");
+					popup.onClose(eve -> {
+						this.quit();
+					});
+					popup.show();
 				} else if (event instanceof MatchTiedEvent) {
 					System.out.println("You tied The Game!");
 				} else if (event instanceof MatchLostEvent) {
+					MatchLostEvent e = (MatchLostEvent)event;
+
 					System.out.println("You lost The Game!");
+
+					Popup popup = new Popup("Lost", "You lost The Game!");
+					popup.onClose(eve -> {
+						this.quit();
+					});
+					popup.show();
 				} else if (event instanceof OpponentDisconnectedEvent) {
 					System.out.println("Your opponent is a noob.");
 				} else if (event instanceof ForfeitEvent) {
@@ -117,5 +134,12 @@ public abstract class AbstractGameController extends AbstractController
 		}
 
 		return this.player1;
+	}
+
+	public void quit()
+	{
+		// TODO: De-register
+
+		Router.get().toLobby();
 	}
 }
