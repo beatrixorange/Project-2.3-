@@ -4,13 +4,15 @@ import Framework.AbstractGameController;
 import Framework.Board;
 import Framework.ClickHandler;
 import Framework.Tile;
+import Reversi.ReversiView;
 import Framework.GameController;
+import Framework.HumanPlayer;
+import Framework.LocalPlayer;
 import Connection.Connection;
 import Framework.AbstractPlayer;
 import javafx.scene.layout.VBox;
 
 public class TicTacToeController extends AbstractGameController implements ClickHandler{
-	TicTacToeView  tView = null;
 
 	public TicTacToeController(Connection connection, AbstractPlayer p1,
 			AbstractPlayer p2, GameController parent, boolean startTurn)
@@ -19,14 +21,20 @@ public class TicTacToeController extends AbstractGameController implements Click
 
 		this.board = new Board(3,3);
 		
-		
-		this.tView = new TicTacToeView(this, this.board);
-		
-
-		this.view = tView;
+		boolean myTurn = this.getPlayerAtMove() instanceof HumanPlayer;
+		this.view = new TicTacToeView(this, this.board, myTurn);
 	}
 
-	@Override
+	public void onBoardClick(int x, int y)
+	{
+		if (!this.turn && this.player1 instanceof LocalPlayer) {
+			this.makePlayerMove(turn, x, y);
+		} else if(this.turn && this.player2 instanceof LocalPlayer) {
+			this.makePlayerMove(turn, x, y);
+		}
+	}
+	
+	/*@Override
 	public void onBoardClick(int x, int y) {
 		if(checkMove(x,y)) {
 		this.board.putTile(x, y, (this.turn) ? Tile.TWO : Tile.ONE);
@@ -39,8 +47,25 @@ public class TicTacToeController extends AbstractGameController implements Click
 		}
 		else
 			return;
+	}*/
+	
+	public void makePlayerMove(boolean turn, int x, int y)
+	{
+		if (!board.isEmpty(x, y)) {
+			return;
+		}
+		
+		int move = this.board.xyToMove(x, y);
+     	System.out.println(x + " " + y);
+  		System.out.println(move);
+  		this.connection.makeMove(move);
+  		
+		this.board.putTile(x, y, Tile.byTurn(this.turn));
+		this.switchTurn(!this.turn);
+		this.getView().reDraw(this.board);	
 	}
-
+	
+/*
 	@Override
 	public boolean checkMove(int x, int y) {
 		if (this.board.getTile(x, y) != Tile.EMPTY) {
@@ -48,6 +73,7 @@ public class TicTacToeController extends AbstractGameController implements Click
 		}
 		return true;
 	}
+	*/
 	public boolean checkWin() {
 		boolean victory = false;
 		
@@ -83,8 +109,23 @@ public class TicTacToeController extends AbstractGameController implements Click
 		}
 		return victory;
 	}
+	
+	@Override
+	public boolean checkMove(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-	protected void makeServerMove(boolean turn, int x, int y)
+	@Override
+	protected void makeServerMove(boolean turn, int x, int y) {
+		System.out.println("MAKE SERVER MOVEEE@@@@@22222@@@");
+		this.board.putTile(x, y, Tile.byTurn(this.turn));
+		this.switchTurn(!turn);
+		this.getView().reDraw(this.board);
+	}
+
+	public TicTacToeView getView()
 	{
+		return (TicTacToeView)this.view;
 	}
 }

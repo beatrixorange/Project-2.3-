@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import Connection.Connection;
 import Connection.Events.UpdatedPlayerListEvent;
+import Connection.Events.LoginSuccesEvent;
 import Connection.Events.MatchStartEvent;
 import Connection.Events.UpdatedPlayerListEvent;
 
@@ -79,6 +80,9 @@ public class LobbyController extends AbstractController
 			if (game == null) {
 				return;
 			}
+			
+			
+			this.connection.sendChallenge(invitePlayer, game);
 			
 			System.out.println("Hoi " + invitePlayer + ", ik wil jou graag eem " + isRegularPlayer + " " + game);
 			// TODO: Stuur invite via Connection
