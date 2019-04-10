@@ -45,7 +45,7 @@ public class Connection extends Registrator {
 	public Connection()  {
 		loggedIn = false;
 		subscribed = false;
-		challengers = new HashMap<Integer,String>();
+		challengers = new HashMap<String,String>();
 		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
@@ -94,6 +94,7 @@ public class Connection extends Registrator {
 								String t2 = "SVR GAME CHALLENGE {CHALLENGER: " + challenger + ", CHALLENGENUMBER: " + challengeNum + ", GAMETYPE: ";
 								String gameType = StringFormat.stringFormat(line.substring(t2.length()+3));
 								challengers.put(challengeNum, challenger);
+								System.out.println(challengers.get(challengeNum));
 								triggerEvent(new ChallengedEvent(challenger, gameType, Integer.parseInt(challengeNum)));
 							}
 							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
@@ -254,7 +255,7 @@ public class Connection extends Registrator {
     	sendCommand("challenge accept " + challengeNumber);
     }
     
-    public HashMap<Integer, String> getChallengerList() {
+    public HashMap<String, String> getChallengerList() {
     	return challengers;
     }
     

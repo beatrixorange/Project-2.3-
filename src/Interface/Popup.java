@@ -30,15 +30,15 @@ public class Popup
 
 	public Popup(String title, String contents)
 	{
-		init(title, contents, null, null);
+		init(title, contents, null, null, connection);
 	}
 	
 	public Popup(String title, String contents, String button1, String button2, Connection connection)
 	{
-		init(title, contents, button1, button2);
+		init(title, contents, button1, button2, connection);
 	}
 	
-	private void init(String title, String contents, String b1text, String b2text)
+	private void init(String title, String contents, String b1text, String b2text, Connection connection)
 	{
 		this.connection = connection;
 		this.stage=new Stage();
@@ -49,21 +49,22 @@ public class Popup
 		Label label = new Label(contents);
 
 		HBox hBox = new HBox();
-		if (b1text != null) {
+		System.out.println("2");
+		if (b2text != null) {
 			this.list = new ListView<String>();
 			updatePlayers(connection.getChallengerList());
 			hBox.getChildren().add(list);
 			
 		}
-				
+		
 		this.button = new Button((b1text != null) ? b1text : "Close");
-		button.setOnAction((e) -> {
+	/*	button.setOnAction((e) -> {
 			stage.close();
 		});
-		
+		*/
 		hBox.getChildren().add(button);
 		
-		if (b1text != null) {
+		if (b2text != null) {
 			this.button2 = new Button(b2text);
 			hBox.getChildren().add(button2);
 
@@ -75,12 +76,14 @@ public class Popup
 
 		Scene scene = new Scene(layout, 300, 250);
 		this.stage.setScene(scene);
+		
 	}
 
 	public void onClose(EventHandler handler)
 	{
 		this.button.setOnAction(e -> {
 			handler.handle(e);
+			
 			stage.close();
 		});
 	}
@@ -89,23 +92,24 @@ public class Popup
 	{
 		this.button2.setOnAction(e -> {
 			handler.handle(e);
-			Iterator it = connection.getChallengerList().entrySet().iterator();
+			System.out.println("yoy");
+			Iterator it = this.connection.getChallengerList().entrySet().iterator();
 			while (it.hasNext()) {
 		        Map.Entry pair = (Map.Entry)it.next();
 		        if(pair.getValue().equals(this.list.getSelectionModel().getSelectedItem())) {
 		        	String s = (String) pair.getKey();
-		        	connection.acceptChallenge((s));
+		        	this.connection.acceptChallenge((s));
 		        };
 			}
 		});
 	}
-
+	
 	public void show()
 	{
 		this.stage.show();
 	}
 	
-	public void updatePlayers(HashMap<Integer, String> temp) {
+	public void updatePlayers(HashMap<String, String> temp) {
 		ObservableList<String> items = FXCollections.observableArrayList();
 			Iterator it = temp.entrySet().iterator();
 			while (it.hasNext()) {

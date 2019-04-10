@@ -53,12 +53,15 @@ public class LobbyController extends AbstractController
 
 				ChallengedEvent cE = (ChallengedEvent)event;
 				
-
+				System.out.println("1");
 				//boolean startTurn = e.getPlayerToMove().equals(e.getOpponent());
-				Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", "Accept", "Close", this.connection);
+				Platform.runLater(() -> {
+				Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", null, "Accept", this.connection);
 				popup.show();
+				
 				popup.onClose(eve -> {
 					this.quit();
+				});
 				});
 				/*System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
