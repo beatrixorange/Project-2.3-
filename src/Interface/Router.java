@@ -43,7 +43,9 @@ public class Router
 		System.out.println("startRemoteGame");
 		System.out.println(this.connection);
 
-		AbstractPlayer p1 = new BotPlayer(this.connection.getUsername());
+		AbstractPlayer p1;
+		//p1 = new BotPlayer(this.connection.getUsername());
+		p1 = new HumanPlayer(this.connection.getUsername());
 		AbstractPlayer p2 = new RemotePlayer(this.connection, opponent);
 
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@ \\/");

@@ -32,8 +32,6 @@ public abstract class AbstractGameController extends AbstractController implemen
 	public AbstractGameController(Connection connection, AbstractPlayer p1,
 			AbstractPlayer p2, GameController parent, boolean startTurn)
 	{
-		System.out.println("AbstractGameController");
-		System.out.println(connection);
 		this.connection = connection;
 		this.player1 = p1;
 		this.player2 = p2;
@@ -92,7 +90,7 @@ public abstract class AbstractGameController extends AbstractController implemen
 					this.makeServerMove(true, xy[0], xy[1]);
 				} else {
 					try {
-						throw new Exception("not p1 and not p2? wat? " + e.player);
+						throw new Exception("not p1 and not p2? wat? " + e.player + ", " + this.player1.getName() + ", " + this.player2.getName());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

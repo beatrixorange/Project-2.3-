@@ -5,6 +5,7 @@ import Framework.Tile;
 import java.util.ArrayList;
 import java.lang.Comparable;
 import java.util.Collections;
+import java.util.Date;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -27,12 +28,16 @@ public class ReversiLogic
 			return new int[][]{};
 		}
 
+		this.makeMove(board, turned, me);
+
+		return turned;
+	}
+
+	public void makeMove(Board board, int[][] turned, Tile me)
+	{
 		for (int i = 0; i < turned.length; i++) {
 			board.putTile(turned[i][0], turned[i][1], me);
 		}
-		board.putTile(x, y, me);
-
-		return turned;
 	}
 
 	public int[][] disksTurnedByMove(Board board, int x, int y, Tile me)
@@ -148,11 +153,11 @@ public class ReversiLogic
 		return new int[]{p1, p2};
 	}
 
-	public int[] bestMove(Board board, boolean turn)
+	public int[] bestMove(Board board, boolean turn, int timeout)
 	{
 		int maxPoints = 0;
-		int mX = -1;
-		int mY = -1;
+		int bestX = -1;
+		int bestY = -1;
 
 		Tile t = Tile.byTurn(turn);
 
@@ -160,6 +165,8 @@ public class ReversiLogic
 
 		int[][] moves = determinePossibleMoves(board, t);
 
+		Thread threads[] = new Thread[moves.length];
+		
 		for (int i = 0; i < moves.length; i++) {
 			int[] move = moves[i];
 
@@ -172,14 +179,14 @@ public class ReversiLogic
 
 			final Board bClone = bClone2;
 
-			(new Thread(() -> {
-				int[][] disks = disksTurnedByMove(board, move[0], move[1], t);
-			
-				int count = disks.length;
+			final int[][] disks = makeMove(board, move[0], move[1], t);
+		
+			final int count = disks.length;
 
-				int beta = board.getSizeX()*board.getSizeY()+4*board.getSizeX()+4+1;
+			final int beta = board.getSizeX()*board.getSizeY() + 4*board.getSizeX() + 4 + 1;
 
-				int points = this.neGaMax(bClone, t, Tile.other(t), 15, -1, beta);
+			threads[i] = new Thread(() -> {
+				int points = this.neGaMax(bClone, t, 4*2, -1, beta, true);
 
 				try {
 					q.put(new int[]{points, move[0], move[1]});
@@ -187,34 +194,67 @@ public class ReversiLogic
 
 				/*if (points > maxPoints) {
 					maxPoints = points;
-					mX = move[0];
-					mY = move[1];
+					bestX = move[0];
+					bestY = move[1];
 				}*/
-			})).start();
+			});
+			threads[i].start();
 		}
 
+		Thread interruptThread = new Thread(() -> {
+			try {
+				Thread.sleep(timeout*1000L);
+			} catch (InterruptedException e) {
+				return;
+			}
+
+			for (Thread thread : threads) {
+				thread.interrupt();
+			}
+
+			System.out.println((new Date()) + ": Interrupted threads!");
+		});
+		interruptThread.start();
+		
 		for (int i = 0; i < moves.length; i++) {
 			try {
 				int[] data = q.take();
 
 				int points = data[0];
 
+				System.out.println((new Date()) + ": Got points: " + points + ", " + data[1] + " " + data[2]);
+
 				if (points > maxPoints) {
 					maxPoints = points;
-					mX = data[1];
-					mY = data[2];
+					bestX = data[1];
+					bestY = data[2];
 				}
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+				break;
+			}
 		}
 
-		return new int[]{mX, mY};
+		interruptThread.interrupt();
+
+		return new int[]{bestX, bestY};
 	}
 
-	private int neGaMax(Board board, Tile me, Tile tile, int depth, int alpha, int beta)
+
+	private int neGaMax(Board board, Tile me, int depth, int alpha, int beta, boolean isUs)
 	{
+		if (Thread.interrupted()) {
+			this.interrupted();
+			int score = this.evaluateBoard(board, me);
+			if (isUs) {
+				return score;
+			}
+
+			return score * -1;
+		}
+
 		if (depth == 0) {
 			int score = this.evaluateBoard(board, me);
-			if (me == tile) {
+			if (isUs) {
 				return score;
 			}
 
@@ -223,8 +263,80 @@ public class ReversiLogic
 
 		int[][] possibleMoves = this.determinePossibleMoves(board, me);
 		if (possibleMoves.length == 0) {
+			System.out.println(board);
 			int score = this.evaluateBoard(board, me);
-			if (me == tile) {
+			System.out.println("no possible moves? :(" + score);
+			if (isUs) {
+				return score;
+			}
+
+			return score * -1;
+		}
+
+		int bestScore = -1;
+
+		for (int x = 0; x < board.getSizeX(); x++) {
+			for (int y = 0; y < board.getSizeY(); y++) {
+				int[][] turned = this.disksTurnedByMove(board, x, y, me);
+				if (turned.length == 0) {
+					// Not valid move :( 
+					continue;
+				}
+
+				Board bClone = null;
+				try {
+					bClone = (Board)board.clone();
+				} catch (CloneNotSupportedException e) {
+				}
+
+				this.makeMove(bClone, turned, me);
+
+				int score = -1 * this.neGaMax(bClone, me, depth-1, alpha*-1, beta*-1, !isUs);
+
+				if (score > bestScore) {
+					bestScore = score;
+				}
+
+				if (score > alpha) {
+					alpha = score;
+				}
+
+				if (alpha >= beta) {
+					break;
+				}
+			}
+		}
+
+		return bestScore;
+	}
+
+	private int neGaMaxOld(Board board, Tile me, int depth, int alpha, int beta, boolean isUs)
+	{
+		if (Thread.interrupted()) {
+			this.interrupted();
+			int score = this.evaluateBoard(board, me);
+			if (isUs) {
+				return score;
+			}
+
+			return score * -1;
+		}
+
+		if (depth == 0) {
+			int score = this.evaluateBoard(board, me);
+			if (isUs) {
+				return score;
+			}
+
+			return score * -1;
+		}
+
+		int[][] possibleMoves = this.determinePossibleMoves(board, me);
+		if (possibleMoves.length == 0) {
+			System.out.println(board);
+			int score = this.evaluateBoard(board, me);
+			System.out.println("no possible moves? :(" + score);
+			if (isUs) {
 				return score;
 			}
 
@@ -237,7 +349,7 @@ public class ReversiLogic
 		for (SortedNode node : sortedNodes) {
 			Board bCopy = node.board;
 
-			int score = this.neGaMax(bCopy, me, Tile.other(tile), depth-1, beta*-1, alpha*-1);
+			int score = -1 * this.neGaMaxOld(bCopy, me, depth-1, alpha*-1, beta*-1, !isUs);
 			if (score > bestScore) {
 				bestScore = score;
 			}
@@ -257,19 +369,19 @@ public class ReversiLogic
 	class SortedNode implements Comparable<SortedNode>
 	{
 		Board board;
-		int turned;
+		int score;
 
-		public SortedNode(Board b, int t)
+		public SortedNode(Board b, int s)
 		{
 			this.board = b;
-			this.turned = t;
+			this.score = s;
 		}
 
 		public int compareTo(SortedNode n)
 		{
 			// Sort descending.
 
-			return n.turned - this.turned;
+			return n.score - this.score;
 		}
 	}
 
@@ -279,24 +391,30 @@ public class ReversiLogic
 
 		for (int x = 0; x < board.getSizeX(); x++) {
 			for (int y = 0; y < board.getSizeY(); y++) {
-				if (!this.isValidMove(board, x, y, me)) {
+				int[][] turned = this.disksTurnedByMove(board, x, y, me);
+				if (turned.length == 0) {
 					continue;
 				}
 
-				Board bCopy = null;
+				Board bClone = null;
 				try {
-					bCopy = (Board)board.clone();
+					bClone = (Board)board.clone();
 				} catch (CloneNotSupportedException e) {
 				}
 
-				int[][] turned = this.disksTurnedByMove(board, x, y, me);
+				this.makeMove(bClone, turned, me);
 
-				list.add(new SortedNode(bCopy, turned.length));
+				list.add(new SortedNode(bClone, this.evaluateBoard(bClone, me)));
 			}
 		
 		}
 
 		Collections.sort(list);
+
+		System.out.println("sortedNodes");
+		for (SortedNode s : list) {
+			System.out.println(s.score);
+		}
 
 		return list;
 	}
@@ -317,16 +435,28 @@ public class ReversiLogic
 				if (xSide && ySide) {
 					// In a corner! :D
 
-					score += 5; // or 5, not sure
+					score += 4; // or 5, not sure
 				} else if (xSide || ySide) {
 					// At a side! :D
-					score += 3;
+					score += 2;
 				} else {
 					score += 1;
 				}
 			}
 		}
 
+		System.out.println(board);
+		System.out.println("evaluateBoard score: " + score);
+
 		return score;
+	}
+
+	/**
+	 * interrupted allows making it visible in the profiler when a thread
+	 * was interrupted. Call it when interrupted to make it show up.
+	 */
+	private void interrupted()
+	{
+		System.out.println("Interupted");
 	}
 }

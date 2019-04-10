@@ -41,9 +41,9 @@ public class ReversiController extends AbstractGameController implements ClickHa
 	public void onBoardClick(int x, int y)
 	{
 		if (!this.turn && this.player1 instanceof LocalPlayer) {
-			this.makePlayerMove(turn, x, y);
+			this.makePlayerMove(false, x, y);
 		} else if(this.turn && this.player2 instanceof LocalPlayer) {
-			this.makePlayerMove(turn, x, y);
+			this.makePlayerMove(true, x, y);
 		}
 	}
 
@@ -59,11 +59,6 @@ public class ReversiController extends AbstractGameController implements ClickHa
 			return;
 		}
 
-		for (int i = 0; i < turned.length; i++) {
-			this.board.putTile(turned[i][0], turned[i][1], Tile.byTurn(this.turn));
-		}
-		this.board.putTile(x, y, Tile.byTurn(this.turn));
-
 		int move = this.board.xyToMove(x, y);
 	     	System.out.println(x + " " + y);
       		System.out.println(move);
@@ -72,11 +67,15 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.makeMove(turn, x, y);
 
 		this.switchTurn(!turn);
+
+		this.getView().reDraw(this.board);
 	}
 
 	protected void makeServerMove(boolean turn, int x, int y)
 	{
 		this.makeMove(turn, x, y);
+
+		this.getView().reDraw(this.board);
 	}
 
 	protected void makeBotMove(boolean turn, BotPlayer bot)
@@ -103,6 +102,8 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.makeMove(turn, move[0], move[1]);
 
 		this.switchTurn(!turn);
+
+		this.getView().reDraw(this.board);
 	}
 
 	private void makeMove(boolean turn, int x, int y)
@@ -112,10 +113,8 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.getView().setNewChanges(turned);
 
 		int[][] possibleMoves = this.logic.determinePossibleMoves(
-			board, Tile.byTurn(this.turn));
+			board, Tile.byTurn(!turn));
 		this.getView().setHighlightedTiles(possibleMoves);
-
-		this.getView().reDraw(this.board);
 
 		int[] scores = this.logic.calculateScores(this.board);
 		this.parentController.setScores(scores[0], scores[1]);
