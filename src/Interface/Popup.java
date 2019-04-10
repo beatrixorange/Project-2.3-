@@ -82,8 +82,15 @@ public class Popup
 	{
 		this.button.setOnAction(e -> {
 			handler.handle(e);
-			
-			stage.close();
+			System.out.println("yoy");
+			Iterator it = this.connection.getChallengerList().entrySet().iterator();
+			while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		        if(pair.getValue().equals(this.list.getSelectionModel().getSelectedItem())) {
+		        	String s = (String) pair.getKey();
+		        	this.connection.acceptChallenge((s));
+		        };
+			}
 		});
 	}
 	
@@ -96,9 +103,11 @@ public class Popup
 			while (it.hasNext()) {
 		        Map.Entry pair = (Map.Entry)it.next();
 		        if(pair.getValue().equals(this.list.getSelectionModel().getSelectedItem())) {
+
 		        	String s = (String) pair.getKey();
 		        	this.connection.acceptChallenge((s));
 		        };
+		    it.remove();
 			}
 		});
 	}
@@ -114,7 +123,7 @@ public class Popup
 			while (it.hasNext()) {
 		        Map.Entry pair = (Map.Entry)it.next();
 		        items.add((String) pair.getValue());
-		        it.remove();
+		        
 			
 		}
 		list.setItems(items);

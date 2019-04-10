@@ -131,12 +131,8 @@ public abstract class AbstractGameController extends AbstractController implemen
 					this.quit();
 				});
 				popup.show();
-			} else if (event instanceof OpponentDisconnectedEvent) {
-				System.out.println("Your opponent is a noob.");
-			} else if (event instanceof ForfeitEvent) {
-				System.out.println("Your opponent is a noob. x2");
-			}
-		});
+		
+			}});
 	}
 
 	abstract protected void makeServerMove(boolean turn, int x, int y);
