@@ -49,7 +49,6 @@ public class Popup
 		Label label = new Label(contents);
 
 		HBox hBox = new HBox();
-		System.out.println("2");
 		if (b2text != null) {
 			this.list = new ListView<String>();
 			updatePlayers(connection.getChallengerList());
