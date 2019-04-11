@@ -1,5 +1,7 @@
 package Interface;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import Connection.Connection;
 import Connection.Events.UpdatedPlayerListEvent;
@@ -20,12 +22,20 @@ public class LobbyController extends AbstractController
 		{	
 			this.lView = new LobbyView();
 			this.view = lView;
+			this.connection = connection;
 			
 			lView.setOnQuickPlayButtonPressHandler(this);
 			lView.setOnInviteButtonPressHandler(this);
 			lView.setOnRefreshButtonPressHandler(this);
 			
-			this.connection = connection;
+			// Update player list when opening lobby
+			connection.updatePlayerList();
+			 connection.register(event -> {
+				 if (event instanceof UpdatedPlayerListEvent) {
+					 lView.updatePlayers(connection.getPlayerList());
+				 }
+			 });
+			
 
 			this.connection.register(event -> {
 				if (!(event instanceof MatchStartEvent)) {
@@ -40,7 +50,6 @@ public class LobbyController extends AbstractController
 
 				System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
-					this.connection.deRegister();
 					Router.get().startRemoteGame(gameType, startTurn, opponent);
 				});
 			});
@@ -54,13 +63,16 @@ public class LobbyController extends AbstractController
 
 				ChallengedEvent cE = (ChallengedEvent)event;
 				
-				String gameType = cE.getGameType();
-				String opponent = cE.getChallenger();
+				System.out.println("1");
 				//boolean startTurn = e.getPlayerToMove().equals(e.getOpponent());
-				Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", "Accept", "Close");
-				popup.show();
-				popup.onClose(eve -> {
-					this.quit();
+				Platform.runLater(() -> {
+					Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", null, "Accept", this.connection);
+					
+					popup.onClose(eve -> {
+						this.quit();
+					});
+					popup.button2List();
+					popup.show();
 				});
 				/*System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
@@ -80,7 +92,6 @@ public class LobbyController extends AbstractController
 		public void onRefreshButtonPress()
 		{
 			 connection.updatePlayerList();
-			 System.out.println("hot");
 			 
 			 connection.register(event -> {
 				 if (event instanceof UpdatedPlayerListEvent) {
@@ -115,6 +126,8 @@ public class LobbyController extends AbstractController
 			System.out.println("Hoi " + invitePlayer + ", ik wil jou graag eem " + isRegularPlayer + " " + game);
 			// TODO: Stuur invite via Connection
 		}
+		
+		
 		
 		public String getTitle() {
 			return "Lobby";

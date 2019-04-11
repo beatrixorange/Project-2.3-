@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import Connection.Connection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -25,38 +26,44 @@ public class Popup
 	private ListView<String> list;
 	private Button button;
 	private Button button2;
+	private Connection connection;
 
 	public Popup(String title, String contents)
 	{
-		init(title, contents, null, null);
+		init(title, contents, null, null, connection);
 	}
 	
-	public Popup(String title, String contents, String button1, String button2)
+	public Popup(String title, String contents, String button1, String button2, Connection connection)
 	{
-		init(title, contents, button1, button2);
+		init(title, contents, button1, button2, connection);
 	}
 	
-	private void init(String title, String contents, String b1text, String b2text)
+	private void init(String title, String contents, String b1text, String b2text, Connection connection)
 	{
+		this.connection = connection;
 		this.stage=new Stage();
 
 		this.stage.initModality(Modality.APPLICATION_MODAL);
 		this.stage.setTitle(title);
 
 		Label label = new Label(contents);
-		if (b1text != null) {
-			this.list = new ListView<String>();
-		}
+
 		HBox hBox = new HBox();
-				
+		if (b2text != null) {
+			this.list = new ListView<String>();
+			updatePlayers(connection.getChallengerList());
+			hBox.getChildren().add(list);
+			
+		}
+		
 		this.button = new Button((b1text != null) ? b1text : "Close");
-		button.setOnAction((e) -> {
+	/*	button.setOnAction((e) -> {
 			stage.close();
 		});
-		
+		*/
 		hBox.getChildren().add(button);
 		
-		if (b1text != null) {
+		if (b2text != null) {
 			this.button2 = new Button(b2text);
 			hBox.getChildren().add(button2);
 
@@ -66,8 +73,9 @@ public class Popup
 		layout.getChildren().addAll(label, hBox);
 		layout.setAlignment(Pos.CENTER);
 
-		Scene scene = new Scene(layout, 300, 250);
+		Scene scene = new Scene(layout, 500, 450);
 		this.stage.setScene(scene);
+		
 	}
 
 	public void onClose(EventHandler handler)
@@ -84,21 +92,36 @@ public class Popup
 			handler.handle(e);
 		});
 	}
+	
+	public void button2List()
+	{
+		this.button2.setOnAction(e -> {
+			System.out.println("yoy");
+			Iterator it = this.connection.getChallengerList().entrySet().iterator();
+			while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		        if(pair.getValue().equals(this.list.getSelectionModel().getSelectedItem())) {
 
+		        	String s = (String) pair.getKey();
+		        	this.connection.acceptChallenge((s));
+		        	stage.close();
+		        };
+		        it.remove();
+			}
+		});
+	}
+	
 	public void show()
 	{
 		this.stage.show();
 	}
 	
-	public void updatePlayers(HashMap<Integer, String> temp) {
+	public void updatePlayers(HashMap<String, String> temp) {
 		ObservableList<String> items = FXCollections.observableArrayList();
 			Iterator it = temp.entrySet().iterator();
 			while (it.hasNext()) {
 		        Map.Entry pair = (Map.Entry)it.next();
-		        System.out.println(pair.getKey() + " = " + pair.getValue());
 		        items.add((String) pair.getValue());
-		        it.remove();
-			
 		}
 		list.setItems(items);
 	}
