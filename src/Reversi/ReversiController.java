@@ -40,9 +40,9 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 	public void onBoardClick(int x, int y)
 	{
-		if (!this.turn && this.player1 instanceof LocalPlayer) {
+		if (!this.turn && this.player1 instanceof HumanPlayer) {
 			this.makePlayerMove(false, x, y);
-		} else if(this.turn && this.player2 instanceof LocalPlayer) {
+		} else if(this.turn && this.player2 instanceof HumanPlayer) {
 			this.makePlayerMove(true, x, y);
 		}
 	}
@@ -80,30 +80,48 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 	protected void makeBotMove(boolean turn, BotPlayer bot)
 	{
-		Board bClone = null;
+		Board bClone2 = null;
 		try {
-			bClone = this.board.clone();
-		} catch (CloneNotSupportedException e) {}
-
-
-		int[] move = bot.move(bClone, turn);
-		if (move[0] == -1 || move[1] == -1) {
-			try {
-				throw new Exception("Je kan ja geen zet meer doen ja");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return;
+			bClone2 = this.board.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
 		}
 
-		this.connection.makeMove(this.board.xyToMove(move[0], move[1]));
+		Board bClone = bClone2;
 
-		this.makeMove(turn, move[0], move[1]);
+		Thread t = new Thread(() -> {
+			int[] move = bot.move(bClone, turn);
+			if (move[0] == -1 || move[1] == -1) {
+				try {
+					throw new Exception("Je kan ja geen zet meer doen ja");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
-		this.switchTurn(!turn);
+				return;
+			}
 
-		this.getView().reDraw(this.board);
+			int oldTurnSwitches = this.turnSwitches;
+
+			Platform.runLater(() -> {
+				if (this.turnSwitches != oldTurnSwitches) {
+					try {
+						throw new Exception("WAAAT? the game has moved on without us?");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				this.connection.makeMove(this.board.xyToMove(move[0], move[1]));
+
+				this.makeMove(turn, move[0], move[1]);
+
+				this.switchTurn(!turn);
+
+				this.getView().reDraw(this.board);
+			});
+		});
+		t.start();
 	}
 
 	private void makeMove(boolean turn, int x, int y)

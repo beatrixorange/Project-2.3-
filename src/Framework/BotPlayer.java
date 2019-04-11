@@ -4,17 +4,17 @@ import Reversi.ReversiLogic;
 
 public class BotPlayer extends LocalPlayer
 {
-	protected ReversiLogic logic;
+	protected GameAI ai;
 
-	public BotPlayer(String name)
+	public BotPlayer(String name, GameAI ai)
 	{
 		super(name);
 
-		this.logic = new ReversiLogic();
+		this.ai = ai;
 	}
 
 	public int[] move(Board board, boolean turn)
 	{
-		return this.logic.bestMove(board, turn, 2);
+		return this.ai.bestMove(board, turn, 85);
 	}
 }

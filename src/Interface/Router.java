@@ -8,6 +8,9 @@ import Framework.AbstractPlayer;
 import Framework.HumanPlayer;
 import Framework.RemotePlayer;
 import Framework.BotPlayer;
+import Framework.GameAI;
+import Reversi.ReversiLogic;
+import TicTacToe.TicTacToeLogic;
 
 public class Router
 {
@@ -42,14 +45,32 @@ public class Router
 	{
 		System.out.println("startRemoteGame");
 		System.out.println(this.connection);
-		System.out.println(player);
-		AbstractPlayer p1;
+
+		AbstractPlayer p1;	
+
 		if(player) {
 			p1 = new HumanPlayer(this.connection.getUsername());
 		}
 		else {
-			p1 = new BotPlayer(this.connection.getUsername());
+			GameAI ai = null;
+			switch (gameType) {
+			case "Reversi":
+				ai = new ReversiLogic();
+				break;
+			case "Tic-tac-toe":
+				ai = new TicTacToeLogic();
+				break;
+			default:
+				System.out.println("Wat gameType? " + gameType);
+				break;
+			}
+			p1 = new BotPlayer(this.connection.getUsername(), ai);
 		}
+
+		GameAI ai = null;
+
+		//AbstractPlayer p1;
+		//p1 = new BotPlayer(this.connection.getUsername(), ai);
 		//p1 = new HumanPlayer(this.connection.getUsername());
 		AbstractPlayer p2 = new RemotePlayer(this.connection, opponent);
 
