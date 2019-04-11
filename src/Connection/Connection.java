@@ -12,13 +12,11 @@ import java.util.HashMap;
 
 import Connection.Events.ChallengeCancelledEvent;
 import Connection.Events.ChallengedEvent;
-import Connection.Events.ForfeitEvent;
 import Connection.Events.LoginSuccesEvent;
 import Connection.Events.MatchLostEvent;
 import Connection.Events.MatchStartEvent;
 import Connection.Events.MatchTiedEvent;
 import Connection.Events.MatchWonEvent;
-import Connection.Events.OpponentDisconnectedEvent;
 import Connection.Events.TurnEvent;
 import Connection.Events.UpdatedPlayerListEvent;
 import Connection.Events.YourMoveEvent;
@@ -35,7 +33,7 @@ public class Connection extends Registrator {
 	private boolean loggedIn;
 	private boolean subscribed;
 	private boolean loginEventTriggered;
-	private HashMap<String, String> challengers;
+	private HashMap challengers;
 	private ArrayList<String> playerList;
 	private ArrayList<String> gameList;
 	private String loggedUsername;
@@ -45,7 +43,7 @@ public class Connection extends Registrator {
 	public Connection()  {
 		loggedIn = false;
 		subscribed = false;
-		challengers = new HashMap<String, String>();
+		challengers = new HashMap<String,String>();
 		gameList = new ArrayList<String>();
 		playerList = new ArrayList<String>();
 		loginEventTriggered = false;
@@ -94,6 +92,7 @@ public class Connection extends Registrator {
 								String t2 = "SVR GAME CHALLENGE {CHALLENGER: " + challenger + ", CHALLENGENUMBER: " + challengeNum + ", GAMETYPE: ";
 								String gameType = StringFormat.stringFormat(line.substring(t2.length()+3));
 								challengers.put(challengeNum, challenger);
+								System.out.println(challengers.get(challengeNum));
 								triggerEvent(new ChallengedEvent(challenger, gameType, Integer.parseInt(challengeNum)));
 							}
 							if(line.contains("SVR GAME CHALLENGE CANCELLED")) {
@@ -250,8 +249,12 @@ public class Connection extends Registrator {
     }
     
     // function to accept a challenge
-    public void acceptChallenge(int challengeNumber) {
+    public void acceptChallenge(String challengeNumber) {
     	sendCommand("challenge accept " + challengeNumber);
+    }
+    
+    public HashMap<String, String> getChallengerList() {
+    	return challengers;
     }
     
     //send command to server to update the game list

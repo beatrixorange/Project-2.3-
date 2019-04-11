@@ -35,6 +35,12 @@ public class LoginView extends AbstractView {
 		
 		this.scene = new Scene(start,1200,1200);
 	}
+	
+	public void keyPressed(LoginController handler) {
+		this.nickName.setOnAction((ActionEvent e) -> {
+			handler.onButtonPress(this.nickName.getText());
+		});
+	}
 		
 	public void setOnButtonPressHandler(LoginController handler)
 	{
