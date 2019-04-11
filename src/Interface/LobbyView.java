@@ -11,6 +11,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -110,6 +111,20 @@ public class LobbyView extends AbstractView {
 			items.add(temp.get(x));
 		}
 		list.setItems(items);
+	}
+	
+	public Boolean getToggle() {
+		boolean player = true;
+		RadioButton t = (RadioButton) this.group.getSelectedToggle();
+		
+		String s = t.getText();
+		if(s.equals("Play as Player")) {
+			player = true;
+		}
+		else {
+			player = false;
+		}
+		return player;
 	}
 	
 	@Override

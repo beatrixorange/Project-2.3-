@@ -36,8 +36,6 @@ public class LoginController extends AbstractController
 				Router.get().toLobby();
 			});
 		});
-
-		
 	}
 	
 	public void onButtonPress(String nickName)

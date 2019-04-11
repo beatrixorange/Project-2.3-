@@ -437,7 +437,7 @@ public class ReversiLogic
 			}
 		}
 
-		System.out.println("evaluateBoard score: " + score);
+		//System.out.println("evaluateBoard score: " + score);
 
 		return score;
 	}

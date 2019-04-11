@@ -5,6 +5,7 @@ import java.util.Map;
 
 import Connection.Connection;
 import Connection.Events.UpdatedPlayerListEvent;
+import Framework.HumanPlayer;
 import Connection.Events.ChallengedEvent;
 import Connection.Events.LoginSuccesEvent;
 import Connection.Events.MatchStartEvent;
@@ -29,14 +30,13 @@ public class LobbyController extends AbstractController
 			lView.setOnRefreshButtonPressHandler(this);
 			
 			// Update player list when opening lobby
-			connection.updatePlayerList();
-			 connection.register(event -> {
+			this.connection.updatePlayerList();
+			this.connection.register(event -> {
 				 if (event instanceof UpdatedPlayerListEvent) {
 					 lView.updatePlayers(connection.getPlayerList());
 				 }
 			 });
 			
-
 			this.connection.register(event -> {
 				if (!(event instanceof MatchStartEvent)) {
 					return;
@@ -47,10 +47,12 @@ public class LobbyController extends AbstractController
 				String gameType = e.getGameType();
 				String opponent = e.getOpponent();
 				boolean startTurn = e.getPlayerToMove().equals(e.getOpponent());
+				boolean player = lView.getToggle();
+				System.out.println(player);
 
 				System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
-					Router.get().startRemoteGame(gameType, startTurn, opponent);
+					Router.get().startRemoteGame(gameType, startTurn, opponent, player);
 				});
 			});
 			
@@ -58,27 +60,17 @@ public class LobbyController extends AbstractController
 			this.connection.register(event -> {
 				Platform.runLater(() -> {
 					if (event instanceof ChallengedEvent) {
-				
-				
-
-				ChallengedEvent cE = (ChallengedEvent)event;
-				
-				System.out.println("1");
-				//boolean startTurn = e.getPlayerToMove().equals(e.getOpponent());
-				Platform.runLater(() -> {
-					Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", null, "Accept", this.connection);
-					
-					popup.onClose(eve -> {
-						this.quit();
+						ChallengedEvent cE = (ChallengedEvent)event;
+						Platform.runLater(() -> {
+							Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", null, "Accept", this.connection);
+						
+							popup.onClose(eve -> {
+								this.quit();
+						});
+						popup.button2List();
+						popup.show();
 					});
-					popup.button2List();
-					popup.show();
-				});
-				/*System.out.println("startturn " + startTurn);
-				Platform.runLater(() -> {
-					Router.get().startRemoteGame(gameType, startTurn, opponent);
-				});*/
-				}
+					}
 				});
 			});
 
@@ -91,8 +83,8 @@ public class LobbyController extends AbstractController
 		
 		public void onRefreshButtonPress()
 		{
+			// update player list then wait for event to add player list to view
 			 connection.updatePlayerList();
-			 
 			 connection.register(event -> {
 				 if (event instanceof UpdatedPlayerListEvent) {
 					 lView.updatePlayers(connection.getPlayerList());
@@ -105,12 +97,13 @@ public class LobbyController extends AbstractController
 		
 		public void onQuickPlayButtonPress(String game, boolean isRegularPlayer)
 		{
+			// if no game is selected you cant press quickplay
 			if (game == null) {
 				return;
 			}
 			
 			System.out.println("Hoi " + game + " " + isRegularPlayer);
-
+			// search for random player
 			this.connection.subscribe(game);
 		}
 		

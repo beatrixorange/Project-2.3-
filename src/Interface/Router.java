@@ -38,13 +38,18 @@ public class Router
 		c.show(this.stage);
 	}
 
-	public void startRemoteGame(String gameType, boolean startTurn, String opponent)
+	public void startRemoteGame(String gameType, boolean startTurn, String opponent, boolean player)
 	{
 		System.out.println("startRemoteGame");
 		System.out.println(this.connection);
-
+		System.out.println(player);
 		AbstractPlayer p1;
-		p1 = new BotPlayer(this.connection.getUsername());
+		if(player) {
+			p1 = new HumanPlayer(this.connection.getUsername());
+		}
+		else {
+			p1 = new BotPlayer(this.connection.getUsername());
+		}
 		//p1 = new HumanPlayer(this.connection.getUsername());
 		AbstractPlayer p2 = new RemotePlayer(this.connection, opponent);
 
