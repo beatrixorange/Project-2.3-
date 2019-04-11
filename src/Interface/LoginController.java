@@ -19,6 +19,7 @@ public class LoginController extends AbstractController
 	{	
 		LoginView view = new LoginView();
 		view.setOnButtonPressHandler(this);
+		view.keyPressed(this);
 		
 		this.view = view;
 		this.connection = connection;
