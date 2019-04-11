@@ -132,5 +132,14 @@ public class TicTacToeController extends AbstractGameController implements Click
 
 	protected void makeBotMove(boolean turn, BotPlayer bot)
 	{
+		int[] move = bot.move(this.board, turn);
+
+		this.connection.makeMove(this.board.xyToMove(move[0], move[1]));
+
+		this.board.putTile(move[0], move[1], Tile.byTurn(turn));
+
+		this.switchTurn(!turn);
+
+		this.getView().reDraw(this.board);
 	}
 }
