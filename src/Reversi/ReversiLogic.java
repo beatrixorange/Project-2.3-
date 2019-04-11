@@ -2,15 +2,16 @@ package Reversi;
 
 import Framework.Board;
 import Framework.Tile;
+import Framework.GameAI;
+
 import java.util.ArrayList;
 import java.lang.Comparable;
 import java.util.Collections;
 import java.util.Date;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class ReversiLogic
+public class ReversiLogic implements GameAI
 {
 	public boolean isValidMove(Board board, int x, int y, Tile me)
 	{
