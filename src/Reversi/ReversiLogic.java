@@ -186,7 +186,7 @@ public class ReversiLogic
 			final int beta = board.getSizeX()*board.getSizeY() + 4*board.getSizeX() + 4 + 1;
 
 			threads[i] = new Thread(() -> {
-				int points = this.neGaMax(bClone, t, 4*2, -1, beta, true);
+				int points = this.neGaMax(bClone, t, 3*2, -1, beta, true);
 
 				try {
 					q.put(new int[]{points, move[0], move[1]});
@@ -239,7 +239,6 @@ public class ReversiLogic
 		return new int[]{bestX, bestY};
 	}
 
-
 	private int neGaMax(Board board, Tile me, int depth, int alpha, int beta, boolean isUs)
 	{
 		if (Thread.interrupted()) {
@@ -263,9 +262,7 @@ public class ReversiLogic
 
 		int[][] possibleMoves = this.determinePossibleMoves(board, me);
 		if (possibleMoves.length == 0) {
-			System.out.println(board);
 			int score = this.evaluateBoard(board, me);
-			System.out.println("no possible moves? :(" + score);
 			if (isUs) {
 				return score;
 			}
@@ -411,11 +408,6 @@ public class ReversiLogic
 
 		Collections.sort(list);
 
-		System.out.println("sortedNodes");
-		for (SortedNode s : list) {
-			System.out.println(s.score);
-		}
-
 		return list;
 	}
 
@@ -445,7 +437,6 @@ public class ReversiLogic
 			}
 		}
 
-		System.out.println(board);
 		System.out.println("evaluateBoard score: " + score);
 
 		return score;
