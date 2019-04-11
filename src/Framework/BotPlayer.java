@@ -15,6 +15,6 @@ public class BotPlayer extends LocalPlayer
 
 	public int[] move(Board board, boolean turn)
 	{
-		return this.logic.bestMove(board, turn, 2);
+		return this.logic.bestMove(board, turn, 85);
 	}
 }

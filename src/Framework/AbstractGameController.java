@@ -142,26 +142,16 @@ public abstract class AbstractGameController extends AbstractController implemen
 		this.turnSwitches++;
 
 		AbstractPlayer playerTurn = (newTurn) ? this.player2 : this.player1;
-		this.view.setMyTurn(playerTurn instanceof HumanPlayer);
+		this.view.setMyTurn(playerTurn instanceof LocalPlayer);
 
 		this.parentController.updateTurn(this.turn);
 
 		if (!turn) {
 			BotPlayer bot = this.isBotGame();
 			if (bot != null) {
-				int thisTurnSwitches = this.turnSwitches;
-				(new Thread(() -> {
-					try {
-						Thread.sleep(100L);
-					} catch (InterruptedException e) {}
-					Platform.runLater(() -> {
-						if (thisTurnSwitches != this.turnSwitches) {
-							return;
-						}
-
-						this.makeBotMove(newTurn, bot);
-					});
-				})).start();
+				Platform.runLater(() -> {
+					this.makeBotMove(newTurn, bot);
+				});
 			}
 		}
 	}

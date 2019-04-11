@@ -188,9 +188,16 @@ public class ReversiLogic
 			threads[i] = new Thread(() -> {
 				int points = this.neGaMax(bClone, t, 3*2, -1, beta, true);
 
-				try {
-					q.put(new int[]{points, move[0], move[1]});
-				} catch (InterruptedException e) {}
+				boolean success = false;
+
+				while (!success) {
+					try {
+						q.put(new int[]{points, move[0], move[1]});
+						success = true;
+					} catch (InterruptedException e) {
+						System.out.println("InterruptedException");
+					}
+				}
 
 				/*if (points > maxPoints) {
 					maxPoints = points;
@@ -203,7 +210,7 @@ public class ReversiLogic
 
 		Thread interruptThread = new Thread(() -> {
 			try {
-				Thread.sleep(timeout*1000L);
+				Thread.sleep(timeout*100L);
 			} catch (InterruptedException e) {
 				return;
 			}
@@ -241,8 +248,9 @@ public class ReversiLogic
 
 	private int neGaMax(Board board, Tile me, int depth, int alpha, int beta, boolean isUs)
 	{
-		if (Thread.interrupted()) {
+		if (Thread.currentThread().isInterrupted()) {
 			this.interrupted();
+
 			int score = this.evaluateBoard(board, me);
 			if (isUs) {
 				return score;
@@ -436,8 +444,6 @@ public class ReversiLogic
 				}
 			}
 		}
-
-		System.out.println("evaluateBoard score: " + score);
 
 		return score;
 	}
