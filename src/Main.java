@@ -19,7 +19,7 @@ public class Main extends Application
 	private Stage stage = null;
 	private static Connection connection = null;
 
-	private static String host = "localhost";
+	private static String host = "145.33.225.170";
 
 	public void start(Stage primaryStage) throws Exception {
 
