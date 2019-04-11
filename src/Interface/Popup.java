@@ -73,7 +73,7 @@ public class Popup
 		layout.getChildren().addAll(label, hBox);
 		layout.setAlignment(Pos.CENTER);
 
-		Scene scene = new Scene(layout, 300, 250);
+		Scene scene = new Scene(layout, 500, 450);
 		this.stage.setScene(scene);
 		
 	}
@@ -82,15 +82,7 @@ public class Popup
 	{
 		this.button.setOnAction(e -> {
 			handler.handle(e);
-			System.out.println("yoy");
-			Iterator it = this.connection.getChallengerList().entrySet().iterator();
-			while (it.hasNext()) {
-		        Map.Entry pair = (Map.Entry)it.next();
-		        if(pair.getValue().equals(this.list.getSelectionModel().getSelectedItem())) {
-		        	String s = (String) pair.getKey();
-		        	this.connection.acceptChallenge((s));
-		        };
-			}
+			stage.close();
 		});
 	}
 	
@@ -98,6 +90,12 @@ public class Popup
 	{
 		this.button2.setOnAction(e -> {
 			handler.handle(e);
+		});
+	}
+	
+	public void button2List()
+	{
+		this.button2.setOnAction(e -> {
 			System.out.println("yoy");
 			Iterator it = this.connection.getChallengerList().entrySet().iterator();
 			while (it.hasNext()) {
@@ -106,8 +104,9 @@ public class Popup
 
 		        	String s = (String) pair.getKey();
 		        	this.connection.acceptChallenge((s));
+		        	stage.close();
 		        };
-		    it.remove();
+		        it.remove();
 			}
 		});
 	}
@@ -123,8 +122,6 @@ public class Popup
 			while (it.hasNext()) {
 		        Map.Entry pair = (Map.Entry)it.next();
 		        items.add((String) pair.getValue());
-		        
-			
 		}
 		list.setItems(items);
 	}

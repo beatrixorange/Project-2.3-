@@ -1,5 +1,7 @@
 package Interface;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import Connection.Connection;
 import Connection.Events.UpdatedPlayerListEvent;
@@ -20,12 +22,20 @@ public class LobbyController extends AbstractController
 		{	
 			this.lView = new LobbyView();
 			this.view = lView;
+			this.connection = connection;
 			
 			lView.setOnQuickPlayButtonPressHandler(this);
 			lView.setOnInviteButtonPressHandler(this);
 			lView.setOnRefreshButtonPressHandler(this);
 			
-			this.connection = connection;
+			// Update player list when opening lobby
+			connection.updatePlayerList();
+			 connection.register(event -> {
+				 if (event instanceof UpdatedPlayerListEvent) {
+					 lView.updatePlayers(connection.getPlayerList());
+				 }
+			 });
+			
 
 			this.connection.register(event -> {
 				if (!(event instanceof MatchStartEvent)) {
@@ -56,12 +66,13 @@ public class LobbyController extends AbstractController
 				System.out.println("1");
 				//boolean startTurn = e.getPlayerToMove().equals(e.getOpponent());
 				Platform.runLater(() -> {
-				Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", null, "Accept", this.connection);
-				popup.show();
-				
-				popup.onClose(eve -> {
-					this.quit();
-				});
+					Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", null, "Accept", this.connection);
+					
+					popup.onClose(eve -> {
+						this.quit();
+					});
+					popup.button2List();
+					popup.show();
 				});
 				/*System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {

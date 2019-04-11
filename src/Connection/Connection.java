@@ -12,13 +12,11 @@ import java.util.HashMap;
 
 import Connection.Events.ChallengeCancelledEvent;
 import Connection.Events.ChallengedEvent;
-import Connection.Events.ForfeitEvent;
 import Connection.Events.LoginSuccesEvent;
 import Connection.Events.MatchLostEvent;
 import Connection.Events.MatchStartEvent;
 import Connection.Events.MatchTiedEvent;
 import Connection.Events.MatchWonEvent;
-import Connection.Events.OpponentDisconnectedEvent;
 import Connection.Events.TurnEvent;
 import Connection.Events.UpdatedPlayerListEvent;
 import Connection.Events.YourMoveEvent;
