@@ -54,8 +54,9 @@ public class LobbyController extends AbstractController
 
 				System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
-					Router.get().startRemoteGame(gameType, startTurn, opponent, player);
 					this.quit();
+
+					Router.get().startRemoteGame(gameType, startTurn, opponent, player);
 				});
 			});
 			

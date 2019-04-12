@@ -75,7 +75,6 @@ public class Popup
 
 		Scene scene = new Scene(layout, 500, 450);
 		this.stage.setScene(scene);
-		
 	}
 
 	public void onClose(EventHandler handler)

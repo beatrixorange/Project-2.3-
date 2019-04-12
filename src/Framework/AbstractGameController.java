@@ -246,6 +246,8 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 	private void gameEnd(String reason, int score1, int score2)
 	{
+		System.out.prinln("    @@@@ game is ending: " + reason + " " + score1 + " " + score2);
+
 		String title = "";
 		String msg = "";
 		switch (reason) {
@@ -265,7 +267,9 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 		Popup popup = new Popup(title,
 				msg + "\nScore: " + score1 + " vs" + score2);
-		popup.show();
+
 		this.quit();
+
+		popup.show();
 	}
 }
