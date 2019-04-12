@@ -154,7 +154,7 @@ public class ReversiLogic implements GameAI
 		return new int[]{p1, p2};
 	}
 
-	public int[] bestMove(Board board, boolean turn, int timeout)
+	public int[] bestMove(final Board board, boolean turn, int timeout)
 	{
 		Tile t = Tile.byTurn(turn);
 
@@ -167,20 +167,21 @@ public class ReversiLogic implements GameAI
 		for (int i = 0; i < moves.length; i++) {
 			int[] move = moves[i];
 
-			Board bClone2 = null;
-			try {
-				bClone2 = (Board)board.clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-
-			final Board bClone = bClone2;
-
+			
 			final int beta = 2147483646; //board.getSizeX()*board.getSizeY() + 4*board.getSizeX() + 4 + 1;
 
 			final int alpha = -2147483646;
 
 			threads[i] = new Thread(() -> {
+				Board bClone = null;
+				try {
+					bClone = (Board)board.clone();
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+
+				this.makeMove(bClone, move[0], move[1], t);
+
 				int points = this.neGaMax(bClone, t, 6, alpha, beta, true);
 
 				System.out.println("points! :D : " + points);
