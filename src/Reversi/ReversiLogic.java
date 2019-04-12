@@ -156,10 +156,6 @@ public class ReversiLogic implements GameAI
 
 	public int[] bestMove(Board board, boolean turn, int timeout)
 	{
-		int maxPoints = 0;
-		int bestX = -1;
-		int bestY = -1;
-
 		Tile t = Tile.byTurn(turn);
 
 		BlockingQueue<int[]> q = new ArrayBlockingQueue<int[]>(8);
@@ -180,14 +176,14 @@ public class ReversiLogic implements GameAI
 
 			final Board bClone = bClone2;
 
-			final int[][] disks = makeMove(board, move[0], move[1], t);
-		
-			final int count = disks.length;
+			final int beta = 2147483646; //board.getSizeX()*board.getSizeY() + 4*board.getSizeX() + 4 + 1;
 
-			final int beta = board.getSizeX()*board.getSizeY() + 4*board.getSizeX() + 4 + 1;
+			final int alpha = -2147483646;
 
 			threads[i] = new Thread(() -> {
-				int points = this.neGaMax(bClone, t, 3*2, -1, beta, true);
+				int points = this.neGaMax(bClone, t, 6, alpha, beta, true);
+
+				System.out.println("points! :D : " + points);
 
 				boolean success = false;
 
@@ -223,6 +219,10 @@ public class ReversiLogic implements GameAI
 			System.out.println((new Date()) + ": Interrupted threads!");
 		});
 		interruptThread.start();
+
+		int maxPoints = -2147483646;
+		int bestX = -1;
+		int bestY = -1;
 		
 		for (int i = 0; i < moves.length; i++) {
 			try {
@@ -252,172 +252,49 @@ public class ReversiLogic implements GameAI
 		if (Thread.currentThread().isInterrupted()) {
 			this.interrupted();
 
-			int score = this.evaluateBoard(board, me);
-			if (isUs) {
-				return score;
-			}
-
-			return score * -1;
+			return this.color(isUs) * this.evaluateBoard(board, me);
 		}
 
 		if (depth == 0) {
-			int score = this.evaluateBoard(board, me);
-			if (isUs) {
-				return score;
-			}
-
-			return score * -1;
+			return this.color(isUs) * this.evaluateBoard(board, me);
 		}
 
 		int[][] possibleMoves = this.determinePossibleMoves(board, me);
 		if (possibleMoves.length == 0) {
-			int score = this.evaluateBoard(board, me);
-			if (isUs) {
-				return score;
-			}
-
-			return score * -1;
+			return this.color(isUs) * this.evaluateBoard(board, me);
 		}
 
-		int bestScore = -1;
+		int bestScore = -2147483646;
 
-		for (int x = 0; x < board.getSizeX(); x++) {
-			for (int y = 0; y < board.getSizeY(); y++) {
-				int[][] turned = this.disksTurnedByMove(board, x, y, me);
-				if (turned.length == 0) {
-					// Not valid move :( 
-					continue;
-				}
-
-				Board bClone = null;
-				try {
-					bClone = (Board)board.clone();
-				} catch (CloneNotSupportedException e) {
-				}
-
-				this.makeMove(bClone, turned, me);
-
-				int score = -1 * this.neGaMax(bClone, me, depth-1, alpha*-1, beta*-1, !isUs);
-
-				if (score > bestScore) {
-					bestScore = score;
-				}
-
-				if (score > alpha) {
-					alpha = score;
-				}
-
-				if (alpha >= beta) {
-					break;
-				}
-			}
-		}
-
-		return bestScore;
-	}
-
-	private int neGaMaxOld(Board board, Tile me, int depth, int alpha, int beta, boolean isUs)
-	{
-		if (Thread.interrupted()) {
-			this.interrupted();
-			int score = this.evaluateBoard(board, me);
-			if (isUs) {
-				return score;
+		for (int i = 0; i < possibleMoves.length; i++) {
+			Board bClone = null;
+			try {
+				bClone = (Board)board.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
 			}
 
-			return score * -1;
-		}
+			this.makeMove(bClone, possibleMoves[i][0], possibleMoves[i][1], me);
 
-		if (depth == 0) {
-			int score = this.evaluateBoard(board, me);
-			if (isUs) {
-				return score;
-			}
-
-			return score * -1;
-		}
-
-		int[][] possibleMoves = this.determinePossibleMoves(board, me);
-		if (possibleMoves.length == 0) {
-			System.out.println(board);
-			int score = this.evaluateBoard(board, me);
-			System.out.println("no possible moves? :(" + score);
-			if (isUs) {
-				return score;
-			}
-
-			return score * -1;
-		}
-
-		ArrayList<SortedNode> sortedNodes = this.sortedNodes(board, me);
-		int bestScore = -1;
-
-		for (SortedNode node : sortedNodes) {
-			Board bCopy = node.board;
-
-			int score = -1 * this.neGaMaxOld(bCopy, me, depth-1, alpha*-1, beta*-1, !isUs);
+			int score = -this.neGaMax(bClone, me, depth-1, -alpha, -beta, !isUs);
 			if (score > bestScore) {
 				bestScore = score;
 			}
 
-			if (score > alpha) {
+			/*if (score > alpha) {
 				alpha = score;
 			}
 
 			if (alpha >= beta) {
-				break;
-			}
+				return alpha;
+			}*/
+		}
+
+		if (bestScore == 1) {
+			System.out.println("bestScore 1 :< : " + bestScore);
 		}
 
 		return bestScore;
-	}
-
-	class SortedNode implements Comparable<SortedNode>
-	{
-		Board board;
-		int score;
-
-		public SortedNode(Board b, int s)
-		{
-			this.board = b;
-			this.score = s;
-		}
-
-		public int compareTo(SortedNode n)
-		{
-			// Sort descending.
-
-			return n.score - this.score;
-		}
-	}
-
-	private ArrayList<SortedNode> sortedNodes(Board board, Tile me)
-	{
-		ArrayList<SortedNode> list = new ArrayList<SortedNode>();
-
-		for (int x = 0; x < board.getSizeX(); x++) {
-			for (int y = 0; y < board.getSizeY(); y++) {
-				int[][] turned = this.disksTurnedByMove(board, x, y, me);
-				if (turned.length == 0) {
-					continue;
-				}
-
-				Board bClone = null;
-				try {
-					bClone = (Board)board.clone();
-				} catch (CloneNotSupportedException e) {
-				}
-
-				this.makeMove(bClone, turned, me);
-
-				list.add(new SortedNode(bClone, this.evaluateBoard(bClone, me)));
-			}
-		
-		}
-
-		Collections.sort(list);
-
-		return list;
 	}
 
 	private int evaluateBoard(Board board, Tile me)
@@ -446,9 +323,6 @@ public class ReversiLogic implements GameAI
 			}
 		}
 
-
-		System.out.println("evaluateBoard score: " + score);
-
 		return score;
 	}
 
@@ -459,5 +333,14 @@ public class ReversiLogic implements GameAI
 	private void interrupted()
 	{
 		System.out.println("Interupted");
+	}
+
+	private int color(boolean isUs)
+	{
+		if (isUs) {
+			return 1;
+		}
+
+		return -1;
 	}
 }
