@@ -33,7 +33,9 @@ public class LobbyController extends AbstractController
 			this.connection.updatePlayerList();
 			this.connection.register(event -> {
 				 if (event instanceof UpdatedPlayerListEvent) {
-					 lView.updatePlayers(connection.getPlayerList());
+					 Platform.runLater(() -> {
+					 	lView.updatePlayers(connection.getPlayerList());
+					 });
 				 }
 			 });
 			
@@ -87,7 +89,9 @@ public class LobbyController extends AbstractController
 			 connection.updatePlayerList();
 			 connection.register(event -> {
 				 if (event instanceof UpdatedPlayerListEvent) {
-					 lView.updatePlayers(connection.getPlayerList());
+					 Platform.runLater(() -> {
+					 	lView.updatePlayers(connection.getPlayerList());
+					 });
 				 }
 			 });
 			
