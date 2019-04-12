@@ -246,7 +246,7 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 	private void gameEnd(String reason, int score1, int score2)
 	{
-		System.out.prinln("    @@@@ game is ending: " + reason + " " + score1 + " " + score2);
+		System.out.println("    @@@@ game is ending: " + reason + " " + score1 + " " + score2);
 
 		String title = "";
 		String msg = "";
