@@ -37,7 +37,7 @@ public class LobbyController extends AbstractController
 					 	lView.updatePlayers(connection.getPlayerList());
 					 });
 				 }
-			 });
+			});
 			
 			this.connection.register(event -> {
 				if (!(event instanceof MatchStartEvent)) {
@@ -55,9 +55,9 @@ public class LobbyController extends AbstractController
 				System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
 					Router.get().startRemoteGame(gameType, startTurn, opponent, player);
+					this.quit();
 				});
 			});
-			
 			
 			this.connection.register(event -> {
 				Platform.runLater(() -> {
@@ -94,8 +94,6 @@ public class LobbyController extends AbstractController
 					 });
 				 }
 			 });
-			
-			// TODO: Stuur invite via Connection
 		}
 		
 		
@@ -121,10 +119,7 @@ public class LobbyController extends AbstractController
 			this.connection.sendChallenge(invitePlayer, game);
 			
 			System.out.println("Hoi " + invitePlayer + ", ik wil jou graag eem " + isRegularPlayer + " " + game);
-			// TODO: Stuur invite via Connection
 		}
-		
-		
 		
 		public String getTitle() {
 			return "Lobby";
@@ -132,8 +127,6 @@ public class LobbyController extends AbstractController
 		
 		public void quit()
 		{
-			// TODO: De-register
-
 			Router.get().toLobby();
 		}
 }
