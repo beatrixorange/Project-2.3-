@@ -84,8 +84,6 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.makeMove(turn, x, y);
 
 		this.switchTurn(!turn);
-
-		this.getView().reDraw(this.board);
 	}
 
 	/**
@@ -99,7 +97,6 @@ public class ReversiController extends AbstractGameController implements ClickHa
 	protected void makeServerMove(boolean turn, int x, int y)
 	{
 		this.makeMove(turn, x, y);
-
 		this.getView().reDraw(this.board);
 	}
 
@@ -152,8 +149,6 @@ public class ReversiController extends AbstractGameController implements ClickHa
 				this.makeMove(turn, move[0], move[1]);
 
 				this.switchTurn(!turn);
-
-				this.getView().reDraw(this.board);
 			});
 		});
 		t.start();

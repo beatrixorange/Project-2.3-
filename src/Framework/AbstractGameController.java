@@ -30,7 +30,7 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 	protected Connection connection;
 
-	protected AbstractGameView view;
+	protected BoardView view;
 
 	private EventHandler handler;
 
@@ -157,10 +157,11 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 		this.turnSwitches++;
 
-		AbstractPlayer playerTurn = (newTurn) ? this.player2 : this.player1;
-		this.view.setMyTurn(playerTurn instanceof LocalPlayer);
+		this.getView().setMyTurn(this.getPlayerAtMove() instanceof LocalPlayer);
 
 		this.parentController.updateTurn(this.turn);
+
+		this.getView().reDraw(this.board);
 
 		if (!turn) {
 			BotPlayer bot = this.isBotGame();
@@ -174,7 +175,7 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 	abstract protected void makeBotMove(boolean turn, BotPlayer bot);
 
-	public AbstractGameView getView()
+	public BoardView getView()
 	{
 		return this.view;
 	}
