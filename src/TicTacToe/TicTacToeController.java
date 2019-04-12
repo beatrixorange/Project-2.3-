@@ -5,7 +5,7 @@ import Framework.Board;
 import Framework.ClickHandler;
 import Framework.Tile;
 import Reversi.ReversiView;
-import Framework.GameController;
+import Framework.PlayController;
 import Framework.HumanPlayer;
 import Framework.LocalPlayer;
 import Connection.Connection;
@@ -16,7 +16,7 @@ import Framework.BotPlayer;
 public class TicTacToeController extends AbstractGameController implements ClickHandler{
 
 	public TicTacToeController(Connection connection, AbstractPlayer p1,
-			AbstractPlayer p2, GameController parent, boolean startTurn)
+			AbstractPlayer p2, PlayController parent, boolean startTurn)
 	{
 		super(connection, p1, p2, parent, startTurn);
 

@@ -3,7 +3,7 @@ package Reversi;
 import Framework.AbstractGameController;
 import Framework.Board;
 import Framework.ClickHandler;
-import Framework.GameController;
+import Framework.PlayController;
 import Framework.Tile;
 import Framework.LocalPlayer;
 import Framework.AbstractPlayer;
@@ -20,7 +20,7 @@ public class ReversiController extends AbstractGameController implements ClickHa
 	private ReversiLogic logic;
 
 	public ReversiController(Connection connection, AbstractPlayer p1,
-			AbstractPlayer p2, GameController parent, boolean startTurn)
+			AbstractPlayer p2, PlayController parent, boolean startTurn)
 	{
 		super(connection, p1, p2, parent, startTurn);
 

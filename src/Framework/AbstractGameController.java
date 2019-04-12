@@ -21,7 +21,7 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 	protected int turnSwitches = 0;
 
-	protected GameController parentController;
+	protected PlayController parentController;
 
 	protected Connection connection;
 
@@ -30,7 +30,7 @@ public abstract class AbstractGameController extends AbstractController implemen
 	private EventHandler handler;
 
 	public AbstractGameController(Connection connection, AbstractPlayer p1,
-			AbstractPlayer p2, GameController parent, boolean startTurn)
+			AbstractPlayer p2, PlayController parent, boolean startTurn)
 	{
 		this.connection = connection;
 		this.player1 = p1;

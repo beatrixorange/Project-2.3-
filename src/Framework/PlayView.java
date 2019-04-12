@@ -9,7 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 
-public class GameView extends AbstractView
+public class PlayView extends AbstractView
 {
 	private Label turnLabel = null;
 
@@ -17,12 +17,12 @@ public class GameView extends AbstractView
 
 	private Label scoreLabel1, scoreLabel2;
 
-	public GameView(AbstractGameView gameView, AbstractPlayer p1, AbstractPlayer p2)
+	public PlayView(AbstractGameView gameView, AbstractPlayer p1, AbstractPlayer p2)
 	{
 		this(gameView, p1, p2, false);
 	}
 
-	public GameView(AbstractGameView gameView, AbstractPlayer p1, AbstractPlayer p2, boolean hasScores)
+	public PlayView(AbstractGameView gameView, AbstractPlayer p1, AbstractPlayer p2, boolean hasScores)
 	{
 		this.player1 = p1;
 		this.player2 = p2;

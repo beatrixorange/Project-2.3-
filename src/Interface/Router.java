@@ -3,7 +3,7 @@ package Interface;
 import javafx.stage.Stage;
 import Connection.Connection;
 
-import Framework.GameController;
+import Framework.PlayController;
 import Framework.AbstractPlayer;
 import Framework.HumanPlayer;
 import Framework.RemotePlayer;
@@ -75,7 +75,7 @@ public class Router
 		AbstractPlayer p2 = new RemotePlayer(this.connection, opponent);
 
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@ \\/");
-		GameController c = new GameController(this.connection, p1, p2, gameType, startTurn);
+		PlayController c = new PlayController(this.connection, p1, p2, gameType, startTurn);
 		System.out.println("View:");
 		System.out.println(c.getView());
 

@@ -53,9 +53,10 @@ public class LobbyView extends AbstractView {
 		this.group = new ToggleGroup();
 		this.playerButton = new RadioButton("Play as Player");
 		playerButton.setToggleGroup(group);
-		playerButton.setSelected(true);
+
 		this.computerButton = new RadioButton("Play as Computer");	
 		computerButton.setToggleGroup(group);
+		computerButton.setSelected(true);
 		
 		this.playerList = new Label("Online Players");
 		this.refreshButton = new Button("Refresh");

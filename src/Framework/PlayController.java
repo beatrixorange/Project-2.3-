@@ -4,13 +4,13 @@ import Interface.AbstractController;
 import TicTacToe.TicTacToeController;
 import Reversi.ReversiController;
 
-public class GameController extends AbstractController
+public class PlayController extends AbstractController
 {
 	private boolean turn;
 
-	protected GameView view;
+	protected PlayView view;
 
-	public GameController(Connection connection, AbstractPlayer p1, AbstractPlayer p2, String gameType, boolean startTurn)
+	public PlayController(Connection connection, AbstractPlayer p1, AbstractPlayer p2, String gameType, boolean startTurn)
 	{
 		this.connection = connection;
 
@@ -25,7 +25,7 @@ public class GameController extends AbstractController
 			hasScores = false;
 		}
 
-		this.view = new GameView(controller.getView(), p1, p2, hasScores);
+		this.view = new PlayView(controller.getView(), p1, p2, hasScores);
 		System.out.println("this.view : ");
 		System.out.println(this.view);
 
@@ -44,7 +44,7 @@ public class GameController extends AbstractController
 		this.getView().setScores(player1, player2);
 	}
 
-	public GameView getView()
+	public PlayView getView()
 	{
 		return this.view;
 	}

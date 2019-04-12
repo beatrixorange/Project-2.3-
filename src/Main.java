@@ -3,7 +3,7 @@ import Connection.Events.EventHandler;
 import Connection.Events.Event;
 import Connection.Events.LoginSuccesEvent;
 import Framework.AbstractPlayer;
-import Framework.GameController;
+import Framework.PlayController;
 import Interface.AbstractController;
 import Interface.LoginController;
 import Interface.LobbyController;
