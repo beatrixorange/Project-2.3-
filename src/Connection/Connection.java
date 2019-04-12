@@ -144,7 +144,7 @@ public class Connection extends Registrator {
 										playerTwoScore = playerTwoScore.replace(" ", "");
 										triggerEvent(new MatchLostEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
 									}
-									if(line.contains("TIE")){
+									if(line.contains("DRAW")){
 										String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME DRAW {PLAYERONESCORE: ".length()));
 										String t = "SVR GAME DRAW {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
 										String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
