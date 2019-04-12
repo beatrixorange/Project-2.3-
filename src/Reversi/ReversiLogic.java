@@ -184,8 +184,6 @@ public class ReversiLogic implements GameAI
 
 				int points = this.neGaMax(bClone, t, 5, alpha, beta, true);
 
-				System.out.println("points! :D : " + points);
-
 				boolean success = false;
 
 				while (!success) {
