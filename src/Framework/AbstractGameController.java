@@ -129,26 +129,17 @@ public abstract class AbstractGameController extends AbstractController implemen
 					System.out.println("this shouldn't happen m8");
 				}
 			} else if (event instanceof MatchWonEvent) {
-				System.out.println("You won The game!");
+				MatchWonEvent e = (MatchWonEvent)event;
 
-				Popup popup = new Popup("Win", "You won The Game!");
-				popup.onClose(eve -> {
-					this.quit();
-				});
-				popup.show();
+				this.gameEnd("win", e.getPlayerOneScore(), e.getPlayerTwoScore());
 			} else if (event instanceof MatchTiedEvent) {
-				System.out.println("You tied The Game!");
+				MatchTiedEvent e = (MatchTiedEvent)event;
+
+				this.gameEnd("draw", e.getPlayerOneScore(), e.getPlayerTwoScore());
 			} else if (event instanceof MatchLostEvent) {
 				MatchLostEvent e = (MatchLostEvent)event;
 
-				System.out.println("You lost The Game!");
-
-				Popup popup = new Popup("Lost", "You lost The Game!");
-				popup.onClose(eve -> {
-					this.quit();
-				});
-				popup.show();
-		
+				this.gameEnd("lose", e.getPlayerOneScore(), e.getPlayerTwoScore());
 			}
 		});
 	}
@@ -251,5 +242,30 @@ public abstract class AbstractGameController extends AbstractController implemen
 		}
 
 		return null;
+	}
+
+	private void gameEnd(String reason, int score1, int score2)
+	{
+		String title = "";
+		String msg = "";
+		switch (reason) {
+		case "win":
+			title = "Win";
+			msg = "You won The Game!";
+			break;
+		case "lose":
+			title = "Lost";
+			msg = "You lost The Game.";
+			break;
+		case "draw":
+			title = "Draw";
+			msg = "The Game is a draw!";
+			break;
+		}
+
+		Popup popup = new Popup(title,
+				msg + "\nScore: " + score1 + " vs" + score2);
+		popup.show();
+		this.quit();
 	}
 }
