@@ -9,16 +9,30 @@ import javafx.application.Platform;
 
 import javafx.scene.input.MouseEvent;
 
+/**
+ * BoardView is an AbstractGameView for board games.
+ * It handles drawing the board to the GUI.
+ */
 public abstract class BoardView extends AbstractGameView
 {
 	protected ClickHandler clickHandler;
 
+	/**
+	 * reDraw wraps draw() and shows it to the scene.
+	 */
 	public void reDraw(Board board)
 	{
 		((Pane)this.scene.getRoot()).getChildren().setAll(this.draw(board));
-		System.out.println("Redraw");
 	}
 
+	/**
+	 * draw creates a JavaFX gridpane representing this board.
+	 * For every location on the board, makeGridNode is called.
+	 *
+	 * @param board The board to draw.
+	 * 
+	 * @return The JavaFX GridPane.
+	 */
 	public GridPane draw(Board board)
 	{
 		GridPane gridPane = new GridPane();
@@ -44,5 +58,15 @@ public abstract class BoardView extends AbstractGameView
 		return gridPane;
 	}
 
+	/**
+	 * makeGridNode should make a JavaFX node representing the given tile at
+	 * location.
+	 *
+	 * @param disk
+	 * @param x
+	 * @param y
+	 *
+	 * @return The JavaFX scene node.
+	 */
 	abstract protected Node makeGridNode(Tile disk, int x, int y);
 }

@@ -15,10 +15,16 @@ import Connection.Connection;
 import javafx.application.Platform;
 import Interface.Popup;
 
+/**
+ * ReversiController is a AbstractGameController for reversi.
+ */
 public class ReversiController extends AbstractGameController implements ClickHandler
 {
 	private ReversiLogic logic;
 
+	/**
+	 * @inheritDoc
+	 */
 	public ReversiController(Connection connection, AbstractPlayer p1,
 			AbstractPlayer p2, PlayController parent, boolean startTurn)
 	{
@@ -38,6 +44,9 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.getView().reDraw(this.board);
 	}
 
+	/**
+	 * onBoardClick satisfies ClickHandler.
+	 */
 	public void onBoardClick(int x, int y)
 	{
 		if (!this.turn && this.player1 instanceof HumanPlayer) {
@@ -47,6 +56,14 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		}
 	}
 
+	/**
+	 * makePlayerMove tries to make the given move for a humanplayer identified
+	 * by the given turn.
+	 *
+	 * @param turn The player to move a move for.
+	 * @param x
+	 * @param y
+	 */
 	public void makePlayerMove(boolean turn, int x, int y)
 	{
 		if (!board.isEmpty(x, y)) {
@@ -71,6 +88,14 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.getView().reDraw(this.board);
 	}
 
+	/**
+	 * makeServerMove tries to make the given move for a remoteplayer identified
+	 * by the given turn.
+	 *
+	 * @param turn The player to make a move for.
+	 * @param x
+	 * @param y
+	 */
 	protected void makeServerMove(boolean turn, int x, int y)
 	{
 		this.makeMove(turn, x, y);
@@ -78,6 +103,13 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		this.getView().reDraw(this.board);
 	}
 
+	/**
+	 * makeBotMove tries to make the given move for a botplayer identified
+	 * by the given turn.
+	 *
+	 * @param turn The player to make a move for.
+	 * @param bot The bot instance making the move.
+	 */
 	protected void makeBotMove(boolean turn, BotPlayer bot)
 	{
 		Board bClone2 = null;
@@ -88,6 +120,9 @@ public class ReversiController extends AbstractGameController implements ClickHa
 		}
 
 		Board bClone = bClone2;
+
+		// Run AI in a different thread, so the user interface is not being
+		// stalled by it.
 
 		Thread t = new Thread(() -> {
 			int[] move = bot.move(bClone, turn);
@@ -136,12 +171,6 @@ public class ReversiController extends AbstractGameController implements ClickHa
 
 		int[] scores = this.logic.calculateScores(this.board);
 		this.parentController.setScores(scores[0], scores[1]);
-	}
-
-	@Override
-	public boolean checkMove(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	public ReversiView getView()

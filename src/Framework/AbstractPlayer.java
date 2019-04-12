@@ -1,5 +1,8 @@
 package Framework;
 
+/**
+ * AbstractPlayer is a player in a game.
+ */
 public abstract class AbstractPlayer {
 	protected String name;
 

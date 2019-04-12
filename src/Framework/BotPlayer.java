@@ -2,6 +2,9 @@ package Framework;
 
 import Reversi.ReversiLogic;
 
+/**
+ * BotPlayer is a LocalPlayer which is controled by a best move algorithm.
+ */
 public class BotPlayer extends LocalPlayer
 {
 	protected GameAI ai;

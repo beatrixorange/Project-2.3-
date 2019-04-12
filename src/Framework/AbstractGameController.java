@@ -11,6 +11,11 @@ import Connection.Connection;
 
 import javafx.application.Platform;
 
+/**
+ * AbstractGameController forms the basis for games. Games are expected to extent it.
+ * This class provides generic functionality for turn based board games, and handles
+ * the connection to the server and the event that come from it.
+ */
 public abstract class AbstractGameController extends AbstractController implements EventHandler
 {
 	protected Board board;
@@ -29,6 +34,15 @@ public abstract class AbstractGameController extends AbstractController implemen
 
 	private EventHandler handler;
 
+	/**
+	 * AbstractGameController initialises the game.
+	 *
+	 * @param connection
+	 * @param p1
+	 * @param p2
+	 * @param parent Parent PlayController.
+	 * @param startTurn Which player has the first turn. True for p2.
+	 */
 	public AbstractGameController(Connection connection, AbstractPlayer p1,
 			AbstractPlayer p2, PlayController parent, boolean startTurn)
 	{
@@ -76,6 +90,11 @@ public abstract class AbstractGameController extends AbstractController implemen
 		this.connection.register(this);
 	}
 
+	/**
+	 * handleEvent satisfies EventHandler
+	 *
+	 * @param event
+	 */
 	public void handleEvent(Event event)
 	{
 		Platform.runLater(() -> {
@@ -130,11 +149,17 @@ public abstract class AbstractGameController extends AbstractController implemen
 				});
 				popup.show();
 		
-			}});
+			}
+		});
 	}
 
 	abstract protected void makeServerMove(boolean turn, int x, int y);
 
+	/**
+	 * switchTurn changes the current player allowed to make a move in the game.
+	 *
+	 * @param newTurn Player to switch turns to. True for player2.
+	 */
 	protected void switchTurn(boolean newTurn)
 	{
 		this.turn = newTurn;
@@ -156,8 +181,6 @@ public abstract class AbstractGameController extends AbstractController implemen
 		}
 	}
 
-	abstract protected boolean checkMove(int x, int y);
-
 	abstract protected void makeBotMove(boolean turn, BotPlayer bot);
 
 	public AbstractGameView getView()
@@ -165,6 +188,13 @@ public abstract class AbstractGameController extends AbstractController implemen
 		return this.view;
 	}
 
+	/**
+	 * getPlayerAtMove returns the player that currently allowed to
+	 * make a move in the game.
+	 * This is either player1 or player2.
+	 *
+	 * @return AbstractPlayer
+	 */
 	public AbstractPlayer getPlayerAtMove()
 	{
 		if (this.turn) {
@@ -174,6 +204,9 @@ public abstract class AbstractGameController extends AbstractController implemen
 		return this.player1;
 	}
 
+	/**
+	 * quit cleans up this controller.
+	 */
 	public void quit()
 	{
 		this.connection.deRegister();
@@ -181,6 +214,12 @@ public abstract class AbstractGameController extends AbstractController implemen
 		Router.get().toLobby();
 	}
 
+	/**
+	 * isBotGame returns the bot player in this game, if either player1 or
+	 * player2 is a bot.
+	 *
+	 * @return BotPlayer
+	 */
 	public BotPlayer isBotGame()
 	{
 		if (this.player1 instanceof BotPlayer) {
@@ -194,6 +233,13 @@ public abstract class AbstractGameController extends AbstractController implemen
 		return null;
 	}
 
+	/**
+	 * isRemoteGame returns the remote player in this game, if either player1 or
+	 * player2 is a remote player, which we play with by communicating with the
+	 * server.
+	 *
+	 * @return RemotePlayer
+	 */
 	public RemotePlayer isRemoteGame()
 	{
 		if (this.player1 instanceof RemotePlayer) {

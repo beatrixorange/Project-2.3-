@@ -1,12 +1,22 @@
 package Framework;
 
+/**
+ * Board is the data representation of a board in a boardgame.
+ */
 public class Board
 {
 	protected Tile[][] board;
 
 	protected int sizeX, sizeY;
 
-	public Board (int sizeX, int sizeY, Tile[][] board)
+	/**
+	 * Board initialises this class with existing board data.
+	 *
+	 * @param sizeX Size of board.
+	 * @param sizeY Size of board.
+	 * @param board Existing board data.
+	 */
+	public Board(int sizeX, int sizeY, Tile[][] board)
 	{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
@@ -14,6 +24,12 @@ public class Board
 		this.board = board;
 	}
 
+	/**
+	 * Board initialises a board with the given size.
+	 *
+	 * @param sizeX Size of board.
+	 * @param sizeY Size of board.
+	 */
 	public Board(int sizeX, int sizeY)
 	{
 		this.sizeX = sizeX;
@@ -38,21 +54,53 @@ public class Board
 		return this.sizeY;
 	}
 
+	/**
+	 * getTile returns the tile on the given location of the board.
+	 *
+	 * @param x
+	 * @param y
+	 *
+	 * @return Tile
+	 */
 	public Tile getTile(int x, int y)
 	{
 		return this.board[x][y];
 	}
 
+	/**
+	 * putTile puts the given Tile on the given location on the board.
+	 *
+	 * @param x
+	 * @param y
+	 * @param disk
+	 */
 	public void putTile(int x, int y, Tile disk)
 	{
 		this.board[x][y] = disk;
 	}
 
+	/**
+	 * isEmpty checks if the given tile location contains an empty tile.
+	 *
+	 * @param x
+	 * @param y
+	 * 
+	 * @return True if empty tile at location.
+	 */
 	public boolean isEmpty(int x, int y)
 	{
 		return this.board[x][y] == Tile.EMPTY;
 	}
 
+	/**
+	 * isValid checks if the given location is on the board, and
+	 * not outside it.
+	 *
+	 * @param x
+	 * @param y
+	 *
+	 * @return True if valid location.
+	 */
 	public boolean isValid(int x, int y)
 	{
 		if (x < 0 || y < 0) {
@@ -66,34 +114,39 @@ public class Board
 		return true;
 	}
 
-	public boolean notEmptyAndNot(int x, int y, Tile not)
-	{
-		Tile t = this.board[x][y];
-		if (t == Tile.EMPTY) {
-			return false;
-		}
-
-		if (t == not) {
-			return false;
-		}
-
-		return true;
-	}
-
+	/**
+	 * xyToMove transform the given location in x,y coordinates
+	 * to the tile location system used by the gameserver.
+	 *
+	 * @param x
+	 * @param y
+	 *
+	 * @return Location identifier.
+	 */
 	public int xyToMove(int x, int y)
 	{
 		return x*this.getSizeX() + y;
 	}
 
+	/**
+	 * moveToXY transform the given gameserver tile location system
+	 * to a regular x,y coordinates system.
+	 *
+	 * @param int
+	 *
+	 * @return X and Y coordinates.
+	 */
 	public int[] moveToXY(int move)
 	{
-		// TODO: Check this. This is error prone.
 		int x = (int)Math.floor((double)move/this.getSizeX());
 		int y = (move)%this.getSizeX();
 
 		return new int[]{x, y};
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public Board clone() throws CloneNotSupportedException
 	{
 		Tile[][] tiles = new Tile[this.sizeX][this.sizeY];
@@ -114,6 +167,9 @@ public class Board
 		return new Board(this.sizeX, this.sizeY, tiles);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public String toString()
 	{
 		String str = "";
