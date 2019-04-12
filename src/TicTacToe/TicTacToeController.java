@@ -112,12 +112,6 @@ public class TicTacToeController extends AbstractGameController implements Click
 	}
 	
 	@Override
-	public boolean checkMove(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	protected void makeServerMove(boolean turn, int x, int y) {
 		System.out.println("MAKE SERVER MOVEEE@@@@@22222@@@");
 		this.board.putTile(x, y, Tile.byTurn(this.turn));
