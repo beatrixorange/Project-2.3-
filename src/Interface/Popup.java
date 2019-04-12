@@ -57,10 +57,10 @@ public class Popup
 		}
 		
 		this.button = new Button((b1text != null) ? b1text : "Close");
-	/*	button.setOnAction((e) -> {
+		button.setOnAction((e) -> {
 			stage.close();
 		});
-		*/
+
 		hBox.getChildren().add(button);
 		
 		if (b2text != null) {

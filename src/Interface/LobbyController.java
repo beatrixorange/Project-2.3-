@@ -60,24 +60,23 @@ public class LobbyController extends AbstractController
 			});
 			
 			this.connection.register(event -> {
+				if (!(event instanceof ChallengedEvent)) {
+					return;
+				}
+
+				ChallengedEvent cE = (ChallengedEvent)event;
 				Platform.runLater(() -> {
-					if (event instanceof ChallengedEvent) {
-						ChallengedEvent cE = (ChallengedEvent)event;
-						Platform.runLater(() -> {
-							Popup popup = new Popup("New Challenger","These player(s) have invited you to a duel!", null, "Accept", this.connection);
-						
-							popup.onClose(eve -> {
-								this.quit();
-						});
-						popup.button2List();
-						popup.show();
-					});
-					}
+					Popup popup = new Popup("New Challenger",
+							"These player(s) have invited you to a duel!",
+							null, "Accept", this.connection);
+					popup.button2List();
+					popup.show();
 				});
 			});
 
-
 			System.out.println(this.connection.getUsername());
+
+			// (Debugging code. Nothing to see here.)
 			if (this.connection.getUsername().startsWith("reversitest")) {
 				this.connection.subscribe("Reversi");
 			}
@@ -127,6 +126,6 @@ public class LobbyController extends AbstractController
 		
 		public void quit()
 		{
-			Router.get().toLobby();
+			this.connection.deRegister();
 		}
 }
