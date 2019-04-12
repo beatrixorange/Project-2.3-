@@ -182,7 +182,7 @@ public class ReversiLogic implements GameAI
 
 				this.makeMove(bClone, move[0], move[1], t);
 
-				int points = this.neGaMax(bClone, t, 6, alpha, beta, true);
+				int points = this.neGaMax(bClone, t, 5, alpha, beta, true);
 
 				System.out.println("points! :D : " + points);
 
