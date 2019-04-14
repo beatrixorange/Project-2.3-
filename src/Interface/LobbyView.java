@@ -13,11 +13,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+
+import Framework.AIHardness;
 
 public class LobbyView extends AbstractView {
 	
@@ -32,15 +35,13 @@ public class LobbyView extends AbstractView {
 	private Label playerList;
 	private HBox hbRefreshButton;
 
+	private Slider aiHardness;
 
-	
 	private ListView<String> list;
 	private Button inviteButton;
 	private HBox hbInviteButton;
 
-	
 	public LobbyView() {
-		
 		VBox lobby = new VBox();
 		lobby.setAlignment(Pos.CENTER);
 		
@@ -63,6 +64,16 @@ public class LobbyView extends AbstractView {
 		this.hbRefreshButton = new HBox();
 		hbRefreshButton.setSpacing(10.0);
 		hbRefreshButton.getChildren().addAll(playerList, refreshButton);
+
+		Label aiHardnessLabel = new Label("Computer skill level:");
+		this.aiHardness = new Slider(0, 1, 0.5);
+		this.aiHardness.setShowTickMarks(true);
+		this.aiHardness.setSnapToTicks(true);
+		this.aiHardness.setMajorTickUnit(2);
+
+		HBox aiHbox = new HBox();
+		aiHbox.getChildren().addAll(aiHardnessLabel, aiHardness);
+		aiHbox.setAlignment(Pos.CENTER);
 		
 		this.list = new ListView<String>();
 		//ObservableList<String> items = FXCollections.observableArrayList ("haha","hihi");
@@ -73,8 +84,7 @@ public class LobbyView extends AbstractView {
 		this.hbInviteButton = new HBox();
 		hbInviteButton.getChildren().addAll(quickPlayButton, inviteButton);
 		
-		
-		lobby.getChildren().addAll(label, cb, playerButton, computerButton, hbRefreshButton, list, hbInviteButton);
+		lobby.getChildren().addAll(label, cb, playerButton, computerButton, aiHbox, hbRefreshButton, list, hbInviteButton);
 		
 		this.scene = new Scene(lobby);
 	}
@@ -126,6 +136,22 @@ public class LobbyView extends AbstractView {
 			player = false;
 		}
 		return player;
+	}
+
+	public AIHardness getAIHardness()
+	{
+		double val = this.aiHardness.getValue();
+		System.out.println(val);
+
+		if (val < 0.3) {
+			return AIHardness.EASY;
+		}
+
+		if (val > 0.7) {
+			return AIHardness.HARD;
+		}
+
+		return AIHardness.MEDIUM;
 	}
 	
 	@Override
