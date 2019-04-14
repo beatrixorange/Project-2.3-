@@ -9,6 +9,7 @@ import Framework.HumanPlayer;
 import Framework.RemotePlayer;
 import Framework.BotPlayer;
 import Framework.GameAI;
+import Framework.AIHardness;
 import Reversi.ReversiLogic;
 import TicTacToe.TicTacToeLogic;
 
@@ -41,7 +42,7 @@ public class Router
 		c.show(this.stage);
 	}
 
-	public void startRemoteGame(String gameType, boolean startTurn, String opponent, boolean player)
+	public void startRemoteGame(String gameType, boolean startTurn, String opponent, boolean player, AIHardness hardness)
 	{
 		System.out.println("startRemoteGame");
 		System.out.println(this.connection);
@@ -55,7 +56,7 @@ public class Router
 			GameAI ai = null;
 			switch (gameType) {
 			case "Reversi":
-				ai = new ReversiLogic();
+				ai = new ReversiLogic(hardness);
 				break;
 			case "Tic-tac-toe":
 				ai = new TicTacToeLogic();
