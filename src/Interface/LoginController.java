@@ -38,8 +38,18 @@ public class LoginController extends AbstractController
 		});
 	}
 	
-	public void onButtonPress(String nickName)
+	public void onButtonPress(String nickName,String host, int port)
 	{
+		try {
+			if (host.startsWith("reversitest")) {
+				this.connection.connect("localhost", 7789);
+				this.connection.login(host);
+			} else {
+				this.connection.connect(host, port);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.out.println("Hoi " + nickName);
 		this.connection.login(nickName);
 	}

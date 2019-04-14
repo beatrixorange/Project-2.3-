@@ -50,8 +50,8 @@ public class Connection extends Registrator {
 		quote = '"';// Found this easier to work than the official way to insert quotes in Strings.
 	}
 	// create new socket for connection and create new input/output stream and reader/writers
-	public void connect(String ipAdress) throws UnknownHostException, IOException {
-		socket = new Socket(ipAdress, 7789);
+	public void connect(String ipAdress, int port) throws UnknownHostException, IOException {
+		socket = new Socket(ipAdress, port);
 		input = new InputStreamReader(socket.getInputStream());
 		output = new OutputStreamWriter(socket.getOutputStream());
 		reader = new BufferedReader(input);
@@ -279,14 +279,6 @@ public class Connection extends Registrator {
     public synchronized ArrayList getPlayerList() {
     	return playerList;
     }
-	
-	
-	public static void main(String args[]) throws UnknownHostException, IOException {
-		Connection x = new Connection();
-		x.connect("localhost");
-		x.login("kees");
-		x.subscribe("Tic-tac-toe");
-	}
 	
 	
  

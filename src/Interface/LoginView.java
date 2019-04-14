@@ -14,6 +14,8 @@ import javafx.scene.layout.VBox;
 public class LoginView extends AbstractView {	
 	private Button button = null;
 	private TextField nickName = null;
+	private TextField host = null;
+	private TextField port = null;
 	
 	public LoginView()
 	{
@@ -23,14 +25,20 @@ public class LoginView extends AbstractView {
 		//VBox.setVgrow(start, Priority.ALWAYS);
 		
 		Label label = new Label("Choose your nickname!");
+		Label label1 = new Label("Choose the IP Adress");
+		Label label2 = new Label("Choose the Port Number");
 		label.setAlignment(Pos.CENTER);
 		label.setContentDisplay(ContentDisplay.CENTER);
 		
 		this.nickName = new TextField();
 		
+		this.host = new TextField();
+		
+		this.port = new TextField();
+		
 		this.button = new Button("Submit");
 		
-		start.getChildren().addAll(label, this.nickName, this.button);
+		start.getChildren().addAll(label, this.nickName, label1, this.host, label2, this.port, this.button);
 		
 		
 		this.scene = new Scene(start,1200,1200);
@@ -38,7 +46,7 @@ public class LoginView extends AbstractView {
 	
 	public void keyPressed(LoginController handler) {
 		this.nickName.setOnAction((ActionEvent e) -> {
-			handler.onButtonPress(this.nickName.getText());
+			handler.onButtonPress(this.nickName.getText(), this.host.getText(), Integer.parseInt(this.port.getText()));
 		});
 	}
 		
@@ -46,10 +54,12 @@ public class LoginView extends AbstractView {
 	{
 		this.button.setOnAction((ActionEvent e) -> {
 			//public void handle(ActionEvent e) {
-				handler.onButtonPress(this.nickName.getText());
+				handler.onButtonPress(this.nickName.getText(), this.host.getText(), Integer.parseInt(this.port.getText()));
 			//}
 		});
 	}
+	
+
 
 	@Override
 	public String getTitle() {

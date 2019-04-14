@@ -38,16 +38,6 @@ public class Main extends Application
 
 		c.show(primaryStage);
 
-		try {
-			if (host.startsWith("reversitest")) {
-				this.connection.connect("localhost");
-				this.connection.login(host);
-			} else {
-				this.connection.connect(host);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void stop() throws Exception
