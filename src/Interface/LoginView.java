@@ -48,7 +48,15 @@ public class LoginView extends AbstractView {
 		this.nickName.setOnAction((ActionEvent e) -> {
 			handler.onButtonPress(this.nickName.getText(), this.host.getText(), Integer.parseInt(this.port.getText()));
 		});
+		this.host.setOnAction((ActionEvent e) -> {
+			handler.onButtonPress(this.nickName.getText(), this.host.getText(), Integer.parseInt(this.port.getText()));
+		});
+		this.port.setOnAction((ActionEvent e) -> {
+			handler.onButtonPress(this.nickName.getText(), this.host.getText(), Integer.parseInt(this.port.getText()));
+		});
 	}
+	
+	
 		
 	public void setOnButtonPressHandler(LoginController handler)
 	{
