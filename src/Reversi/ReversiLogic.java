@@ -3,6 +3,7 @@ package Reversi;
 import Framework.Board;
 import Framework.Tile;
 import Framework.GameAI;
+import Framework.AIHardness;
 
 import java.util.ArrayList;
 import java.lang.Comparable;
@@ -13,6 +14,40 @@ import java.util.concurrent.BlockingQueue;
 
 public class ReversiLogic implements GameAI
 {
+	private int depth;
+
+	public ReversiLogic()
+	{
+		this.depth = 2;
+	}
+
+	public ReversiLogic(AIHardness hardness)
+	{
+		switch (hardness) {
+		case EASY:
+			this.depth = 5;
+			break;
+		case MEDIUM:
+			this.depth = 6;
+			break;
+		case HARD:
+			this.depth = 7;
+			break;
+		}
+
+		System.out.println("Setting depth to: " + this.depth);
+	}
+
+	/**
+	 * isValidMove checks if the given move complies to the Reversi game rules.
+	 *
+	 * @param board
+	 * @param x
+	 * @param y
+	 * @param me
+	 *
+	 * @return is valid move
+	 */
 	public boolean isValidMove(Board board, int x, int y, Tile me)
 	{
 		if (!board.isEmpty(x, y)) {
@@ -22,6 +57,17 @@ public class ReversiLogic implements GameAI
 		return this.disksTurnedByMove(board, x, y, me).length > 0;
 	}
 
+	/**
+	 * makeMove makes the given move to the given board, according to the
+	 * Reversi game rules.
+	 *
+	 * @param board
+	 * @param x
+	 * @param y
+	 * @param me
+	 *
+	 * @return Tiles changed by move.
+	 */
 	public int[][] makeMove(Board board, int x, int y, Tile me)
 	{
 		int[][] turned = this.disksTurnedByMove(board, x, y, me);
@@ -34,6 +80,13 @@ public class ReversiLogic implements GameAI
 		return turned;
 	}
 
+	/**
+	 * makeMove changes the given tiles on the given board to the given tile.
+	 *
+	 * @param board
+	 * @param turned
+	 * @param me
+	 */
 	public void makeMove(Board board, int[][] turned, Tile me)
 	{
 		for (int i = 0; i < turned.length; i++) {
@@ -41,6 +94,17 @@ public class ReversiLogic implements GameAI
 		}
 	}
 
+	/**
+	 * disksTurnedByMove checks which tiles on the board will be changed if the
+	 * given move would be made.
+	 *
+	 * @param board
+	 * @param x
+	 * @param y
+	 * @param me
+	 *
+	 * @return changed tiles
+	 */
 	public int[][] disksTurnedByMove(Board board, int x, int y, Tile me)
 	{
 		ArrayList<int[]> list = new ArrayList<int[]>();
@@ -115,6 +179,15 @@ public class ReversiLogic implements GameAI
 		return list.toArray(new int[list.size()][]);
 	}
 
+	/**
+	 * determinePossibleMoves checks which moves the player is currently allowed
+	 * to do on the board, according to the reversi game rules.
+	 *
+	 * @param board
+	 * @param turnsTile who's turn it is
+	 *
+	 * @return possible moves coordinates.
+	 */
 	public int[][] determinePossibleMoves(Board board, Tile turnsTile)
 	{
 		ArrayList<int[]> list = new ArrayList<int[]>();
@@ -135,6 +208,13 @@ public class ReversiLogic implements GameAI
 		return list.toArray(new int[list.size()][]);
 	}
 
+	/**
+	 * calculateScores counts the number of disks owned by both players.
+	 *
+	 * @param board
+	 *
+	 * @return score for player1 and for player2
+	 */
 	public int[] calculateScores(Board board)
 	{
 		int p1 = 0;
@@ -154,6 +234,10 @@ public class ReversiLogic implements GameAI
 		return new int[]{p1, p2};
 	}
 
+
+	/**
+	 * @inheritDoc
+	 */
 	public int[] bestMove(final Board board, boolean turn, int timeout)
 	{
 		Tile t = Tile.byTurn(turn);
@@ -182,7 +266,7 @@ public class ReversiLogic implements GameAI
 
 				this.makeMove(bClone, move[0], move[1], t);
 
-				int points = this.neGaMax(bClone, t, 6, alpha, beta, true);
+				int points = this.neGaMax(bClone, t, this.depth, alpha, beta, true);
 
 				boolean success = false;
 

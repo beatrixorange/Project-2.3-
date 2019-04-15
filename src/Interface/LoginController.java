@@ -15,9 +15,9 @@ public class LoginController extends AbstractController
 {
 	private Connection connection;
 
-	public LoginController(Connection connection)
+	public LoginController(Connection connection, String defaultHost, int defaultPort)
 	{	
-		LoginView view = new LoginView();
+		LoginView view = new LoginView(defaultHost, defaultPort);
 		view.setOnButtonPressHandler(this);
 		view.keyPressed(this);
 		

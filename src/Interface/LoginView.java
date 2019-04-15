@@ -21,10 +21,8 @@ public class LoginView extends AbstractView {
 	private TextField host = null;
 	private TextField port = null;
 	
-	public LoginView()
+	public LoginView(String defaultHost, int defaultPort)
 	{
-		
-		
 		VBox start = new VBox();
 		start.setAlignment(Pos.CENTER);
 		//VBox.setVgrow(start, Priority.ALWAYS);
@@ -39,8 +37,10 @@ public class LoginView extends AbstractView {
 		this.nickName = new TextField();
 		
 		this.host = new TextField();
+		this.host.setText(defaultHost);
 		
 		this.port = new TextField();
+		this.port.setText("" + defaultPort);
 		
 		this.button = new Button("Submit");
 		
@@ -62,8 +62,6 @@ public class LoginView extends AbstractView {
 		});
 	}
 	
-	
-		
 	public void setOnButtonPressHandler(LoginController handler)
 	{
 		this.button.setOnAction((ActionEvent e) -> {

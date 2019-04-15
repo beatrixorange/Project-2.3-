@@ -21,6 +21,8 @@ public class Main extends Application
 
 	private static String host = "145.33.225.170";
 
+	private static int port = 7789;
+
 	public void start(Stage primaryStage) throws Exception {
 
 		this.connection = new Connection();
@@ -28,16 +30,14 @@ public class Main extends Application
 		this.stage.setWidth(1000);
 		this.stage.setHeight(800);
 		
-		
 		new Router(this.stage, this.connection);
 
 		stage.setTitle("Login");
 		this.stage.centerOnScreen();
-		
-		AbstractController c = new LoginController(connection);
+
+		AbstractController c = new LoginController(connection, host, port);
 
 		c.show(primaryStage);
-
 	}
 
 	public void stop() throws Exception
@@ -54,6 +54,9 @@ public class Main extends Application
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			host = args[0];
+		}
+		if  (args.length > 1) {
+			port = Integer.parseInt(args[1]);
 		}
 
 		Application.launch(args);

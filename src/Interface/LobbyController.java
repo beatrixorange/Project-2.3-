@@ -6,6 +6,7 @@ import java.util.Map;
 import Connection.Connection;
 import Connection.Events.UpdatedPlayerListEvent;
 import Framework.HumanPlayer;
+import Framework.AIHardness;
 import Connection.Events.ChallengedEvent;
 import Connection.Events.LoginSuccesEvent;
 import Connection.Events.MatchStartEvent;
@@ -49,14 +50,17 @@ public class LobbyController extends AbstractController
 				String gameType = e.getGameType();
 				String opponent = e.getOpponent();
 				boolean startTurn = e.getPlayerToMove().equals(e.getOpponent());
-				boolean player = lView.getToggle();
-				System.out.println(player);
 
 				System.out.println("startturn " + startTurn);
 				Platform.runLater(() -> {
-					this.quit();
+					boolean player = lView.getToggle();
+					System.out.println(player);
 
-					Router.get().startRemoteGame(gameType, startTurn, opponent, player);
+					AIHardness aiHardness = lView.getAIHardness();
+
+					this.quit();
+				
+					Router.get().startRemoteGame(gameType, startTurn, opponent, player, aiHardness);
 				});
 			});
 			
