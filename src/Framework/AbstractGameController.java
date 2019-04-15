@@ -135,6 +135,8 @@ public abstract class AbstractGameController extends AbstractController implemen
 			} else if (event instanceof MatchTiedEvent) {
 				MatchTiedEvent e = (MatchTiedEvent)event;
 
+				System.out.println(">>>> I'm getting MatchTiedEvent");
+
 				this.gameEnd("draw", e.getPlayerOneScore(), e.getPlayerTwoScore());
 			} else if (event instanceof MatchLostEvent) {
 				MatchLostEvent e = (MatchLostEvent)event;

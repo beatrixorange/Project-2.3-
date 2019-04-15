@@ -136,20 +136,18 @@ public class Connection extends Registrator {
 										String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
 										playerTwoScore = playerTwoScore.replace(" ", "");
 										triggerEvent(new MatchWonEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
-									}
-									if(line.contains("LOSS")){
+									} else if(line.contains("LOSS")){
 										String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME LOSS {PLAYERONESCORE: ".length()));
 										String t = "SVR GAME LOSS {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
 										String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
 										playerTwoScore = playerTwoScore.replace(" ", "");
 										triggerEvent(new MatchLostEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
-									}
-									if(line.contains("DRAW")){
+									} else if(line.contains("DRAW")){
 										String playerOneScore = StringFormat.stringFormat(line.substring("SVR GAME DRAW {PLAYERONESCORE: ".length()));
 										String t = "SVR GAME DRAW {PLAYERONESCORE: " + playerOneScore + ", PLAYERTWOSCORE: ";
 										String playerTwoScore = StringFormat.stringFormat(line.substring(t.length()));
 										playerTwoScore = playerTwoScore.replace(" ", "");
-										triggerEvent(new MatchTiedEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
+										triggerEvent(new MatchWonEvent(Integer.parseInt(playerOneScore), Integer.parseInt(playerTwoScore)));
 									}
 								}
 								
