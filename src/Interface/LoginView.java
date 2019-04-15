@@ -2,13 +2,17 @@ package Interface;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class LoginView extends AbstractView {	
@@ -20,6 +24,7 @@ public class LoginView extends AbstractView {
 	public LoginView()
 	{
 		
+		
 		VBox start = new VBox();
 		start.setAlignment(Pos.CENTER);
 		//VBox.setVgrow(start, Priority.ALWAYS);
@@ -29,7 +34,8 @@ public class LoginView extends AbstractView {
 		Label label2 = new Label("Choose the Port Number");
 		label.setAlignment(Pos.CENTER);
 		label.setContentDisplay(ContentDisplay.CENTER);
-		
+
+
 		this.nickName = new TextField();
 		
 		this.host = new TextField();
@@ -38,8 +44,8 @@ public class LoginView extends AbstractView {
 		
 		this.button = new Button("Submit");
 		
-		start.getChildren().addAll(label, this.nickName, label1, this.host, label2, this.port, this.button);
 		
+		start.getChildren().addAll(label, this.nickName, label1, this.host, label2, this.port, this.button);
 		
 		this.scene = new Scene(start,1200,1200);
 	}

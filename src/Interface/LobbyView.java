@@ -51,12 +51,12 @@ public class LobbyView extends AbstractView {
 		// TODO: Naming is important as the server is picky.
 		
 		this.group = new ToggleGroup();
-		this.playerButton = new RadioButton("Play as Player");
-		playerButton.setToggleGroup(group);
-
 		this.computerButton = new RadioButton("Play as Computer");	
 		computerButton.setToggleGroup(group);
 		computerButton.setSelected(true);
+		
+		this.playerButton = new RadioButton("Play as Player");
+		playerButton.setToggleGroup(group);
 		
 		this.playerList = new Label("Online Players");
 		this.refreshButton = new Button("Refresh");
@@ -74,7 +74,7 @@ public class LobbyView extends AbstractView {
 		hbInviteButton.getChildren().addAll(quickPlayButton, inviteButton);
 		
 		
-		lobby.getChildren().addAll(label, cb, playerButton, computerButton, hbRefreshButton, list, hbInviteButton);
+		lobby.getChildren().addAll(label, cb, computerButton, playerButton, hbRefreshButton, list, hbInviteButton);
 		
 		this.scene = new Scene(lobby);
 	}
