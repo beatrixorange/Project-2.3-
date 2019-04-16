@@ -11,9 +11,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class LoginView extends AbstractView {	
 	private Button button = null;
@@ -26,20 +32,33 @@ public class LoginView extends AbstractView {
 		VBox start = new VBox();
 		start.setAlignment(Pos.CENTER);
 		//VBox.setVgrow(start, Priority.ALWAYS);
+		//set background image
+		BackgroundImage myBI= new BackgroundImage(new Image("Login.jpg",985,750,false,true),
+		        BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+		          BackgroundSize.DEFAULT);
+		//then you set to your node
+		start.setBackground(new Background(myBI));
 		
+		// add textfields to Interface
 		Label label = new Label("Choose your nickname!");
+		label.setTextFill(Color.ALICEBLUE);
 		Label label1 = new Label("Choose the IP Adress");
+		label1.setTextFill(Color.ALICEBLUE);
 		Label label2 = new Label("Choose the Port Number");
+		label2.setTextFill(Color.ALICEBLUE);
 		label.setAlignment(Pos.CENTER);
 		label.setContentDisplay(ContentDisplay.CENTER);
 
 
 		this.nickName = new TextField();
+		nickName.setMaxWidth(450);
 		
 		this.host = new TextField();
+		host.setMaxWidth(450);
 		this.host.setText(defaultHost);
 		
 		this.port = new TextField();
+		port.setMaxWidth(450);
 		this.port.setText("" + defaultPort);
 		
 		this.button = new Button("Submit");

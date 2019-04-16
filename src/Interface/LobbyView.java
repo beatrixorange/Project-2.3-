@@ -13,13 +13,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
+import javafx.scene.paint.Color;
 import Framework.AIHardness;
 
 public class LobbyView extends AbstractView {
@@ -45,6 +51,13 @@ public class LobbyView extends AbstractView {
 		VBox lobby = new VBox();
 		lobby.setAlignment(Pos.CENTER);
 		
+		//set background image
+		BackgroundImage myBI= new BackgroundImage(new Image("Background.jpg",985,750,false,true),
+		        BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+		          BackgroundSize.DEFAULT);
+		//then you set to your node
+		lobby.setBackground(new Background(myBI));
+		
 		Label label = new Label("What game do you want to play?");
 		
 		this.cb = new ChoiceBox<String>(FXCollections.observableArrayList(
@@ -60,7 +73,9 @@ public class LobbyView extends AbstractView {
 		playerButton.setToggleGroup(group);
 		
 		this.playerList = new Label("Online Players");
+		this.playerList.setTextFill(Color.ALICEBLUE);
 		this.refreshButton = new Button("Refresh");
+		this.refreshButton.setAlignment(Pos.CENTER_LEFT);
 		this.hbRefreshButton = new HBox();
 		hbRefreshButton.setSpacing(10.0);
 		hbRefreshButton.getChildren().addAll(playerList, refreshButton);
@@ -76,6 +91,8 @@ public class LobbyView extends AbstractView {
 		aiHbox.setAlignment(Pos.CENTER);
 		
 		this.list = new ListView<String>();
+		this.list.setMaxHeight(200);
+		this.list.setMaxWidth(1000);
 		//ObservableList<String> items = FXCollections.observableArrayList ("haha","hihi");
 		//list.setItems(items);
 		
@@ -88,6 +105,7 @@ public class LobbyView extends AbstractView {
 		lobby.getChildren().addAll(label, cb, playerButton, computerButton, aiHbox, hbRefreshButton, list, hbInviteButton);
 		
 		this.scene = new Scene(lobby);
+		
 	}
 	
 	public void setOnQuickPlayButtonPressHandler(LobbyController handler)
